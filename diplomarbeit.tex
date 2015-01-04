@@ -1,0 +1,737 @@
+%% LyX 2.1.2 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[a4paper,ngerman,naustrian,DIV=12,BCOR=1cm]{scrbook}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\setcounter{secnumdepth}{3}
+\usepackage{babel}
+\usepackage{textcomp}
+\usepackage{url}
+\usepackage{makeidx}
+\makeindex
+\usepackage{graphicx}
+\PassOptionsToPackage{normalem}{ulem}
+\usepackage{ulem}
+\usepackage[unicode=true,
+ bookmarks=true,bookmarksnumbered=false,bookmarksopen=false,
+ breaklinks=true,pdfborder={0 0 0},backref=false,colorlinks=false]
+ {hyperref}
+\hypersetup{pdftitle={Diplomarbeit Titel},
+ pdfauthor={Wer auch immer},
+ pdfsubject={Diplomarbeit},
+ pdfkeywords={dies, das}}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+\pdfpageheight\paperheight
+\pdfpagewidth\paperwidth
+
+%% Because html converters don't know tabularnewline
+\providecommand{\tabularnewline}{\\}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+\newcommand{\strong}[1]{\textbf{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+%%%%%%%%%%%%
+% Latex-Vorspann
+\usepackage{lastpage}
+\usepackage{listings}
+\usepackage{blindtext}
+
+%% geht nicht mit jeder Latex Variante, gibt aber ein schöneres Layout
+\usepackage{microtype} 
+
+%% Aufzählungen nicht so weit einrücken
+\usepackage{enumitem}
+%\setitemize{leftmargin=*} 
+
+%\usepackage{caladea}
+%\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+
+%% für pandoc
+%% maximale Breite der Bilder
+\setkeys{Gin}{width=0.90\linewidth,keepaspectratio}
+
+\makeatother
+
+\usepackage{listings}
+\addto\captionsnaustrian{\renewcommand{\lstlistingname}{Listing}}
+\addto\captionsngerman{\renewcommand{\lstlistingname}{Listing}}
+\renewcommand{\lstlistingname}{Listing}
+
+\begin{document}
+%%%%%%
+% Weitere Einstellungen siehe Latex-Vorspann%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% falls man die erste Zeile der Absätze nicht einrücken will
+% dann sollte man aber etwas mehr Abstand zwischen den Absätzen erlauben
+%%\setlength{\parindent}{0pt}
+%%\setlength{\parskip}{1.5ex plus0.5ex minus0.5ex}
+% Auch Fußnoten bündig ausrichten
+\deffootnote[]{1em}{1em}{\textsuperscript{\thefootnotemark\ }}
+% Listen etwas wenige einrücken, erfordert enumitem
+\setitemize{leftmargin=*}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Kopf und Fußzeilen -- links und rechts verschieden 
+\newcommand{\kopfseitenummer}{{\bfseries \thepage}}
+\newcommand{\kopfkapl}{{\bfseries\leftmark}}
+\newcommand{\kopfkapr}{{\bfseries\rightmark}}
+\newcommand{\kopfbild}{\includegraphics[width=25mm]{HTL3RLogoRGB}}
+\newcommand{\kopfHTL}{Höhere Technische Bundeslehranstalt Wien 3, \\Rennweg 	Abteilung für Informationstechnologie}
+\renewcommand{\chaptermark}[1]%
+  {\thispagestyle{fancy}\markboth{\thechapter.\ #1}{}}%\thispagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+%\lhead[\fancyplain{\kopfbild}{\kopfbild}]% li aussen
+%      {\fancyplain{\kopfHTL}{\kopfHTL}}% re innen
+%\rhead[\kopfHTL]% li innen
+%      {\kopfbild}% re aussen
+
+%% mit kapitelautor kann man den Autor festlegen oder auf leer setzen - steht dann in der Fußzeile.
+\newcommand{\kapitelautor}{}
+
+%%%
+% Alternative: am Rand (Marginale)
+%\setlength{\marginparsep}{-5mm}
+%\mbox{}\marginpar{\raggedleft\hspace{0pt}Autor: Hans Huber}
+
+%% kopf links: [linke] und {rechte} Seite
+\lhead[\kopfbild]{\kopfkapl}
+\rhead[\kopfkapr]{\kopfbild}
+\chead{}
+
+\lfoot[\kopfseitenummer]{\kapitelautor}
+\cfoot[]{}
+\rfoot[\kapitelautor]{\kopfseitenummer}
+
+%%
+% einfaches "siehe ..." - das Ziel muss man markieren
+\newcommand{\kap}[1]{Kapitel~\ref{#1}, Seite~\pageref{#1}}
+\newcommand{\siehe}[1]{siehe \kap{#1}}
+
+%%%%%Anfang Titelseite
+\pagenumbering{roman}
+\title{Diplomarbeit}
+\begin{titlepage}
+\begin{minipage}[b]{1\columnwidth}
+\parbox[b]{50mm}{\includegraphics[width=45mm]{HTL3RLogoRGB}}
+\hfill
+\parbox[b]{130mm}{\footnotesize \textsc{Höhere Technische Bundeslehranstalt} Wien 3, Rennweg\\
+IT \& Mechatronik\\
+\\
+HTL Rennweg :: Rennweg 89b\\
+A-1030 Wien :: Tel +43 1 24215-10 :: Fax DW 18
+}\\
+\mbox{}
+\end{minipage}
+
+\vspace{1cm}
+
+
+\begin{center}
+\textbf{\LARGE{}Diplomarbeit}{\large{}}\\
+{\large{}\vspace{15mm}
+ }\textbf{\large{}eventuell KURZTITEL}\\
+\textbf{\large{}Ausgeschriebener Titel der Diplomarbeit}\\
+ \vspace{15mm}
+ ausgeführt an der\\
+ Höheren Abteilung für Informationstechnologie/Ausbildungsschwerpunkt\\
+ der Höheren Technischen Lehranstalt Wien 3 Rennweg\\
+ \vspace{1cm}
+ im Schuljahr 20??/20??\\
+ \vspace{1cm}
+ durch\\
+ \vspace{0.5cm}
+\textbf{\large{}Mitarbeiter Eins (alphabetisch)}\\
+\textbf{\large{}Mitarbeiter Zwei}\\
+\textbf{\large{}Mitarbeiter Drei}\\
+\textbf{\large{}Mitarbeiter Vier}\\
+
+\par\end{center}{\large \par}
+
+\begin{center}
+\vspace{20mm}
+ \normalsize unter der Anleitung von\\
+ \vspace{0.5cm}
+ Hauptbetreuer\\
+eventuell Nebenbetreuer
+\par\end{center}
+
+\begin{center}
+\vspace{5mm}
+Wien, \today 
+\par\end{center}
+
+\end{titlepage}%%%%%%%%%%%%%%%%%%%%% Ende Titelseite %%%%%%%%%%%%%%%%%%%%%%
+
+
+\addchap*{Kurzfassung}
+
+% Auf Seiten mit einem neuen Kapitel ist keine Kopfzeile -- kann man sich aber wünschen
+\thispagestyle{fancy}
+
+Darum geht es.
+
+\blindtext[1]
+
+
+\addchap*{Abstract}
+
+% mit Kopfzeile
+\thispagestyle{fancy}
+
+Thats why.
+
+\blindtext[1]
+
+
+\addchap*{Ehrenwörtliche Erklärung}
+
+% mit Kopfzeile
+\thispagestyle{fancy}
+
+Ich versichere, 
+\begin{itemize}
+\item dass ich meinen Anteil an dieser Diplomarbeit selbstständig verfasst
+habe, 
+\item dass ich keine anderen als die angegebenen Quellen und Hilfsmittel
+benutzt habe 
+\item und mich auch sonst keiner unerlaubten Hilfe bzw. Hilfsmittel bedient
+habe.
+\end{itemize}
+\bigskip{}
+Wien, am \today
+
+<eigenhändige Unterschriften aller Teammitglieder>
+
+
+\addchap*{Präambel}
+
+\thispagestyle{fancy}
+
+Die Inhalte dieser Diplomarbeit entsprechen den Qualitätsnormen für
+,,Ingenieurprojekte`` gemäß §\,29 der Verordnung des Bundesministers
+für Unterricht und kulturelle Angelegenheiten über die Reife- und
+Diplomprüfung in den berufsbildenden höheren Schulen, BGBl. Nr. 847/1992,
+in der Fassung der Verordnungen BGBl. Nr. 269/1993, Nr. 467/1996 und
+BGBl. II Nr. 123/97.
+
+\vspace{10mm}
+
+
+Liste der betreuenden Lehrer: 
+
+<{[}Dir|AV|Prof{]}, akad. Grad, Vorname Name Hauptbetreuer> 
+
+<{[}Dir|AV|Prof{]}, akad. Grad, Vorname Name Hauptbetreuer Stellvertreter> 
+
+<{[}Dir|AV|Prof{]}, akad. Grad, Vorname Name Betreuer> ... (in alphabetischer
+Reihenfolge des Nachnamens) 
+
+<{[}Dir|AV|Prof{]}, akad. Grad, Vorname Name Betreuer> 
+
+\vspace{10mm}
+
+
+Liste der Kooperationspartner:%falls vorhanden
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Verzeichnisse -- machen wir mit fancy headern
+\renewcommand*{\chapterpagestyle}{fancy}
+\cleardoublepage{}
+\tableofcontents{}
+\cleardoublepage{}
+\listoftables
+\cleardoublepage{}
+\listoffigures
+
+\cleardoublepage{}
+
+%hier geht es los mit dem Text - auf einer rechten Seite
+\pagenumbering{arabic}
+\pagestyle{fancy}
+\thispagestyle{fancy} 
+
+
+\chapter{Beschreibung der Formatierung}
+
+% wer hat diese Kapitel geschrieben oder leer
+\renewcommand{\kapitelautor}{Autor: Hans Huber}
+
+\thispagestyle{fancy}
+
+
+\section{Vorlagen}
+
+In diesen Kapitel gibt es einige Muster für Dinge die oft vorkommen.
+Und etwas Blindtext damit man auch volle Seiten sieht.
+
+
+\subsection{Formatvorlagen}
+
+Alle Formatierungen sollten mit Formatvorlagen vorgenommen werden.
+Spätestens bei der Konvertierung in ein Ebook rächen sich diese ,,Sünden``:
+Ebooks sind HTML Dokumente mit einer Formatierung mittels CSS.
+
+Auch bei der Umwandlung in interaktive PDFs ist eine konsequente Formatierung
+wichtig.
+
+
+\subsection{Schriften und Absätze}
+
+Hier findet man eine Beschreibung des Layouts -- Details folgen weiter
+unten.
+\begin{description}
+\item [{Schrift:}] dieses \LaTeX{}-Dokument verwendet die Standardschriften.
+Die Schriftgröße soll 12\,pt betragen.
+\item [{Absatz:}] entweder verwendet man wie in \LaTeX{} einen etwas größeren
+Seitenrand oder einen größeren Zeilenabstand. Beides sorgt für bessere
+Lesbarkeit. Die erste Zeile eines Absatzes wird etwas eingerückt (nicht
+die erste Zeile nach einer Überschrift, nach einem Bild etc.) und
+bzw. oder es gibt einen Abstand zwischen den Absätzen. Am Ende und
+Anfang einer Seite sollten mindestens zwei Zeilen eines Absatzes sein
+(keine Schusterjungen%
+\footnote{siehe \url{http://www.typolexikon.de/s/schusterjunge.html}%
+} und Hurenkinder%
+\footnote{siehe \url{http://www.typolexikon.de/h/hurenkind.html}%
+}).
+\item [{Blocksatz:}] Alle Texte werden im Blocksatz gesetzt. Die Silbentrennung
+ist dann obligatorisch.
+\item [{Kapitelüberschriften:}] Überschriften erster Ordnung sollten auf
+rechten Seiten beginnen. Über jeder Überschrift sollte ein Abstand
+sein. Alle Überschriften müssen mit de nächsten Absatz ,,zusammengehalten``
+werden -- keine einsamen Überschriften am Ende einer Seite.
+\item [{Inhaltsverzeichnis:}] das Inhaltsverzeichnis sollte möglichst kompakt
+sein. Als Gliederung dienen fette Hauptüberschriften und etwas Abstand
+über den Zeilen.
+\item [{Seitenformat:}] der Ausdruck erfolgt zweiseitig, ein entsprechender
+Bundsteg ist zu berücksichtigen%
+\footnote{Die Einstellung der Seitenränder ist keinesfalls beliebig. Sie sollte
+bewährten Regeln folgen, {[}\ldots{}{]}. Die häufige Zielvorgabe
+,,Den Platz auf dem Papier möglichst gut ausnutzen`` ist keine typografische
+sondern eine extrem laienhafte Regel. aus \cite{layout}%
+}. Nach Rücksprache mit dem Betreuer kann auch eine einseitige Variante
+gewählt werden. Bei Bedarf könne auch einzelne Seiten im Querformat
+gesetzt werden.
+\item [{Kopfzeile:}] die Kopfzeile sollte dieser Vorlage entsprechen. Falls,
+nach Rücksprache mit dem Betreuer, der Ausdruck nur in Schwarz-weiß
+erfolgt, kann das Logo entfallen.
+\item [{Fußzeile:}] hier ist Platz für den Autor des Kapitels und die Seitennummer.
+Wie bei technischen Publikationen üblich ist die Einleitung und die
+Verzeichnisse mit römischen Seitennummern versehen. Das eigentliche
+Dokument wird mit arabischen Ziffern nummeriert. Beide Nummerierungen
+sind unabhängig voneinander und beginnen jeweils bei 1.
+\item [{Autor:}] Jedes Kapitel muss auch einem Autor haben. Das sieht man
+in der Fußzeile oder als Textbox in der Nähe der Überschrift. Alternativ
+kann es im Anhang eine Liste geben. Das ist besonders wichtig wenn
+es viele Beilagen, z.B. Handbücher ohne direkte Angabe des Autors,
+gibt.
+\item [{PDF:}] Die PDF Metainformation sollten richtig sein (Autor etc.)
+-- siehe Datei/Eigenschaften. Links auf Webseiten, Verweise innerhalb
+des Dokuments, das Inhaltsverzeichnis, die Fußnoten usw. sollten ,,klickbar``
+sein.
+\end{description}
+
+\subsection{Bilder\label{sub:Bilder}}
+
+Das Bild als Gleitobjekt ist genau hier, oder oben auf der Seite,
+oder unten, aber immer zentriert mit Nummer und Beschreibung -- wenn
+es sinnvoll ist auch mit Querverweis (siehe Abbildung \ref{Bild11}).
+Durch Gleitobjekte, d.~h. Bilder oben oder unten auf der Seite statt
+,,genau hier``, werden halbleere Seiten durch besonders große Bilder
+vermieden.
+
+Wichtig: alle Bilder oder andere Medien z.~B. Screenshots, Audio
+oder Video für EBooks und interaktive PDFs sollten mit einen entsprechenden
+Quellennachweis versehen sein.
+
+\begin{figure}[tbh]
+\begin{centering}
+\includegraphics[scale=0.6]{HTL3RLogoRGB}
+\par\end{centering}
+
+\protect\caption{Ein Bild}
+\label{Bild11}
+\end{figure}
+
+
+
+\subsection{Tabellen}
+
+In der folgenden Tabelle sieht man: es gibt immer eine Nummer und
+eine Beschreibung. Besonders längere Tabellen sollten eventuell als
+Gleitobjekt am Ende oder Anfang einer Seite positioniert werden. Geht
+die Tabelle über mehrere Seiten so ist die Überschrift zu wiederholen.
+
+\begin{table}[h]
+\begin{centering}
+\begin{tabular}{|c|c|c|}
+\hline 
+Überschrift & Wert & noch einer\tabularnewline
+\hline 
+\hline 
+1 & abc & Hallo\tabularnewline
+\hline 
+2 & def & Latex\tabularnewline
+\hline 
+\end{tabular}
+\par\end{centering}
+
+\protect\caption{So eine tolle Tabelle}
+\end{table}
+
+
+
+\subsection{Formel}
+
+Etwas Text als Überleitung zu einer Formel:
+
+\selectlanguage{ngerman}%
+\[
+f(x)=\left\{ \begin{array}{cc}
+\log_{8}x & x>0\\
+0 & x=0\\
+\sum_{i=1}^{5}\alpha_{i}+\sqrt{-\frac{1}{x}} & x<0
+\end{array}\right.
+\]
+
+
+\selectlanguage{naustrian}%
+Wenn man sehr viele Formeln hat sollte man diese auch nummerieren.
+Besonders bei Verweisen ist das sehr sinnvoll.
+
+
+\subsection{Sourcecode}
+
+Sourcecode sollte in einer Schrift mit fixer Breite sein. Falls man
+Verweise braucht sollte man die Listings auch nummerieren. 
+
+% das kann auch ganz oben stehen
+% das braucht man nur einmal
+\lstset{numbers=left, numberstyle=\tiny, stepnumber=2, numbersep=5pt, showspaces=true, frame=single}
+% einmal oder immer was anderes
+\lstset{language=C}
+
+% hier könnte man auch aus Dateien lesen
+\begin{lstlisting} 
+#include <stdio.h>
+
+int main() 
+{ 
+  printf("Hello world\n"); 
+} 
+\end{lstlisting} 
+
+Die genaue Formatierung ist freigestellt: Einstellungen wie bunt bzw.
+fett, Markierung von Leerzeichen und Zeilennummerierung kann an den
+Bedarf der Diplomarbeit angepasst werden. 
+
+Beispiel Java mit anderen Einstellungen -- nur als Beispiel, in der
+Diplomarbeit sollte man sich an eine einheitliches Format halten.
+Bei längeren Listings muss man eventuell mit Umbrüchen rechnen, oder
+man verwendet einen Rahmen der frei angeordnet werden kann (\siehe{sub:Bilder}).
+
+% Einstellungen für die fogenden Listings
+% entweder mit \begin{listing} oder in Lyx als Programmlisting
+\lstset{numbers=right, numberstyle=\tiny, stepnumber=2, numbersep=5pt, showspaces=false, frame=single}
+\lstset{language=Java}
+
+Achtung \LaTeX{}-User: Listing kann keine Umlaute, aber unter \cite{listingtipp}
+gibt es eine Lösung.
+
+\inputencoding{latin9}\begin{lstlisting}[caption={Java Beispiel},captionpos=b]
+import java.awt.*;  
+import java.awt.event.*;
+public class AL extends Frame
+                 implements WindowListener, ActionListener {
+  TextField text = new TextField(20);
+  Button b;    
+  private int numClicks = 0;
+ 
+  public static void main(String[] args) {
+    AL myWindow = new AL("My first window");
+    myWindow.setSize(350,100);
+    myWindow.setVisible(true);    
+  } 
+}
+\end{lstlisting}
+\inputencoding{utf8}
+
+
+\subsection{Fachbegriffe}
+
+Fachbegriffe in einer Fremdsprache oder Kommandos sollten einheitlich
+gekennzeichnet werden. Bei Latex verwendet man dazu ,,logisches Markup``,
+bei Word oder Open/Libre-office wird all diesen Wörtern wird eine
+Vorlage zugewiesen, das Aussehen wird dann an einer Stelle zentral
+festgelegt. 
+
+Als Beispiel soll \emph{Text to Speech}\index{Text to Speech: Umwandlung von Texten in Sprache}
+dienen. Solche Wörter sollte natürlich in ein Glossar aufgenommen
+werden. 
+
+Oder der Befehl \strong{dir} für die Kommandozeile. Die Angabe von
+Dateinamen sollte auch einheitlich sein: entweder \emph{/etc/passwd}
+oder \strong{C:\textbackslash{}system32}.
+
+
+\subsection{Zitieren}
+
+Die Quellenangabe kann in Form eines Vollbelegs in der Fußnote%
+\footnote{aus Zitat --- Wikipedia, Die freie Enzyklopädie, \url{http://de.wikipedia.org/w/index.php?title=Zitat},
+Abgerufen 2014-09-14%
+}(bei technischen Dokumenten eher unüblich) oder als Kurzbeleg am Schluss
+der gesamten Arbeit aufgeführt werden. Beim Kurzbeleg sind dabei verschiedene
+Formen üblich. Der platzsparendste, aber am wenigsten aussagekräftige
+Zitierstil ist die fortlaufende Nummerierung aller zitierten Quellen
+{[}123{]}.
+
+Insbesondere in der Informatik üblich ist eine Kombination der ersten
+drei Buchstaben des Autorennamens und der letzten beiden Ziffern des
+Erscheinungsjahres (z. B. „The04“ für Theisen 2004). Wohl am weitesten
+verbreitet ist der vollständige Verfassernamen mit Erscheinungsjahr,
+wobei mehrere Quellen desselben Autors innerhalb eines Jahres durch
+fortlaufende Buchstaben kenntlich gemacht werden (z. B. „Theisen 2004c“).
+Weniger üblich, aber am aussagekräftigsten ist die Quellenangabe unter
+Hinzufügung eines Schlagwortes, das den mit der Materie vertrauten
+Leser zumeist bereits die zitierte Quelle erkennen lässt, z. B. in
+der Form „Theisen (Wissenschaftliches Arbeiten, 2004)“.
+
+Obwohl mehrere Zitierstile bzw. Zitiertechniken zur Verfügung stehen,
+werden in einem Dokument üblicherweise nicht mehrere verwendet; ein
+ausgewählter Zitierstil wird im gesamten Dokument konsequent beibehalten.
+Ein gute Übersicht bietet \cite{wiki:zitat}.
+
+
+\subsubsection{Quellenverzeichnis}
+
+Unter \LaTeX{} kann das Programm Bib\TeX{} zur Erstellung von Literaturangaben
+verwendet werden. 
+\begin{itemize}
+\item Links auf Wikipedia sollten vermieden werden.
+\item Jeder Link sollte mit einem Abfragedatum versehen sein.
+\item Das Literaturverzeichnis kommt an das Ende des Dokuments.
+\end{itemize}
+Viele Details dazu findet man bei \cite{wiki:zitat}.
+
+
+\subsubsection{Rechtliches zum Zitieren}
+
+Achtung: nicht gekennzeichnete Zitate (Plagiate) führen zu einer negativen
+Beurteilung der Diplomarbeit.
+
+Nach \cite{wiki:quelle}:
+
+§ 57 des österreichischen Urheberrechtsgesetzes\cite{ris57} enthält
+detaillierte Vorschriften über die Quellenangabe, unter anderem: Werden
+Stellen oder Teile von Sprachwerken nach §\,46 vervielfältigt, so
+sind sie in der Quellenangabe so genau zu bezeichnen, dass sie in
+dem benutzten Werke leicht aufgefunden werden können. In den Erläuterungen
+(ErlRV) heißt es: Bei Entlehnungen aus umfangreichen Werken muss also
+in der Quellenangabe auch die Seite, der Abschnitt, das Kapitel oder
+der Akt, wo sich die entlehnte Stelle befindet, angeführt werden (Dillenz,
+Materialien zum österreichischen Urheberrecht, 134, zitiert nach \cite{dittrich},
+S. 621)
+
+2002 nahm der österreichische OGH zur Frage der Quellenangabe in der
+Entscheidung Riven Rock Stellung: Nach § 57 Abs 4 UrhG bedarf die
+Unterlassung einer Quellenangabe der Rechtfertigung durch die im redlichen
+Verkehr geltenden Gewohnheiten und Gebräuche. Bei Auslegung dieser
+Bestimmung ist eine Abwägung der Interessen des Urhebers mit jenen
+des zur freien Werknutzung Berechtigten nach dem Verständnis loyaler,
+den Belangen des Urhebers mit Verständnis gegenübertretenden, billig
+und gerecht denkenden Benutzern (Vinck aaO § 63 Rz 2) geboten und
+danach zu beurteilen, ob dem freien Werknutzer neben der Nennung des
+Autors/Verlags auch die Nennung des Namens des Übersetzers von in
+einer Rundfunksendung verlesenen Roman-Zitaten zumutbar ist.
+
+
+\section{Bad Practice}
+
+Was man vermeiden sollte -- diese Dinge führen zur Mehrarbeit und
+verursachen zusätzlichen Stress in der hektischen Zeit knapp vor dem
+Abgabetermin.
+
+
+\paragraph{Stil}
+\begin{itemize}
+\item Extrem lange, geschachtelte Sätze und/oder endlose Textpassagen ohne
+Gliederung durch Absätze.\nopagebreak
+
+\begin{itemize}
+\item Vielleicht bzw. sinnvollerweise lassen Sie den Text auch von einer
+,,außenstehenden Person`` lesen. 
+\end{itemize}
+\item Aufzählungen im Text statt Listen. Wie man hier sieht dürfen bei Listen
+auch mehrere Sätze stehen.
+\item \uline{Unterstreichen} ist ein Relikt aus ,,Schreibmaschinen-Zeiten``.
+\item Eine Diplomarbeit ist keine Erzählung. Natürlich kann man als ,,ich``
+oder ,,wir`` auf ,,unsere Probleme`` eingehen, aber im Allgemeinen
+ist ein formaler, beschreibender und technischer Stil einzuhalten.
+\item Eine Diplomarbeit ist auch keine Email oder SMS: Schreiben Sie ganze
+Sätze ohne kryptische Abkürzungen und Smileys.
+\item Ein Mindestmaß an Interpunktion wird vorausgesetzt. Eventuell lassen
+Sie den Text durch eine kundige Person Ihres Vertrauens korrigieren.
+\item Es gibt viele verschiedene Striche, und alle sehen verschieden aus:
+Gedankenstriche, Bindestriche und Minus kommen in einer Diplomarbeit
+häufig vor.
+\item Weitere Wörter die Ihren Betreuer verzweifeln lassen -- natürlich
+nur bei übermäßiger Verwendung
+
+\begin{itemize}
+\item Welcher/Welches, Hierbei
+\end{itemize}
+\end{itemize}
+
+\paragraph{Technik}
+\begin{itemize}
+\item (viele) händische Formatierungen statt Formatvorlagen.
+\item zusätzliche manuelle Seitenumbrüche oder Leerzeilen für ein ,,schöneres``
+Layout. Es gibt bei den Absatzformatierungen tolle Möglichkeiten für
+Abstände vor und nach einem Absatz bzw. zum Beeinflussen des Textflusses.
+\item Arbeiten Sie mit dem Programm statt gegen das Programm:
+
+\begin{itemize}
+\item Verweise als fixer Text. Nutzen Sie die Möglichkeiten der Textverarbeitung.
+\item Dinge die ,,kompliziert`` einzugeben sind, sind meist falsch --
+richtige Lösungen sind in allen Programmen auch ,,leicht`` zu erreichen%
+\footnote{Oder Sie verwenden ein für Ihre Zwecke schlecht geeignetes Programm.%
+}.
+\end{itemize}
+\item Kontrollieren Sie beim fertigen PDF die Angaben unter Datei / Eigenschaften
+-- dort sollten sinnvolle Dinge stehen. Bei Latex wird dazu das Paket
+\texttt{\code{\texttt{hyperref}}} verwendet.
+\end{itemize}
+
+\section{Details zu Formatierung}
+
+
+\subsection{Schriftarten}
+
+Die Word- und Libreoffice-vorlage verwenden etwas andere Schriften
+als das Latex Dokument.
+
+
+\section{Beispiele}
+
+
+\subsection{Zitieren mit Latex}
+
+Am Beispiel der URL \url{http://de.wikibooks.org/wiki/LaTeX-Kompendium}
+und des Buches ,,\LaTeX{}: Einführung``.
+
+Man braucht eine \texttt{.bib} Datei mit den notwendigen Informationen:
+
+\inputencoding{latin9}\begin{lstlisting}[language={[LaTeX]TeX}]
+@book{kopka1991latex,
+  title={LaTeX: Einf�hrung},
+  author={Kopka, Helmut and Rahtz, Sebastian},
+  volume={2},
+  year={1991},
+  publisher={Addison-Wesley} 
+}
+
+@online{latexKomp,
+  author = {},
+  title ={LaTeX-Kompendium - Wikibooks, Sammlung freier Lehr-, 
+Sach- und Fachb�cher},
+  url = {http://de.wikibooks.org/wiki/LaTeX-Kompendium},
+  lastchecked = {2014.09.14},
+}
+\end{lstlisting}
+\inputencoding{utf8}
+
+Diese Einträge werden dann im Text verwendet: \texttt{\textbackslash{}cite\{kopka1991latex\}
+}und das Ergebnis sieht dann so \cite{kopka1991latex} und so \cite{latexKomp}
+aus. Gleichzeitig erscheinen diese Einträge auch im Literaturverzeichnis
+am Ende des Dokuments (Format: \texttt{plaindin}).
+
+
+\subsection{Formatierungen }
+
+Der Autor kann natürlich auch eingreifen und zum Beispiel\\
+Zeilenumbrüche erzwingen und \\
+\\
+Leerzeilen -- aber das sollte man nicht machen. \newpage{}
+
+Ein Seitenumbruch kostet mich auch nicht mehr als einen müden Lacher,
+ist aber noch seltener wirklich sinnvoll.
+
+Schriftgrößen:
+\begin{itemize}
+\item {\tiny{}tiny} 
+\item {\scriptsize{}scriptsize} 
+\item {\footnotesize{}footnotesize} 
+\item {\small{}small} 
+\item normalsize 
+\item {\large{}large} 
+\item {\Large{}Large} 
+\item {\LARGE{}LARGE} 
+\item {\huge{}huge} 
+\item {\Huge{}Huge} \end{itemize}
+\begin{enumerate}
+\item Nummerierungen
+\item sind 
+\item auch 
+\item easy
+\end{enumerate}
+\textbf{bissl was fettes} \textit{italienisches} \uline{für unten
+drunter}.
+
+
+\subsection{Fülltext}
+
+\Blindtext
+
+
+\chapter{Planung}
+
+%das komplette nächste Kapitel wird in der externen Datei diplomarbeit2.tex gespeichert. Es wird an diese Stelle im Dokument eingebaut.
+%Damit ist es möglich, mehrere Personen an diverse Teile der Diplomarbeit arbeiten zu lassen.
+
+\input{diplomarbeit2.tex}
+
+
+\chapter{Umsetzung}
+
+\Blindtext
+
+
+\chapter{Ergebnisse}
+
+% wer hat diese Kapitel geschrieben oder leer
+\renewcommand{\kapitelautor}{Autor: Susi Sorglos}
+
+\blindmathpaper\Blindtext
+
+
+\chapter{Evaluation}
+
+% wer hat diese Kapitel geschrieben oder leer 
+\renewcommand{\kapitelautor}{Autor: Blindtext}
+
+\Blindtext
+
+\Blinddocument\Blindtext\Blinddocument[2]\Blindtext\Blinddocument[5]\Blindtext\Blinddocument[10]\Blindtext\Blindtext
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% wer hat diese Kapitel geschrieben oder leer
+\renewcommand{\kapitelautor}{}
+
+\appendix
+
+\chapter{Anhang 1\label{chap:Anhang-1}}
+
+was auch immer
+
+\printindex{}
+
+\bibliographystyle{plaindin}
+\bibliography{diplom}
+
+\end{document}

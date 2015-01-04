@@ -1,0 +1,2997 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass scrbook
+\begin_preamble
+%%%%%%%%%%%%
+% Latex-Vorspann
+\usepackage{lastpage}
+\usepackage{listings}
+\usepackage{blindtext}
+
+%% geht nicht mit jeder Latex Variante, gibt aber ein schöneres Layout
+\usepackage{microtype} 
+
+%% Aufzählungen nicht so weit einrücken
+\usepackage{enumitem}
+%\setitemize{leftmargin=*} 
+
+%\usepackage{caladea}
+%\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+
+%% für pandoc
+%% maximale Breite der Bilder
+\setkeys{Gin}{width=0.90\linewidth,keepaspectratio}
+\end_preamble
+\options DIV=12,BCOR=1cm
+\use_default_options false
+\begin_modules
+logicalmkup
+\end_modules
+\maintain_unincluded_children false
+\language naustrian
+\language_package default
+\inputencoding utf8
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref true
+\pdf_title "Diplomarbeit Titel"
+\pdf_author "Wer auch immer"
+\pdf_subject "Diplomarbeit"
+\pdf_keywords "dies, das"
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks true
+\pdf_pdfborder true
+\pdf_colorlinks false
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize a4paper
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\index Stichwortverzeichnis
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 2
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language german
+\papercolumns 1
+\papersides 2
+\paperpagestyle fancy
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%%%%%%
+\end_layout
+
+\begin_layout Plain Layout
+
+% Weitere Einstellungen siehe Latex-Vorspann
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+\end_layout
+
+\begin_layout Plain Layout
+
+% falls man die erste Zeile der Absätze nicht einrücken will
+\end_layout
+
+\begin_layout Plain Layout
+
+% dann sollte man aber etwas mehr Abstand zwischen den Absätzen erlauben
+\end_layout
+
+\begin_layout Plain Layout
+
+%%
+\backslash
+setlength{
+\backslash
+parindent}{0pt}
+\end_layout
+
+\begin_layout Plain Layout
+
+%%
+\backslash
+setlength{
+\backslash
+parskip}{1.5ex plus0.5ex minus0.5ex}
+\end_layout
+
+\begin_layout Plain Layout
+
+% Auch Fußnoten bündig ausrichten
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+deffootnote[]{1em}{1em}{
+\backslash
+textsuperscript{
+\backslash
+thefootnotemark
+\backslash
+ }}
+\end_layout
+
+\begin_layout Plain Layout
+
+% Listen etwas wenige einrücken, erfordert enumitem
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+setitemize{leftmargin=*}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+\end_layout
+
+\begin_layout Plain Layout
+
+%  Kopf und Fußzeilen -- links und rechts verschieden 
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+newcommand{
+\backslash
+kopfseitenummer}{{
+\backslash
+bfseries 
+\backslash
+thepage}}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+newcommand{
+\backslash
+kopfkapl}{{
+\backslash
+bfseries
+\backslash
+leftmark}}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+newcommand{
+\backslash
+kopfkapr}{{
+\backslash
+bfseries
+\backslash
+rightmark}}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+newcommand{
+\backslash
+kopfbild}{
+\backslash
+includegraphics[width=25mm]{HTL3RLogoRGB}}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+newcommand{
+\backslash
+kopfHTL}{Höhere Technische Bundeslehranstalt Wien 3, 
+\backslash
+
+\backslash
+Rennweg 	Abteilung für Informationstechnologie}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand{
+\backslash
+chaptermark}[1]%
+\end_layout
+
+\begin_layout Plain Layout
+
+  {
+\backslash
+thispagestyle{fancy}
+\backslash
+markboth{
+\backslash
+thechapter.
+\backslash
+ #1}{}}%
+\backslash
+thispagestyle{fancy}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand{
+\backslash
+headrulewidth}{0pt}
+\end_layout
+
+\begin_layout Plain Layout
+
+%
+\backslash
+lhead[
+\backslash
+fancyplain{
+\backslash
+kopfbild}{
+\backslash
+kopfbild}]% li aussen
+\end_layout
+
+\begin_layout Plain Layout
+
+%      {
+\backslash
+fancyplain{
+\backslash
+kopfHTL}{
+\backslash
+kopfHTL}}% re innen
+\end_layout
+
+\begin_layout Plain Layout
+
+%
+\backslash
+rhead[
+\backslash
+kopfHTL]% li innen
+\end_layout
+
+\begin_layout Plain Layout
+
+%      {
+\backslash
+kopfbild}% re aussen
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+%% mit kapitelautor kann man den Autor festlegen oder auf leer setzen -
+ steht dann in der Fußzeile.
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+newcommand{
+\backslash
+kapitelautor}{}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+%%%
+\end_layout
+
+\begin_layout Plain Layout
+
+% Alternative: am Rand (Marginale)
+\end_layout
+
+\begin_layout Plain Layout
+
+%
+\backslash
+setlength{
+\backslash
+marginparsep}{-5mm}
+\end_layout
+
+\begin_layout Plain Layout
+
+%
+\backslash
+mbox{}
+\backslash
+marginpar{
+\backslash
+raggedleft
+\backslash
+hspace{0pt}Autor: Hans Huber}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+%% kopf links: [linke] und {rechte} Seite
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+lhead[
+\backslash
+kopfbild]{
+\backslash
+kopfkapl}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+rhead[
+\backslash
+kopfkapr]{
+\backslash
+kopfbild}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+chead{}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+lfoot[
+\backslash
+kopfseitenummer]{
+\backslash
+kapitelautor}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+cfoot[]{}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+rfoot[
+\backslash
+kapitelautor]{
+\backslash
+kopfseitenummer}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%%
+\end_layout
+
+\begin_layout Plain Layout
+
+% einfaches "siehe ..." - das Ziel muss man markieren
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+newcommand{
+\backslash
+kap}[1]{Kapitel~
+\backslash
+ref{#1}, Seite~
+\backslash
+pageref{#1}}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+newcommand{
+\backslash
+siehe}[1]{siehe 
+\backslash
+kap{#1}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%%%%%Anfang Titelseite
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+pagenumbering{roman}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+title{Diplomarbeit}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{titlepage}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{minipage}[b]{1
+\backslash
+columnwidth}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+parbox[b]{50mm}{
+\backslash
+includegraphics[width=45mm]{HTL3RLogoRGB}}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+hfill
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+parbox[b]{130mm}{
+\backslash
+footnotesize 
+\backslash
+textsc{Höhere Technische Bundeslehranstalt} Wien 3, Rennweg
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+IT 
+\backslash
+& Mechatronik
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+HTL Rennweg :: Rennweg 89b
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+A-1030 Wien :: Tel +43 1 24215-10 :: Fax DW 18
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+mbox{}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{minipage}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace 1cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\series bold
+\size largest
+Diplomarbeit
+\series default
+\size large
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset VSpace 15mm
+\end_inset
+
+ 
+\series bold
+eventuell KURZTITEL
+\begin_inset Newline newline
+\end_inset
+
+Ausgeschriebener Titel der Diplomarbeit
+\series default
+\size default
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset VSpace 15mm
+\end_inset
+
+ ausgeführt an der
+\begin_inset Newline newline
+\end_inset
+
+ Höheren Abteilung für Informationstechnologie/Ausbildungsschwerpunkt
+\begin_inset Newline newline
+\end_inset
+
+ der Höheren Technischen Lehranstalt Wien 3 Rennweg
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset VSpace 1cm
+\end_inset
+
+ im Schuljahr 20??/20??
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset VSpace 1cm
+\end_inset
+
+ durch
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset VSpace 0.5cm
+\end_inset
+
+
+\series bold
+\size large
+Mitarbeiter Eins (alphabetisch)
+\begin_inset Newline newline
+\end_inset
+
+Mitarbeiter Zwei
+\begin_inset Newline newline
+\end_inset
+
+Mitarbeiter Drei
+\begin_inset Newline newline
+\end_inset
+
+Mitarbeiter Vier
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset VSpace 20mm
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+normalsize
+\end_layout
+
+\end_inset
+
+ unter der Anleitung von
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset VSpace 0.5cm
+\end_inset
+
+ Hauptbetreuer
+\begin_inset Newline newline
+\end_inset
+
+eventuell Nebenbetreuer
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset VSpace 5mm
+\end_inset
+
+Wien, 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+today
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{titlepage}%%%%%%%%%%%%%%%%%%%%% Ende Titelseite %%%%%%%%%%%%%%%%%%%%%%
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Addchap*
+Kurzfassung
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% Auf Seiten mit einem neuen Kapitel ist keine Kopfzeile -- kann man sich
+ aber wünschen
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+thispagestyle{fancy}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Darum geht es.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+blindtext[1]
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Addchap*
+Abstract
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% mit Kopfzeile
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+thispagestyle{fancy}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thats why.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+blindtext[1]
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Addchap*
+Ehrenwörtliche Erklärung
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% mit Kopfzeile
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+thispagestyle{fancy}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ich versichere, 
+\end_layout
+
+\begin_layout Itemize
+dass ich meinen Anteil an dieser Diplomarbeit selbstständig verfasst habe,
+ 
+\end_layout
+
+\begin_layout Itemize
+dass ich keine anderen als die angegebenen Quellen und Hilfsmittel benutzt
+ habe 
+\end_layout
+
+\begin_layout Itemize
+und mich auch sonst keiner unerlaubten Hilfe bzw.
+ Hilfsmittel bedient habe.
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+Wien, am 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+today
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+<eigenhändige Unterschriften aller Teammitglieder>
+\end_layout
+
+\begin_layout Addchap*
+Präambel
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+thispagestyle{fancy}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Die Inhalte dieser Diplomarbeit entsprechen den Qualitätsnormen für 
+\begin_inset Quotes gld
+\end_inset
+
+Ingenieurprojekte
+\begin_inset Quotes grd
+\end_inset
+
+ gemäß §
+\begin_inset space \thinspace{}
+\end_inset
+
+29 der Verordnung des Bundesministers für Unterricht und kulturelle Angelegenhei
+ten über die Reife- und Diplomprüfung in den berufsbildenden höheren Schulen,
+ BGBl.
+ Nr.
+ 847/1992, in der Fassung der Verordnungen BGBl.
+ Nr.
+ 269/1993, Nr.
+ 467/1996 und BGBl.
+ II Nr.
+ 123/97.
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace 10mm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Liste der betreuenden Lehrer: 
+\end_layout
+
+\begin_layout Standard
+<[Dir|AV|Prof], akad.
+ Grad, Vorname Name Hauptbetreuer> 
+\end_layout
+
+\begin_layout Standard
+<[Dir|AV|Prof], akad.
+ Grad, Vorname Name Hauptbetreuer Stellvertreter> 
+\end_layout
+
+\begin_layout Standard
+<[Dir|AV|Prof], akad.
+ Grad, Vorname Name Betreuer> ...
+ (in alphabetischer Reihenfolge des Nachnamens) 
+\end_layout
+
+\begin_layout Standard
+<[Dir|AV|Prof], akad.
+ Grad, Vorname Name Betreuer> 
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace 10mm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Liste der Kooperationspartner:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%falls vorhanden
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%
+\end_layout
+
+\begin_layout Plain Layout
+
+%Verzeichnisse -- machen wir mit fancy headern
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand*{
+\backslash
+chapterpagestyle}{fancy}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+cleardoublepage{}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+tableofcontents{}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+cleardoublepage{}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+listoftables
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+cleardoublepage{}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+listoffigures
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%hier geht es los mit dem Text - auf einer rechten Seite
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+pagenumbering{arabic}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+pagestyle{fancy}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+thispagestyle{fancy} 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+Beschreibung der Formatierung
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% wer hat diese Kapitel geschrieben oder leer
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand{
+\backslash
+kapitelautor}{Autor: Hans Huber}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+thispagestyle{fancy}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Vorlagen
+\end_layout
+
+\begin_layout Standard
+In diesen Kapitel gibt es einige Muster für Dinge die oft vorkommen.
+ Und etwas Blindtext damit man auch volle Seiten sieht.
+\end_layout
+
+\begin_layout Subsection
+Formatvorlagen
+\end_layout
+
+\begin_layout Standard
+Alle Formatierungen sollten mit Formatvorlagen vorgenommen werden.
+ Spätestens bei der Konvertierung in ein Ebook rächen sich diese 
+\begin_inset Quotes gld
+\end_inset
+
+Sünden
+\begin_inset Quotes grd
+\end_inset
+
+: Ebooks sind HTML Dokumente mit einer Formatierung mittels CSS.
+\end_layout
+
+\begin_layout Standard
+Auch bei der Umwandlung in interaktive PDFs ist eine konsequente Formatierung
+ wichtig.
+\end_layout
+
+\begin_layout Subsection
+Schriften und Absätze
+\end_layout
+
+\begin_layout Standard
+Hier findet man eine Beschreibung des Layouts -- Details folgen weiter unten.
+\end_layout
+
+\begin_layout Description
+Schrift: dieses LaTeX-Dokument verwendet die Standardschriften.
+ Die Schriftgröße soll 12
+\begin_inset space \thinspace{}
+\end_inset
+
+pt betragen.
+\end_layout
+
+\begin_layout Description
+Absatz: entweder verwendet man wie in LaTeX einen etwas größeren Seitenrand
+ oder einen größeren Zeilenabstand.
+ Beides sorgt für bessere Lesbarkeit.
+ Die erste Zeile eines Absatzes wird etwas eingerückt (nicht die erste Zeile
+ nach einer Überschrift, nach einem Bild etc.) und bzw.
+ oder es gibt einen Abstand zwischen den Absätzen.
+ Am Ende und Anfang einer Seite sollten mindestens zwei Zeilen eines Absatzes
+ sein (keine Schusterjungen
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+siehe 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://www.typolexikon.de/s/schusterjunge.html
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ und Hurenkinder
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+siehe 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://www.typolexikon.de/h/hurenkind.html
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Description
+Blocksatz: Alle Texte werden im Blocksatz gesetzt.
+ Die Silbentrennung ist dann obligatorisch.
+\end_layout
+
+\begin_layout Description
+Kapitelüberschriften: Überschriften erster Ordnung sollten auf rechten Seiten
+ beginnen.
+ Über jeder Überschrift sollte ein Abstand sein.
+ Alle Überschriften müssen mit de nächsten Absatz 
+\begin_inset Quotes gld
+\end_inset
+
+zusammengehalten
+\begin_inset Quotes grd
+\end_inset
+
+ werden -- keine einsamen Überschriften am Ende einer Seite.
+\end_layout
+
+\begin_layout Description
+Inhaltsverzeichnis: das Inhaltsverzeichnis sollte möglichst kompakt sein.
+ Als Gliederung dienen fette Hauptüberschriften und etwas Abstand über den
+ Zeilen.
+\end_layout
+
+\begin_layout Description
+Seitenformat: der Ausdruck erfolgt zweiseitig, ein entsprechender Bundsteg
+ ist zu berücksichtigen
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Die Einstellung der Seitenränder ist keinesfalls beliebig.
+ Sie sollte bewährten Regeln folgen, [\SpecialChar \ldots{}
+].
+ Die häufige Zielvorgabe 
+\begin_inset Quotes gld
+\end_inset
+
+Den Platz auf dem Papier möglichst gut ausnutzen
+\begin_inset Quotes grd
+\end_inset
+
+ ist keine typografische sondern eine extrem laienhafte Regel.
+ aus 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "layout"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+.
+ Nach Rücksprache mit dem Betreuer kann auch eine einseitige Variante gewählt
+ werden.
+ Bei Bedarf könne auch einzelne Seiten im Querformat gesetzt werden.
+\end_layout
+
+\begin_layout Description
+Kopfzeile: die Kopfzeile sollte dieser Vorlage entsprechen.
+ Falls, nach Rücksprache mit dem Betreuer, der Ausdruck nur in Schwarz-weiß
+ erfolgt, kann das Logo entfallen.
+\end_layout
+
+\begin_layout Description
+Fußzeile: hier ist Platz für den Autor des Kapitels und die Seitennummer.
+ Wie bei technischen Publikationen üblich ist die Einleitung und die Verzeichnis
+se mit römischen Seitennummern versehen.
+ Das eigentliche Dokument wird mit arabischen Ziffern nummeriert.
+ Beide Nummerierungen sind unabhängig voneinander und beginnen jeweils bei
+ 1.
+\end_layout
+
+\begin_layout Description
+Autor: Jedes Kapitel muss auch einem Autor haben.
+ Das sieht man in der Fußzeile oder als Textbox in der Nähe der Überschrift.
+ Alternativ kann es im Anhang eine Liste geben.
+ Das ist besonders wichtig wenn es viele Beilagen, z.B.
+ Handbücher ohne direkte Angabe des Autors, gibt.
+\end_layout
+
+\begin_layout Description
+PDF: Die PDF Metainformation sollten richtig sein (Autor etc.) -- siehe Datei/Eig
+enschaften.
+ Links auf Webseiten, Verweise innerhalb des Dokuments, das Inhaltsverzeichnis,
+ die Fußnoten usw.
+ sollten 
+\begin_inset Quotes gld
+\end_inset
+
+klickbar
+\begin_inset Quotes grd
+\end_inset
+
+ sein.
+\end_layout
+
+\begin_layout Subsection
+Bilder
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Bilder"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Das Bild als Gleitobjekt ist genau hier, oder oben auf der Seite, oder unten,
+ aber immer zentriert mit Nummer und Beschreibung -- wenn es sinnvoll ist
+ auch mit Querverweis (siehe Abbildung 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Bild11"
+
+\end_inset
+
+).
+ Durch Gleitobjekte, d.
+\begin_inset space ~
+\end_inset
+
+h.
+ Bilder oben oder unten auf der Seite statt 
+\begin_inset Quotes gld
+\end_inset
+
+genau hier
+\begin_inset Quotes grd
+\end_inset
+
+, werden halbleere Seiten durch besonders große Bilder vermieden.
+\end_layout
+
+\begin_layout Standard
+Wichtig: alle Bilder oder andere Medien z.
+\begin_inset space ~
+\end_inset
+
+B.
+ Screenshots, Audio oder Video für EBooks und interaktive PDFs sollten mit
+ einen entsprechenden Quellennachweis versehen sein.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement tbh
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename HTL3RLogoRGB.eps
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Ein Bild
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "Bild11"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Tabellen
+\end_layout
+
+\begin_layout Standard
+In der folgenden Tabelle sieht man: es gibt immer eine Nummer und eine Beschreib
+ung.
+ Besonders längere Tabellen sollten eventuell als Gleitobjekt am Ende oder
+ Anfang einer Seite positioniert werden.
+ Geht die Tabelle über mehrere Seiten so ist die Überschrift zu wiederholen.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="3">
+<features rotate="0" tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Überschrift
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Wert
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+noch einer
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+abc
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Hallo
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+def
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Latex
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+So eine tolle Tabelle
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Formel
+\end_layout
+
+\begin_layout Standard
+Etwas Text als Überleitung zu einer Formel:
+\end_layout
+
+\begin_layout Standard
+
+\lang ngerman
+\begin_inset Formula 
+\[
+f(x)=\left\{ \begin{array}{cc}
+\log_{8}x & x>0\\
+0 & x=0\\
+\sum_{i=1}^{5}\alpha_{i}+\sqrt{-\frac{1}{x}} & x<0
+\end{array}\right.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Wenn man sehr viele Formeln hat sollte man diese auch nummerieren.
+ Besonders bei Verweisen ist das sehr sinnvoll.
+\end_layout
+
+\begin_layout Subsection
+Sourcecode
+\end_layout
+
+\begin_layout Standard
+Sourcecode sollte in einer Schrift mit fixer Breite sein.
+ Falls man Verweise braucht sollte man die Listings auch nummerieren.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% das kann auch ganz oben stehen
+\end_layout
+
+\begin_layout Plain Layout
+
+% das braucht man nur einmal
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{numbers=left, numberstyle=
+\backslash
+tiny, stepnumber=2, numbersep=5pt, showspaces=true, frame=single}
+\end_layout
+
+\begin_layout Plain Layout
+
+% einmal oder immer was anderes
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=C}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% hier könnte man auch aus Dateien lesen
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting} 
+\end_layout
+
+\begin_layout Plain Layout
+
+#include <stdio.h>
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+int main() 
+\end_layout
+
+\begin_layout Plain Layout
+
+{ 
+\end_layout
+
+\begin_layout Plain Layout
+
+  printf("Hello world
+\backslash
+n"); 
+\end_layout
+
+\begin_layout Plain Layout
+
+} 
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting} 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Die genaue Formatierung ist freigestellt: Einstellungen wie bunt bzw.
+ fett, Markierung von Leerzeichen und Zeilennummerierung kann an den Bedarf
+ der Diplomarbeit angepasst werden.
+ 
+\end_layout
+
+\begin_layout Standard
+Beispiel Java mit anderen Einstellungen -- nur als Beispiel, in der Diplomarbeit
+ sollte man sich an eine einheitliches Format halten.
+ Bei längeren Listings muss man eventuell mit Umbrüchen rechnen, oder man
+ verwendet einen Rahmen der frei angeordnet werden kann (
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+siehe{sub:Bilder}
+\end_layout
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% Einstellungen für die fogenden Listings
+\end_layout
+
+\begin_layout Plain Layout
+
+% entweder mit 
+\backslash
+begin{listing} oder in Lyx als Programmlisting
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{numbers=right, numberstyle=
+\backslash
+tiny, stepnumber=2, numbersep=5pt, showspaces=false, frame=single}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstset{language=Java}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Achtung LaTeX-User: Listing kann keine Umlaute, aber unter 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "listingtipp"
+
+\end_inset
+
+ gibt es eine Lösung.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "caption={Java Beispiel},captionpos=b"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+import java.awt.*;  
+\end_layout
+
+\begin_layout Plain Layout
+
+import java.awt.event.*;
+\end_layout
+
+\begin_layout Plain Layout
+
+public class AL extends Frame
+\end_layout
+
+\begin_layout Plain Layout
+
+                 implements WindowListener, ActionListener {
+\end_layout
+
+\begin_layout Plain Layout
+
+  TextField text = new TextField(20);
+\end_layout
+
+\begin_layout Plain Layout
+
+  Button b;    
+\end_layout
+
+\begin_layout Plain Layout
+
+  private int numClicks = 0;
+\end_layout
+
+\begin_layout Plain Layout
+
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+  public static void main(String[] args) {
+\end_layout
+
+\begin_layout Plain Layout
+
+    AL myWindow = new AL("My first window");
+\end_layout
+
+\begin_layout Plain Layout
+
+    myWindow.setSize(350,100);
+\end_layout
+
+\begin_layout Plain Layout
+
+    myWindow.setVisible(true);    
+\end_layout
+
+\begin_layout Plain Layout
+
+  } 
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Fachbegriffe
+\end_layout
+
+\begin_layout Standard
+Fachbegriffe in einer Fremdsprache oder Kommandos sollten einheitlich gekennzeic
+hnet werden.
+ Bei Latex verwendet man dazu 
+\begin_inset Quotes gld
+\end_inset
+
+logisches Markup
+\begin_inset Quotes grd
+\end_inset
+
+, bei Word oder Open/Libre-office wird all diesen Wörtern wird eine Vorlage
+ zugewiesen, das Aussehen wird dann an einer Stelle zentral festgelegt.
+ 
+\end_layout
+
+\begin_layout Standard
+Als Beispiel soll 
+\begin_inset Flex Emph
+status open
+
+\begin_layout Plain Layout
+Text to Speech
+\end_layout
+
+\end_inset
+
+
+\begin_inset Index idx
+status collapsed
+
+\begin_layout Plain Layout
+Text to Speech: Umwandlung von Texten in Sprache
+\end_layout
+
+\end_inset
+
+ dienen.
+ Solche Wörter sollte natürlich in ein Glossar aufgenommen werden.
+ 
+\end_layout
+
+\begin_layout Standard
+Oder der Befehl 
+\begin_inset Flex Strong
+status open
+
+\begin_layout Plain Layout
+dir
+\end_layout
+
+\end_inset
+
+ für die Kommandozeile.
+ Die Angabe von Dateinamen sollte auch einheitlich sein: entweder 
+\begin_inset Flex Emph
+status open
+
+\begin_layout Plain Layout
+/etc/passwd
+\end_layout
+
+\end_inset
+
+ oder 
+\begin_inset Flex Strong
+status open
+
+\begin_layout Plain Layout
+C:
+\backslash
+system32
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Zitieren
+\end_layout
+
+\begin_layout Standard
+Die Quellenangabe kann in Form eines Vollbelegs in der Fußnote
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+aus Zitat --- Wikipedia, Die freie Enzyklopädie, 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://de.wikipedia.org/w/index.php?title=Zitat
+\end_layout
+
+\end_inset
+
+, Abgerufen 2014-09-14
+\end_layout
+
+\end_inset
+
+(bei technischen Dokumenten eher unüblich) oder als Kurzbeleg am Schluss
+ der gesamten Arbeit aufgeführt werden.
+ Beim Kurzbeleg sind dabei verschiedene Formen üblich.
+ Der platzsparendste, aber am wenigsten aussagekräftige Zitierstil ist die
+ fortlaufende Nummerierung aller zitierten Quellen [123].
+\end_layout
+
+\begin_layout Standard
+Insbesondere in der Informatik üblich ist eine Kombination der ersten drei
+ Buchstaben des Autorennamens und der letzten beiden Ziffern des Erscheinungsjah
+res (z.
+ B.
+ „The04“ für Theisen 2004).
+ Wohl am weitesten verbreitet ist der vollständige Verfassernamen mit Erscheinun
+gsjahr, wobei mehrere Quellen desselben Autors innerhalb eines Jahres durch
+ fortlaufende Buchstaben kenntlich gemacht werden (z.
+ B.
+ „Theisen 2004c“).
+ Weniger üblich, aber am aussagekräftigsten ist die Quellenangabe unter
+ Hinzufügung eines Schlagwortes, das den mit der Materie vertrauten Leser
+ zumeist bereits die zitierte Quelle erkennen lässt, z.
+ B.
+ in der Form „Theisen (Wissenschaftliches Arbeiten, 2004)“.
+\end_layout
+
+\begin_layout Standard
+Obwohl mehrere Zitierstile bzw.
+ Zitiertechniken zur Verfügung stehen, werden in einem Dokument üblicherweise
+ nicht mehrere verwendet; ein ausgewählter Zitierstil wird im gesamten Dokument
+ konsequent beibehalten.
+ Ein gute Übersicht bietet 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "wiki:zitat"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Quellenverzeichnis
+\end_layout
+
+\begin_layout Standard
+Unter LaTeX kann das Programm BibTeX zur Erstellung von Literaturangaben
+ verwendet werden.
+ 
+\end_layout
+
+\begin_layout Itemize
+Links auf Wikipedia sollten vermieden werden.
+\end_layout
+
+\begin_layout Itemize
+Jeder Link sollte mit einem Abfragedatum versehen sein.
+\end_layout
+
+\begin_layout Itemize
+Das Literaturverzeichnis kommt an das Ende des Dokuments.
+\end_layout
+
+\begin_layout Standard
+Viele Details dazu findet man bei 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "wiki:zitat"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Rechtliches zum Zitieren
+\end_layout
+
+\begin_layout Standard
+Achtung: nicht gekennzeichnete Zitate (Plagiate) führen zu einer negativen
+ Beurteilung der Diplomarbeit.
+\end_layout
+
+\begin_layout Standard
+Nach 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "wiki:quelle"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+§ 57 des österreichischen Urheberrechtsgesetzes
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ris57"
+
+\end_inset
+
+ enthält detaillierte Vorschriften über die Quellenangabe, unter anderem:
+ Werden Stellen oder Teile von Sprachwerken nach §
+\begin_inset space \thinspace{}
+\end_inset
+
+46 vervielfältigt, so sind sie in der Quellenangabe so genau zu bezeichnen,
+ dass sie in dem benutzten Werke leicht aufgefunden werden können.
+ In den Erläuterungen (ErlRV) heißt es: Bei Entlehnungen aus umfangreichen
+ Werken muss also in der Quellenangabe auch die Seite, der Abschnitt, das
+ Kapitel oder der Akt, wo sich die entlehnte Stelle befindet, angeführt
+ werden (Dillenz, Materialien zum österreichischen Urheberrecht, 134, zitiert
+ nach 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dittrich"
+
+\end_inset
+
+, S.
+ 621)
+\end_layout
+
+\begin_layout Standard
+2002 nahm der österreichische OGH zur Frage der Quellenangabe in der Entscheidun
+g Riven Rock Stellung: Nach § 57 Abs 4 UrhG bedarf die Unterlassung einer
+ Quellenangabe der Rechtfertigung durch die im redlichen Verkehr geltenden
+ Gewohnheiten und Gebräuche.
+ Bei Auslegung dieser Bestimmung ist eine Abwägung der Interessen des Urhebers
+ mit jenen des zur freien Werknutzung Berechtigten nach dem Verständnis
+ loyaler, den Belangen des Urhebers mit Verständnis gegenübertretenden,
+ billig und gerecht denkenden Benutzern (Vinck aaO § 63 Rz 2) geboten und
+ danach zu beurteilen, ob dem freien Werknutzer neben der Nennung des Autors/Ver
+lags auch die Nennung des Namens des Übersetzers von in einer Rundfunksendung
+ verlesenen Roman-Zitaten zumutbar ist.
+\end_layout
+
+\begin_layout Section
+Bad Practice
+\end_layout
+
+\begin_layout Standard
+Was man vermeiden sollte -- diese Dinge führen zur Mehrarbeit und verursachen
+ zusätzlichen Stress in der hektischen Zeit knapp vor dem Abgabetermin.
+\end_layout
+
+\begin_layout Paragraph
+Stil
+\end_layout
+
+\begin_layout Itemize
+Extrem lange, geschachtelte Sätze und/oder endlose Textpassagen ohne Gliederung
+ durch Absätze.
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+nopagebreak
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Vielleicht bzw.
+ sinnvollerweise lassen Sie den Text auch von einer 
+\begin_inset Quotes gld
+\end_inset
+
+außenstehenden Person
+\begin_inset Quotes grd
+\end_inset
+
+ lesen.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Aufzählungen im Text statt Listen.
+ Wie man hier sieht dürfen bei Listen auch mehrere Sätze stehen.
+\end_layout
+
+\begin_layout Itemize
+
+\bar under
+Unterstreichen
+\bar default
+ ist ein Relikt aus 
+\begin_inset Quotes gld
+\end_inset
+
+Schreibmaschinen-Zeiten
+\begin_inset Quotes grd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Eine Diplomarbeit ist keine Erzählung.
+ Natürlich kann man als 
+\begin_inset Quotes gld
+\end_inset
+
+ich
+\begin_inset Quotes grd
+\end_inset
+
+ oder 
+\begin_inset Quotes gld
+\end_inset
+
+wir
+\begin_inset Quotes grd
+\end_inset
+
+ auf 
+\begin_inset Quotes gld
+\end_inset
+
+unsere Probleme
+\begin_inset Quotes grd
+\end_inset
+
+ eingehen, aber im Allgemeinen ist ein formaler, beschreibender und technischer
+ Stil einzuhalten.
+\end_layout
+
+\begin_layout Itemize
+Eine Diplomarbeit ist auch keine Email oder SMS: Schreiben Sie ganze Sätze
+ ohne kryptische Abkürzungen und Smileys.
+\end_layout
+
+\begin_layout Itemize
+Ein Mindestmaß an Interpunktion wird vorausgesetzt.
+ Eventuell lassen Sie den Text durch eine kundige Person Ihres Vertrauens
+ korrigieren.
+\end_layout
+
+\begin_layout Itemize
+Es gibt viele verschiedene Striche, und alle sehen verschieden aus: Gedankenstri
+che, Bindestriche und Minus kommen in einer Diplomarbeit häufig vor.
+\end_layout
+
+\begin_layout Itemize
+Weitere Wörter die Ihren Betreuer verzweifeln lassen -- natürlich nur bei
+ übermäßiger Verwendung
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Welcher/Welches, Hierbei
+\end_layout
+
+\end_deeper
+\begin_layout Paragraph
+Technik
+\end_layout
+
+\begin_layout Itemize
+(viele) händische Formatierungen statt Formatvorlagen.
+\end_layout
+
+\begin_layout Itemize
+zusätzliche manuelle Seitenumbrüche oder Leerzeilen für ein 
+\begin_inset Quotes gld
+\end_inset
+
+schöneres
+\begin_inset Quotes grd
+\end_inset
+
+ Layout.
+ Es gibt bei den Absatzformatierungen tolle Möglichkeiten für Abstände vor
+ und nach einem Absatz bzw.
+ zum Beeinflussen des Textflusses.
+\end_layout
+
+\begin_layout Itemize
+Arbeiten Sie mit dem Programm statt gegen das Programm:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Verweise als fixer Text.
+ Nutzen Sie die Möglichkeiten der Textverarbeitung.
+\end_layout
+
+\begin_layout Itemize
+Dinge die 
+\begin_inset Quotes gld
+\end_inset
+
+kompliziert
+\begin_inset Quotes grd
+\end_inset
+
+ einzugeben sind, sind meist falsch -- richtige Lösungen sind in allen Programme
+n auch 
+\begin_inset Quotes gld
+\end_inset
+
+leicht
+\begin_inset Quotes grd
+\end_inset
+
+ zu erreichen
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Oder Sie verwenden ein für Ihre Zwecke schlecht geeignetes Programm.
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Kontrollieren Sie beim fertigen PDF die Angaben unter Datei / Eigenschaften
+ -- dort sollten sinnvolle Dinge stehen.
+ Bei Latex wird dazu das Paket 
+\family typewriter
+
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+
+\family typewriter
+hyperref
+\end_layout
+
+\end_inset
+
+
+\family default
+ verwendet.
+\end_layout
+
+\begin_layout Section
+Details zu Formatierung
+\end_layout
+
+\begin_layout Subsection
+Schriftarten
+\end_layout
+
+\begin_layout Standard
+Die Word- und Libreoffice-vorlage verwenden etwas andere Schriften als das
+ Latex Dokument.
+\end_layout
+
+\begin_layout Section
+Beispiele
+\end_layout
+
+\begin_layout Subsection
+Zitieren mit Latex
+\end_layout
+
+\begin_layout Standard
+Am Beispiel der URL 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+url{http://de.wikibooks.org/wiki/LaTeX-Kompendium}
+\end_layout
+
+\end_inset
+
+ und des Buches 
+\begin_inset Quotes gld
+\end_inset
+
+LaTeX: Einführung
+\begin_inset Quotes grd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Man braucht eine 
+\family typewriter
+.bib
+\family default
+ Datei mit den notwendigen Informationen:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language={[LaTeX]TeX}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+@book{kopka1991latex,
+\end_layout
+
+\begin_layout Plain Layout
+
+  title={LaTeX: Einführung},
+\end_layout
+
+\begin_layout Plain Layout
+
+  author={Kopka, Helmut and Rahtz, Sebastian},
+\end_layout
+
+\begin_layout Plain Layout
+
+  volume={2},
+\end_layout
+
+\begin_layout Plain Layout
+
+  year={1991},
+\end_layout
+
+\begin_layout Plain Layout
+
+  publisher={Addison-Wesley} 
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+@online{latexKomp,
+\end_layout
+
+\begin_layout Plain Layout
+
+  author = {},
+\end_layout
+
+\begin_layout Plain Layout
+
+  title ={LaTeX-Kompendium - Wikibooks, Sammlung freier Lehr-, 
+\end_layout
+
+\begin_layout Plain Layout
+
+Sach- und Fachbücher},
+\end_layout
+
+\begin_layout Plain Layout
+
+  url = {http://de.wikibooks.org/wiki/LaTeX-Kompendium},
+\end_layout
+
+\begin_layout Plain Layout
+
+  lastchecked = {2014.09.14},
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Diese Einträge werden dann im Text verwendet: 
+\family typewriter
+
+\backslash
+cite{kopka1991latex} 
+\family default
+und das Ergebnis sieht dann so 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "kopka1991latex"
+
+\end_inset
+
+ und so 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "latexKomp"
+
+\end_inset
+
+ aus.
+ Gleichzeitig erscheinen diese Einträge auch im Literaturverzeichnis am
+ Ende des Dokuments (Format: 
+\family typewriter
+plaindin
+\family default
+).
+\end_layout
+
+\begin_layout Subsection
+Formatierungen 
+\end_layout
+
+\begin_layout Standard
+Der Autor kann natürlich auch eingreifen und zum Beispiel
+\begin_inset Newline newline
+\end_inset
+
+Zeilenumbrüche erzwingen und 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Leerzeilen -- aber das sollte man nicht machen.
+ 
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ein Seitenumbruch kostet mich auch nicht mehr als einen müden Lacher, ist
+ aber noch seltener wirklich sinnvoll.
+\end_layout
+
+\begin_layout Standard
+Schriftgrößen:
+\end_layout
+
+\begin_layout Itemize
+
+\size tiny
+tiny
+\size default
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\size scriptsize
+scriptsize
+\size default
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\size footnotesize
+footnotesize
+\size default
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\size small
+small
+\size default
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\size normal
+normalsize
+\size default
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\size large
+large
+\size default
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\size larger
+Large
+\size default
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\size largest
+LARGE
+\size default
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\size huge
+huge
+\size default
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\size giant
+Huge
+\size default
+ 
+\end_layout
+
+\begin_layout Enumerate
+Nummerierungen
+\end_layout
+
+\begin_layout Enumerate
+sind 
+\end_layout
+
+\begin_layout Enumerate
+auch 
+\end_layout
+
+\begin_layout Enumerate
+easy
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+bissl was fettes
+\series default
+ 
+\shape italic
+italienisches
+\shape default
+ 
+\bar under
+für unten drunter
+\bar default
+.
+\end_layout
+
+\begin_layout Subsection
+Fülltext
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+Blindtext
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+Planung
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%das komplette nächste Kapitel wird in der externen Datei diplomarbeit2.tex
+ gespeichert.
+ Es wird an diese Stelle im Dokument eingebaut.
+\end_layout
+
+\begin_layout Plain Layout
+
+%Damit ist es möglich, mehrere Personen an diverse Teile der Diplomarbeit
+ arbeiten zu lassen.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand input
+filename "diplomarbeit2.tex"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+Umsetzung
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+Blindtext
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+Ergebnisse
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% wer hat diese Kapitel geschrieben oder leer
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand{
+\backslash
+kapitelautor}{Autor: Susi Sorglos}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+blindmathpaper
+\backslash
+Blindtext
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+Evaluation
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% wer hat diese Kapitel geschrieben oder leer 
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand{
+\backslash
+kapitelautor}{Autor: Blindtext}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+Blindtext
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+Blinddocument
+\backslash
+Blindtext
+\backslash
+Blinddocument[2]
+\backslash
+Blindtext
+\backslash
+Blinddocument[5]
+\backslash
+Blindtext
+\backslash
+Blinddocument[10]
+\backslash
+Blindtext
+\backslash
+Blindtext
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%
+\end_layout
+
+\begin_layout Plain Layout
+
+% wer hat diese Kapitel geschrieben oder leer
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand{
+\backslash
+kapitelautor}{}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+\start_of_appendix
+Anhang 1
+\begin_inset CommandInset label
+LatexCommand label
+name "chap:Anhang-1"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+was auch immer
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset index_print
+LatexCommand printindex
+type "idx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "diplom"
+options "plaindin"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
