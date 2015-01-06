@@ -12,4 +12,11 @@ DCL
 		Channels
 		PacketComponents
 sblit
+	Idee
+	Anforderungen
+	Kommunikation
+	File-Verarbeitung
+		Konflikterkennung /-lösung
+		Reaktion auf Dateiänderung		
+	Partnerschaften
 	GUI
