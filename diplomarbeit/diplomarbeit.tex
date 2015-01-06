@@ -627,9 +627,9 @@ und des Buches ,,\LaTeX{}: Einführung``.
 
 Man braucht eine \texttt{.bib} Datei mit den notwendigen Informationen:
 
-\inputencoding{latin9}\begin{lstlisting}[language={[LaTeX]TeX}]
+\begin{lstlisting}[language={[LaTeX]TeX},inputencoding={utf8},extendedchars=false]
 @book{kopka1991latex,
-  title={LaTeX: Einf�hrung},
+  title={LaTeX: Einführung},
   author={Kopka, Helmut and Rahtz, Sebastian},
   volume={2},
   year={1991},
@@ -639,12 +639,11 @@ Man braucht eine \texttt{.bib} Datei mit den notwendigen Informationen:
 @online{latexKomp,
   author = {},
   title ={LaTeX-Kompendium - Wikibooks, Sammlung freier Lehr-, 
-Sach- und Fachb�cher},
+Sach- und Fachbücher},
   url = {http://de.wikibooks.org/wiki/LaTeX-Kompendium},
   lastchecked = {2014.09.14},
 }
 \end{lstlisting}
-\inputencoding{utf8}
 
 Diese Einträge werden dann im Text verwendet: \texttt{\textbackslash{}cite\{kopka1991latex\}
 }und das Ergebnis sieht dann so \cite{kopka1991latex} und so \cite{latexKomp}
