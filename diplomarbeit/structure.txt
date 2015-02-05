@@ -12,8 +12,12 @@ DCL
 		Application-to-Service-Protokoll
 	Implementierung
 		Link
+			Überlegung AES-verschlüsselte TCP-Verbindung bzw. TLS - Problem mit NAT-Traversal
 		Channels
 		PacketComponents
+	Application Channels
+		Aktuelle Umsetzung
+		Künftige Variationen - Direct, Routed
 	Tutorial DCL Application Library
 sblit
 	Idee
@@ -24,3 +28,6 @@ sblit
 		Reaktion auf Dateiänderung		
 	Partnerschaften
 	GUI
+GUI
+	Idee - System-Tray, Zurückhaltend
+	SWT - Vorteile
