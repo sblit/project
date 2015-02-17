@@ -31,3 +31,11 @@ sblit
 GUI
 	Idee - System-Tray, Zurückhaltend
 	SWT - Vorteile
+	[SWT - Nachteile] (Kein What-you-see-is-what-you-get-Editor)
+	[Verwendetes Programmier-Pattern]
+	Benutzerhandbuch für das GUI
+		Beinhaltet diverse Screenshots von den verschiedenen Plattformen
+Website
+	Konzept
+	Umsetzung
+	[Mock-Up der Produktseite (sofern das noch während der Diplomarbeit passiert)]
