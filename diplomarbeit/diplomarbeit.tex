@@ -1,5 +1,3 @@
-%% LyX 2.1.2 created this file.  For more info, see http://www.lyx.org/.
-%% Do not edit unless you really know what you are doing.
 \documentclass[a4paper,ngerman,naustrian,DIV=12,BCOR=1cm]{scrbook}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -18,10 +16,13 @@
  bookmarks=true,bookmarksnumbered=false,bookmarksopen=false,
  breaklinks=true,pdfborder={0 0 0},backref=false,colorlinks=false]
  {hyperref}
-\hypersetup{pdftitle={Diplomarbeit Titel},
- pdfauthor={Wer auch immer},
+\hypersetup{pdftitle={sblit},
+ pdfauthor={Martin Exner, Andreas Novak, Nikola Szucsich},
  pdfsubject={Diplomarbeit},
- pdfkeywords={dies, das}}
+ pdfkeywords={Diplomarbeit}}
+
+% Serifenschrift für Überschriften
+\addtokomafont{disposition}{\rmfamily}
 
 \makeatletter
 
@@ -101,8 +102,9 @@
 %\mbox{}\marginpar{\raggedleft\hspace{0pt}Autor: Hans Huber}
 
 %% kopf links: [linke] und {rechte} Seite
-\lhead[\kopfbild]{\kopfkapl}
-\rhead[\kopfkapr]{\kopfbild}
+
+\lhead[\kopfbild]{\fancyplain{}{\kopfkapl}}
+\rhead[\fancyplain{}{\kopfkapr}]{\kopfbild}
 \chead{}
 
 \lfoot[\kopfseitenummer]{\kapitelautor}
@@ -136,21 +138,19 @@ A-1030 Wien :: Tel +43 1 24215-10 :: Fax DW 18
 \begin{center}
 \textbf{\LARGE{}Diplomarbeit}{\large{}}\\
 {\large{}\vspace{15mm}
- }\textbf{\large{}eventuell KURZTITEL}\\
-\textbf{\large{}Ausgeschriebener Titel der Diplomarbeit}\\
+ }\textbf{\large{}sblit}\\
  \vspace{15mm}
  ausgeführt an der\\
- Höheren Abteilung für Informationstechnologie/Ausbildungsschwerpunkt\\
+ Höheren Abteilung für Informationstechnologie/Netzwerktechnik\\
  der Höheren Technischen Lehranstalt Wien 3 Rennweg\\
  \vspace{1cm}
- im Schuljahr 20??/20??\\
+ im Schuljahr 2014/2015\\
  \vspace{1cm}
  durch\\
  \vspace{0.5cm}
-\textbf{\large{}Mitarbeiter Eins (alphabetisch)}\\
-\textbf{\large{}Mitarbeiter Zwei}\\
-\textbf{\large{}Mitarbeiter Drei}\\
-\textbf{\large{}Mitarbeiter Vier}\\
+\textbf{\large{}Martin Exner}\\
+\textbf{\large{}Andreas Novak}\\
+\textbf{\large{}Nikola Szucsich}\\
 
 \par\end{center}{\large \par}
 
@@ -158,8 +158,7 @@ A-1030 Wien :: Tel +43 1 24215-10 :: Fax DW 18
 \vspace{20mm}
  \normalsize unter der Anleitung von\\
  \vspace{0.5cm}
- Hauptbetreuer\\
-eventuell Nebenbetreuer
+ August Hörandl
 \par\end{center}
 
 \begin{center}
@@ -226,19 +225,13 @@ BGBl. II Nr. 123/97.
 
 Liste der betreuenden Lehrer: 
 
-<{[}Dir|AV|Prof{]}, akad. Grad, Vorname Name Hauptbetreuer> 
+Prof. DI August Hörandl, \textit{Hauptbetreuer}
 
-<{[}Dir|AV|Prof{]}, akad. Grad, Vorname Name Hauptbetreuer Stellvertreter> 
+Prof. DI Franz Breunig, \textit{Betreuer}
 
-<{[}Dir|AV|Prof{]}, akad. Grad, Vorname Name Betreuer> ... (in alphabetischer
-Reihenfolge des Nachnamens) 
-
-<{[}Dir|AV|Prof{]}, akad. Grad, Vorname Name Betreuer> 
+Prof. DI Herbert Sasshofer, \textit{Betreuer}
 
 \vspace{10mm}
-
-
-Liste der Kooperationspartner:%falls vorhanden
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Verzeichnisse -- machen wir mit fancy headern
