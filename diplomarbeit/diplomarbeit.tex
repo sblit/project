@@ -174,7 +174,7 @@ Wien, \today
 % Auf Seiten mit einem neuen Kapitel ist keine Kopfzeile -- kann man sich aber wünschen
 \thispagestyle{fancy}
 
-\input{content/zusammenfassung.tex}
+\input{content/kurzfassung.tex}
 
 
 \addchap*{Abstract}
@@ -245,6 +245,11 @@ Prof. DI Herbert Sasshofer, \textit{Betreuer}
 \pagenumbering{arabic}
 \pagestyle{fancy}
 \thispagestyle{fancy} 
+
+
+
+\input{content/dcl.tex}
+\input{content/sblit.tex}
 
 
 \chapter{Beschreibung der Formatierung}
@@ -679,10 +684,84 @@ drunter}.
 
 \chapter{Planung}
 
-%das komplette nächste Kapitel wird in der externen Datei diplomarbeit2.tex gespeichert. Es wird an diese Stelle im Dokument eingebaut.
-%Damit ist es möglich, mehrere Personen an diverse Teile der Diplomarbeit arbeiten zu lassen.
+\section{Kapitel aus der anderen
+Datei}\label{kapitel-aus-der-anderen-datei}
 
-\input{diplomarbeit2.tex}
+Dieses Kapitel wurde als \emph{diplomarbeit2.md} geschrieben und dann
+mit \emph{pandoc} in \TeX~umgewandelt.
+
+\begin{lstlisting}[language=bash]
+pandoc --listings -s diplomarbeit2.md -o diplomarbeit2.tex 
+\end{lstlisting}
+
+Wie man sieht ist das ganz einfach, sogar Listings sind möglich. Und nun
+zu einem Bild.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{HTL3RLogo.png}
+\caption{Der Text steht unterhalb}
+\end{figure}
+
+Achtung: Pandoc skaliert die Bilder nicht! Hier hilft nur eine
+vorhergehende Skalierung des Bildes. Oder nachträgliches Editieren --
+ganz einfach die passende Breite in der \emph{.tex} Datei ausbessern.
+
+Man kann auch die Breite aber auch durch La\TeX~Befehle angeben -- das
+ändert aber die Standardbreite aller folgenden Bilder!
+
+\setkeys{Gin}{width=0.6\textwidth,}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{HTL3RLogo.png}
+\caption{Das kleinere Bild}
+\end{figure}
+
+\setkeys{Gin}{width=2cm}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{HTL3RLogo.png}
+\caption{Das ganz kleine Bild}
+\end{figure}
+
+Auch Listen sind kein Problem, wichtig sind nur Leerzeilen zwischen den
+Listenpunkten. Hier sieht man eine einfache Aufzählung.
+
+\begin{itemize}
+\item
+  wichtig
+\item
+  auch ganz lange Texte können bei Listen geschrieben werden.
+
+  Sogar mehrere Absätze sind möglich.
+\item
+  Ende der Liste.
+\end{itemize}
+
+Welches Zeichen am Anfang der Liste steht ist dabei leicht einzustellen,
+im \emph{pandoc} Manual gibt es nähere Infos:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  eins
+\item
+  zwei
+
+  \begin{enumerate}
+  \def\labelenumii{\roman{enumii}.}
+  \itemsep1pt\parskip0pt\parsep0pt
+  \item
+    zwei eins -- Mindestens 4 Zeichen eingerückt
+  \item
+    zwei zwei
+  \end{enumerate}
+\item
+  drei. \emph{Pandoc} zählt richtig, das Zeichen am Anfang der Zeile ist
+  nur ein Muster!
+\end{enumerate}
 
 
 \chapter{Umsetzung}
