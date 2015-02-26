@@ -1,0 +1,47 @@
+
+Da die Internetanbindungen der meisten Haushalte und somit des Großteils der Zielgruppe von sblit über
+öffentliche IP-Adressen verfügen, die sich periodisch ändern, ist ein anderes Adressierungskonzept
+innerhalb der Kommunikationsschicht von Nöten, um Teilnehmer permanent identifizieren zu können. %TODO Notwendigkeit von permanenter Identifikation
+
+Asymmetrische Verschlüsselungsverfahren wie RSA eignen sich durch ihre Eigenschaften ausgezeichnet für
+die Adressierung innerhalb der Kommunikationsschicht.
+\tags{key-info, schlüsselpaar, asymmetrisch}
+Bei asymmetrischen Verschlüsselungsverfahren kommen sogenannte Schlüsselpaare, bestehend aus zwei
+Schlüsseln, zum Einsatz. Die Besonderheit liegt darin, dass eine Nachricht, die mit einem Schlüssel
+aus dem Schlüsselpaar verschlüsselt wurde, bei asymmetrischen Verfahren im Gegensatz zu symmetrischen
+Verfahren nicht mit dem selben Schlüssel auch wieder entschlüsselt werden kann, sondern ausschließlich
+mit dem anderen Schlüssel des Schlüsselpaars.
+Gleichzeitig kann aus einem Schlüssel eines Schlüsselpaars der dazugehörige andere Schlüssel des
+Schlüsselpaars nicht in absehbarer Zeit berechnet werden.
+
+Dadurch wird es möglich, ein Adressierungssystem umzusetzen, das die Anforderungen im Bezug auf
+Überprüfbarkeit der Adressen erfüllt. Dazu wird einer der beiden Schlüssel aus dem Schlüsselpaar
+als Adresse angenommen und somit bewusst veröffentlicht, während der andere Schlüssel aus dem
+Schlüsselpaar geheim gehalten wird.
+Der Schlüssel aus dem Schlüsselpaar, der veröffentlicht wird, wird auch \emph{Öffentlicher Schlüssel}
+oder \emph{Public Key} genannt, der weiterhin geheim gehaltene Schlüssel \emph{Privater Schlüssel} oder
+\emph{Private Key}.
+
+Öffentliche Schlüssel als Adressen haben den Vorteil, dass sie ohne höhere Behörde oder zentrale Stelle
+auf ihre Echtheit überprüft werden können und somit fälschungssicher sind. Ein Mechanismus zur
+Überprüfung solch einer Adresse wird im Nächsten Abschnitt beschrieben.
+
+\subsection{Überprüfung von Adressen}
+Dadurch, dass eine mit einem öffentlichen Schlüssel verschlüsselte Nachricht nicht mit wieder mit dem
+öffentlichen Schlüssel entschlüsselt werden kann, sondern ausschließlich mit dem dazugehörigen privaten
+Schlüssel, kann der Besitz des gesamten Schlüsselpaars bewiesen werden, ohne mehr als den öffentlichen
+Schlüssel preisgeben zu müssen: Eine beliebige Folge von Daten wird vom überprüfenden Teilnehmer
+generiert, mit der Adresse, also dem öffentlichen Schlüssel des zu überprüfenden Teilnehmers
+verschlüsselt und anschließend an diesen übermittelt. Dort wird die empfangene Nachricht vom zu
+überprüfenden Teilnehmer wieder entschlüsselt und zurück an den überprüfenden Teilnehmer gesendet.
+Decken sich die ursprünglich vom überprüfenden Teilnehmer generierten Daten mit denen, die vom zu
+überprüfenden Teilnehmer entschlüsselt wurden, ist der Besitz des gesamten Schlüsselpaars, und nicht
+lediglich des öffentlichen Schlüssels, bewiesen.
+
+%TODO konkretes Beispiel
+
+%TODO Erklärung der Challenge mit Nikolas mergen
+
+\subsection{Eindeutigkeit von Adressen}
+
+Siehe \cite{crypto.stackexchange.com/a/2559:rsa-key-collision}.

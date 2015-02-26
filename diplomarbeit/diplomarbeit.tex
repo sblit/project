@@ -116,6 +116,11 @@
 \newcommand{\kap}[1]{Kapitel~\ref{#1}, Seite~\pageref{#1}}
 \newcommand{\siehe}[1]{siehe \kap{#1}}
 
+
+%### TAGS COMMAND ####
+\newcommand{\tags}[2]{\hspace{0in}#2}
+%\newcommand{\tags}[1]{\textit{Tags: #1}}
+
 %%%%%Anfang Titelseite
 \pagenumbering{roman}
 \title{Diplomarbeit}
@@ -247,9 +252,9 @@ Prof. DI Herbert Sasshofer, \textit{Betreuer}
 \thispagestyle{fancy} 
 
 
-\addchap*{Decentralized Communication Layer}
-\renewcommand{\kapitelautor}{Autor: Hans Huber}
-\input{content/dcl_einfuehrung.tex}
+
+\input{content/dcl.tex}
+\input{content/sblit.tex}
 
 
 \chapter{Beschreibung der Formatierung}

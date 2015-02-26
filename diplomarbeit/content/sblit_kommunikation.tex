@@ -1,12 +1,13 @@
-Sblit verwendet zur Kommunikation fünf verschiedene Nachrichten:
+Sblit verwendet zur Kommunikation fÃ¼nf verschiedene Nachrichten:
 \begin{itemize}
 	\item Authentifizierungssanfrage
 	\item Antwort auf eine Authentifizierungssanfrage
 	\item Dateianfragen
 	\item Antwort auf eine Dateianfrage
-	\item Die eigentliche Übertragung der Datei
+	\item Die eigentliche Ãœbertragung der Datei
 \end{itemize}
 \subsubsection*{Authentifizierungssanfrage}
+<<<<<<< HEAD
 Angenommen zwei Geräte eines Besitzers wollen Daten austauschen. Wie können sich diese sicher sein, dass es sich auch um das richtige Gerät handelt? Hier kommt die Authentizierung ins Spiel. Authentizitätsanfragen dienen zur Sicherstellung der Authentizität des Gerätes (im Folgenden Gerät A), mit dem ein anderes Gerät (im Folgenden Gerät B) eine Verbindung aufbaut. Dazu schickt das Gerät B zufällige Daten an Gerät A mit der Aufforderung, diese zu verschlüsseln. Die Gesamtlänge der Daten, die mit RSA-2048 verschlüsselt werden, darf maximal 128 Byte lang sein. Um Gerät A 64 Byte zur Verfügung zu stellen, beträgt die Länge der von Gerät B gesendeten Daten 64 Byte. Diese 64 Byte werden von Gerät A benötigt, um zu verhindern, dass Gerät B sich gewünschte Werte von Gerät A verschlüsseln lässt.
 
 \subsubsection*{Antwort auf eine Authentifizierungssanfrage}
@@ -22,3 +23,20 @@ Nach Empfang der Antwort wird zunächst überprüft, ob die Datei benötigt wird. Au
 
 \subsubsection*{Die eigentliche Übertragung der Datei}
 Bei der eigentlichen Übertragung der Datei werden folgenden Daten mit der Datei mitgesendet: die Geräte, auf denen die neuste Version schon vorhanden ist, der Pfad, in dem die Datei gespeichert ist und der Hash der aktuellen Datei. Um einem Gerät, das die neuste Version schon besitzt keine unnötige Dateianfrage zu schicken, werden die Geräte, die diese Version schon besitzen, ebenfalls mit einer Datei mitgeschickt. Der Pfad wird mitgeschickt, um die Datei auf dem zu synchronisierenden Gerät am gleichen relativen Ort zu speichern, wie auf dem Gerät, von dem die Datei kommt. Um sicherzustellen, dass die Datei auch so ankommt, wie sie verschickt wird, wird ein Hash der Datei mitgesendet. Verhasht man die Datei, muss das Ergebnis mit dem mitgeschickten Hash übereinstimmen. Andernfalls entsteht ein Übertragungsfehler und die Datei muss neu gesendet werden.
+=======
+AuthentizitÃ¤tsanfragen dienen zur Sicherstellung der AuthentizitÃ¤t des GerÃ¤tes (im Folgenden GerÃ¤t A), mit dem ein anderes GerÃ¤t (im Folgenden GerÃ¤t B) eine Verbindung aufbaut. Dazu schickt das GerÃ¤t B zufÃ¤llige Daten an GerÃ¤t A mit der Aufforderung, diese zu verschlÃ¼sseln. Die LÃ¤nge der gesendeten Daten betrÃ¤gt dabei 64 Byte, um GerÃ¤t A weitere 64 Byte zur VerfÃ¼gung zu stellen, um zu verhindern, dass GerÃ¤t B sich einen bestimmten Wert von GerÃ¤t A verschlÃ¼sseln lÃ¤sst.
+
+\subsubsection*{Antwort auf eine Authentifizierungssanfrage}
+Bevor die Daten wieder zurÃ¼ckgeschickt werden, mÃ¼ssen diese von GerÃ¤t B verschlÃ¼sselt werden. Dies geschieht mit dem Private-Key des eben genannten GerÃ¤tes. Dabei wird vorher noch ein zufÃ¤lliger Wert an die empfangenen Daten angefÃ¼gt, um das unter Authentifizierungssanfragen beschriebene Problem zu lÃ¶sen.
+Wird dieses Paket nun von GerÃ¤t B empfangen, kann der Inhalt mit dem Public-Key des GerÃ¤tes A, also dessen Adresse, entschlÃ¼sselt werden. Hierbei werden die 64 Byte am Anfang der erhaltenen Daten mit den ursprÃ¼nglich gesendeten 64 Byte verglichen. Stimmen die beiden Werte Ã¼berein, konnte das GerÃ¤t seine AuthentizitÃ¤t beweisen. Stimmen diese jedoch nicht Ã¼berein, handelt es sich um einen BetrÃ¼ger, der offensichtlich den richtigen Private-Key zu seiner Adresse nicht kennt.
+
+\subsubsection*{Dateianfrage}
+Bevor eine Datei an ein GerÃ¤t verschickt wird, schickt das GerÃ¤t, das die Datei besitzt (im Folgenden GerÃ¤t A) eine Dateianfrage an ein anderes GerÃ¤t (im Folgenden GerÃ¤t B). Dies hat 2 GrÃ¼nde: Erstens muss eruiert werden, ob die Datei Ã¼berhaupt von GerÃ¤t B benÃ¶tigt wird, oder ob besagtes GerÃ¤t schon diese Datei besitzt. Zweitens ist die MÃ¶glichkeit eine Konfliktes gegeben. Eine nÃ¤here ErklÃ¤rung zu Konflikten finden Sie im Kapitel \nameref{Konflikt} auf Seite \pageref{Konflikt}. Daher werden sowohl der zu Sblits Hauptordner relative Dateipfad, als auch ein Versionsverlauf mit allen Hashes der Datei seit der letzten Version, die auf allen GerÃ¤ten verteilt war, an das GerÃ¤t B versendet. 
+
+\subsubsection*{Antwort auf eine Dateianfrage}
+Die Antwort auf eine Dateianfrage beinhaltet den Pfad der Datei, ob die Datei benÃ¶tigt wird [-> anders formulieren] und den letzten Hashwert in der Dateianfrage. Nach Empfang der Dateianfrage wird zunÃ¤chst geprÃ¼ft, ob die Datei vorhanden und auf der aktuellsten Version bzw. ob ein Konflikt aufgetreten ist. Die Konflikterkennung finden Sie im Kapitel \nameref{Konflikterkennung} auf der Seite \pageref{Konflikterkennung}. Ist die lokale Datei nicht aktuell, wird das Feld, in dem steht, ob das File benÃ¶tigt wird, auf den Hexadezimalwert 0x01 gesetzt. Ist die Datei auf dem aktuellsten Stand, wird besagtes Feld auf den Hexadezimalwert 0x00 gesetzt. 
+Nach Empfang der Antwort wird zunÃ¤chst Ã¼berprÃ¼ft, ob die Datei benÃ¶tigt wird. AuÃŸerdem wird zusÃ¤tzlich Ã¼berprÃ¼ft, ob der Hashwert der Datei mit dem erhaltenen Pfad Ã¼bereinstimmt. Stimmt der Hashwert in der Anfrage nicht mit dem aktuellen Hashwert Ã¼berein, wird die Antwort verworfen. Stimmt dieser jedoch Ã¼berein kann die Datei nun im nÃ¤chsten Schritt verschickt werden.
+
+\subsubsection*{Die eigentliche Ãœbertragung der Datei}
+Bei der eigentlichen Ãœbertragung der Datei werden folgenden Daten mit der Datei mitgesendet:
+>>>>>>> 0264c2515d7bf000d431711e6614a0add6e101e5
