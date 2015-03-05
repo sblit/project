@@ -21,9 +21,6 @@
  pdfsubject={Diplomarbeit},
  pdfkeywords={Diplomarbeit}}
 
-% Serifenschrift für Überschriften
-\addtokomafont{disposition}{\rmfamily}
-
 \makeatletter
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
@@ -50,6 +47,12 @@
 %% Aufzählungen nicht so weit einrücken
 \usepackage{enumitem}
 %\setitemize{leftmargin=*} 
+
+% Serifenschrift für Überschriften
+\addtokomafont{disposition}{\rmfamily}
+
+% Serifenschrift für Description-Lists
+\setlist[description]{font=\rmfamily}
 
 %\usepackage{caladea}
 %\usepackage[T1]{fontenc}
