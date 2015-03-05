@@ -69,6 +69,11 @@
 \addto\captionsngerman{\renewcommand{\lstlistingname}{Listing}}
 \renewcommand{\lstlistingname}{Listing}
 
+% to insert a space after use of an argument-less command depending on what follows (\xspace)
+\usepackage{xspace}
+
+% global definitions
+\input{content/_defs.tex}
 
 % glossaries
 \usepackage[toc,acronym]{glossaries}
@@ -124,11 +129,6 @@
 % einfaches "siehe ..." - das Ziel muss man markieren
 \newcommand{\kap}[1]{Kapitel~\ref{#1}, Seite~\pageref{#1}}
 \newcommand{\siehe}[1]{siehe \kap{#1}}
-
-
-%### TAGS COMMAND ####
-\newcommand{\tags}[2]{\hspace{0in}#2}
-%\newcommand{\tags}[1]{\textit{Tags: #1}}
 
 %%%%%Anfang Titelseite
 \pagenumbering{roman}
@@ -815,7 +815,6 @@ was auch immer
 \bibliographystyle{plaindin}
 \bibliography{diplom}
 
-%\renewcommand*{\acronymtype}{acronym}
 \printglossary[type=\acronymtype]
 \printglossary
 
