@@ -69,6 +69,12 @@
 \addto\captionsngerman{\renewcommand{\lstlistingname}{Listing}}
 \renewcommand{\lstlistingname}{Listing}
 
+
+% glossaries
+\usepackage[toc,acronym]{glossaries}
+\makeglossaries
+\input{content/glossary.tex}
+
 \begin{document}
 %%%%%%
 % Weitere Einstellungen siehe Latex-Vorspann%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -808,5 +814,9 @@ was auch immer
 
 \bibliographystyle{plaindin}
 \bibliography{diplom}
+
+%\renewcommand*{\acronymtype}{acronym}
+\printglossary[type=\acronymtype]
+\printglossary
 
 \end{document}
