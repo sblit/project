@@ -2,10 +2,13 @@
 \renewcommand{\kapitelautor}{Autor: Martin Exner}
 
 \section{Einleitung}
-% TODO niemand hat besondere berechtigungen, niemand kann die funktion des netzwerks beeinträchtigen
 Um die Hauptanforderung an die Umsetzung, den Verzicht auf zentrale Server im System, realisieren zu können,
 wird ein \gls{p2pnet} benötigt. Über dieses läuft die Kommunikation der Synchronisationsanwendung.
 Dabei muss das Netzwerk vollständig dezentral aufgebaut sein, um ohne Server funktionieren zu können.
+Gleichzeitig müssen alle Teilnehmer des Netzwerks die selben Berechtigungen haben, weswegen es keinen
+Teilnehmer geben kann, der besondere Befugnisse hat. Deshalb ist es notwendig, dass sich das Netzwerk
+und die Teilnehmer selbst organisieren und verwalten, ohne dabei auf ein zentrales Organ angewiesen
+zu sein.
 
 Dieses \gls{p2pnet} ist in einer separaten \gls{cl}, \gls{dcl}, umgesetzt.
 Das ermöglicht es einerseits, \gls{dcl} für Anwendungen von fremden Entwicklern zu öffnen, sodass diese auf das schon bestehende Netzwerk
@@ -17,3 +20,6 @@ zwischen \gls{cl} und eigentlicher Synchronisationsanwendung die Umsetzung beide
 
 \section{Adressierung}
 \input{content/dcl_adressierung.tex}
+
+\section{Routing}
+\input{content/dcl_routing.tex}

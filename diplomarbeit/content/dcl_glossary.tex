@@ -17,3 +17,14 @@
 
 \newacronym[see={[Glossar:]{gls_dcl}}]{dcl}{DCL}{Decentralized Communication Layer\glsadd{gls_dcl}}
 
+\newglossaryentry{aenc}{
+	name=Asymmetrisches Verschlüsselungsverfahren,
+	description={Verschlüsselungsverfahren, bei dem zur Entschlüsselung einer Nachricht ein anderer Schlüssel verwendet wird, als zur Verschlüsselung verwendet wurde},
+	see={[Siehe:]{rsa}}
+}
+
+\newglossaryentry{rsa}{
+	name=RSA,
+	description={\gls{aenc}, benannt nach und erstmals veröffentlich von Ron Rivest, Adi Shamir and Leonard Adleman \cite{wikipedia:rsa}},
+	see={[Siehe:]{aenc}}
+}
