@@ -1,7 +1,18 @@
 
+\newglossaryentry{cl}{
+	name=Kommunikationsschicht,
+	description={Eine Schicht im netzwerktechnischen Sinne, die zur Kommunikation verwendet wird},
+	see={[Siehe:]{gls_dcl}}
+}
+
+\newglossaryentry{p2pnet}{
+	name=Peer-to-Peer-Netzwerk,
+	description={Ein Kommunikationsnetzwerk, in dem die einzelnen Kommunikationspartner im Gegensatz zu einer klassischen Client-Server-Infrastruktur direkt miteinander kommunizieren}
+}
+
 \newglossaryentry{gls_dcl}{
 	name=Decentralized Communication Layer,
-	description={Die auf einem dezentralen Peer-to-Peer-Netzwerk basierende Kommunikationsschicht, die \sblit zur Kommunikation benutzt}
+	description={Die auf einem dezentralen \gls{p2pnet} basierende \gls{cl}, die \sblit zur Kommunikation benutzt}
 }
 
 \newacronym[see={[Glossar:]{gls_dcl}}]{dcl}{DCL}{Decentralized Communication Layer\glsadd{gls_dcl}}

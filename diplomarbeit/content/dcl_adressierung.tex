@@ -1,10 +1,11 @@
 
-Da die Internetanbindungen der meisten Haushalte und somit des Großteils der Zielgruppe von sblit über
+\subsection{Notwendigkeit}
+Da die Internetanbindungen der meisten Haushalte und somit des Großteils der Zielgruppe von \sblit über
 öffentliche IP-Adressen verfügen, die sich periodisch ändern, ist ein anderes Adressierungskonzept
-innerhalb der Kommunikationsschicht von Nöten, um Teilnehmer permanent identifizieren zu können. %TODO Notwendigkeit von permanenter Identifikation
+innerhalb der \gls{cl} von Nöten, um Teilnehmer permanent identifizieren zu können. %TODO Notwendigkeit von permanenter Identifikation
 
 Asymmetrische Verschlüsselungsverfahren wie RSA eignen sich durch ihre Eigenschaften ausgezeichnet für
-die Adressierung innerhalb der Kommunikationsschicht.
+die Adressierung innerhalb des \gls{dcl}.
 \tags{key-info, schlüsselpaar, asymmetrisch}
 Bei asymmetrischen Verschlüsselungsverfahren kommen sogenannte Schlüsselpaare, bestehend aus zwei
 Schlüsseln, zum Einsatz. Die Besonderheit liegt darin, dass eine Nachricht, die mit einem Schlüssel
@@ -24,7 +25,7 @@ oder \emph{Public Key} genannt, der weiterhin geheim gehaltene Schlüssel \emph{
 
 Öffentliche Schlüssel als Adressen haben den Vorteil, dass sie ohne höhere Behörde oder zentrale Stelle
 auf ihre Echtheit überprüft werden können und somit fälschungssicher sind. Ein Mechanismus zur
-Überprüfung solch einer Adresse wird im Nächsten Abschnitt beschrieben.
+Überprüfung solch einer Adresse wird im nächsten Abschnitt beschrieben.
 
 \subsection{Überprüfung von Adressen}
 Dadurch, dass eine mit einem öffentlichen Schlüssel verschlüsselte Nachricht nicht mit wieder mit dem
@@ -43,5 +44,5 @@ lediglich des öffentlichen Schlüssels, bewiesen.
 %TODO Erklärung der Challenge mit Nikolas mergen
 
 \subsection{Eindeutigkeit von Adressen}
+Die Eindeutigkeit der generierten RSA-Schlüsselpaare kann nicht garantiert werden, eine Kollision ist jedoch unwahrscheinlich genug, um praktisch nicht aufzutreten. \cite{crypto.stackexchange.com/a/2559:rsa-key-collision}
 
-Siehe \cite{crypto.stackexchange.com/a/2559:rsa-key-collision}.
