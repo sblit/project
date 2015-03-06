@@ -28,3 +28,42 @@
 	description={\gls{aenc}, benannt nach und erstmals veröffentlich von Ron Rivest, Adi Shamir and Leonard Adleman \cite{wikipedia:rsa}},
 	see={[Siehe:]{aenc}}
 }
+
+\newglossaryentry{hash}{
+	name=Hashalgorithmus,
+	plural=Hashalgorithmen,
+	description={Algorithmus, der eine große Eingabemenge auf eine kleinere Zielmenge (\gls{hashval}) abbildet \cite{wikipedia:hash}}
+}
+
+\newglossaryentry{Hash}{
+	name=Hash,
+	description={Im Quellcode von \gls{dcl} definierte Klasse zur Anwendung von \glspl{hash} auf \gls{Data}-Objekte}
+}
+
+\newglossaryentry{hashval}{
+	name=Hashwert,
+	plural=Hashwerte,
+	description={Ergebnis bei Anwendung eines \gls{hash}}
+}
+
+\newglossaryentry{digestlength}{
+	name=Digest Length,
+	description={Die Länge der \glspl{hashval} eines \gls{hash}}
+}
+
+\newglossaryentry{cnt}{
+	name=CircleNetworkType,
+	description={Standard \gls{nt} im \gls{dcl}},
+	see={[Siehe:]{nt}}
+}
+
+\newglossaryentry{nt}{
+	name=Network Type,
+	description={Beschreibt ein Netzwerk innerhalb des \gls{dcl} samt Adresskonzept und Routingverfahren},
+	see={[Siehe:]{cnt}}
+}
+
+\newglossaryentry{Data}{
+	name=Data,
+	description={Im Quellcode von \gls{dcl} definierte Klasse zur Speicherung von Binärdaten}
+}
