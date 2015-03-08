@@ -1,0 +1,45 @@
+
+\subsection*{FlexNum}
+\label{dcl-packetcomponents-flexnum}
+Ein \gls{FlexNum}-Component ist ein \gls{PacketComponent} zur Übertragung einer bis zu 64 Bits großen
+Ganzzahl.
+Die Besonderheit liegt darin, dass der \gls{FlexNum}-Component zwar Zahlen bis zu $2^{64}-1$ übertragen
+kann, für Zahlen bis $2^{7}-1$, welche bereits mit 7 Bits darstellbar sind, aber trotzdem nur ein Byte
+zur Übertragung benötigt.
+
+
+Nachfolgend ist jener Teil des Quellcodes von \gls{dcl} angeführt, welcher zum Lesen eines
+\gls{FlexNum}-Components angewandt wird.
+
+\javalisting
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[caption={Lesen eines \gls*{FlexNum}-Components (Java)},captionpos=b]
+long readFlexNum() {
+	
+	byte iByte = read();
+	int additionalBytes = 8;
+	long num = 0;
+	long offset = 0;
+	
+	for(int i = 0; i < 8; i++) {
+		if((iByte & (0x80 >> i)) == 0) {
+			additionalBytes = i;
+			break;
+		}
+	}
+	
+	num |= (iByte & ((0x100 >> additionalBytes) - 1));
+	for(int i = 0; i < additionalBytes; i++) {
+		num <<= 8;
+		num |= (read() & 0xFF);
+		offset += (0x80L << 7*i);
+	}
+	
+	return num + offset;
+	
+}
+\end{lstlisting}
+\end{minipage}
+
+
+

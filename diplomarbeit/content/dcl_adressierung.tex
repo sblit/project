@@ -1,7 +1,8 @@
 
 \subsection{Notwendigkeit}
-Um im \gls{dcl} Synchronisationgruppen zu bilden, ist es nötig, die Teilnehmer dieser Gruppen als solche
-erkennen zu können. Das erfordert wiederum die permanente und eindeutige Adressierung dieser Teilnehmer.
+Um in einer auf dem \gls{dcl} basierenden Anwendung Synchronisationgruppen bilden zu können, ist es
+nötig, die Teilnehmer dieser Gruppen als solche erkennen zu können.
+Das erfordert wiederum die permanente und eindeutige Adressierung dieser Teilnehmer.
 Da sich die öffentlichen IP-Adressen der meisten privaten Internetanschlüsse und somit des Großteils der
 Zielgruppe von \sblit periodisch ändern, eignen sich diese jedoch nicht als Adressen im \gls{dcl}. Es
 wird also ein anderes Adresskonzept benötigt, mit dem ohne höhere Behörde allen Teilnehmern eindeutige
@@ -12,9 +13,11 @@ Funktion zu implementieren, die überprüft, ob eine neu generierte Adresse im N
 da dieser Ansatz keinerlei Sicherheit vor einer absichtlichen Übernahme der Adresse eines anderen
 Teilnehmers durch einen Angreifer bietet.
 
+Dieses Unterkapitel beschreibt die Adressierung im \gls{cnet}.
+
 % TODO schwierigkeit: keine zentrale Stelle, Eindeutigkeit
 
-\subsection{Adressierung mit \gls{rsa}}
+\subsection{Adressierung mit \gls*{rsa}}
 \glslink{aenc}{Asymmetrische Verschlüsselungsverfahren} wie \gls{rsa} eignen sich durch ihre Eigenschaften
 ausgezeichnet für die Adressierung innerhalb eines Netzwerks, in dem alle Teilnehmer die gleichen
 Berechtigungen haben und in dem keine höhere Instanz existiert, die Adressen vergeben und diese
@@ -61,6 +64,7 @@ bekanntgegebene Adresse ist echt.
 %TODO Erklärung der Challenge mit Nikolas mergen
 
 \subsection{Eindeutigkeit von Adressen}
+\label{dcl-addr-uniqueness}
 Die Eindeutigkeit der generierten \gls{rsa}-Schlüsselpaare und somit der Adressen kann zwar nicht
 garantiert werden, eine Kollision ist jedoch aufgrund der Länge der verwendeten Schlüssel und der
 Anzahl der dadurch möglichen Schlüsselpaare dermaßen unwahrscheinlich, dass davon ausgegangen
@@ -68,7 +72,7 @@ werden kann, dass eine Kollision praktisch nicht auftritt. \cite{crypto.stackexc
 
 \subsection{Adressformat}
 
-\subsubsection{\gls{rsa}-Schlüssellänge}
+\subsubsection{\gls*{rsa}-Schlüssellänge}
 Die für die Adressen im \gls{dcl} verwendeten öffentlichen \gls{rsa}-Schlüssel haben eine Länge von \addrkeybits
 Bits, was \addrkeybytes Bytes entspricht.
 IPv4 und IPv6-Adressen haben mit jeweils 32 Bits (4 Bytes) bzw. 128 Bits (16 Bytes) vergleichsweise kurze
@@ -89,8 +93,8 @@ zur Adressverkürzung angewandt wird.
 
 \javalisting
 \begin{minipage}{\linewidth}
-\begin{lstlisting}[caption={Adressverkürzung (Java)},captionpos=b]
-public Data scaleAddress(Address address) {
+\begin{lstlisting}[caption={Adressverkürzung im \gls*{cnt} (Java)},captionpos=b]
+Data scaleAddress(Address address) {
 	
 	Data fullData = address.toData();
 	Data hashedData = hash.update(fullData).finish();
@@ -117,8 +121,8 @@ public Data scaleAddress(Address address) {
 \begin{description}
 	
 	\item [{\code{address}:}]
-		Das \javaarg \code{address} referenziert ein \code{Address}-Objekt, welches den als
-		Grundlage für eine Adresse verwendeten öffentlichen Schlüssel beinhaltet.
+		Das \javaarg \code{address} referenziert ein \code{\gls{Address}}-Objekt, welches den
+		als Grundlage für eine Adresse verwendeten öffentlichen Schlüssel enthält.
 	
 	\item [{\code{\gls{Data}}:}]
 		\glsdesc{Data}.
@@ -128,7 +132,7 @@ public Data scaleAddress(Address address) {
 		im \gls{nt} angegebenen \gls{hash} implementiert.
 	
 	\item [{\code{byteLength}:}]
-		Die Instanzvariable \code{byteLength} beinhaltet die Ziellänge der Adressen, in bytes.
+		Die \javainstvar \code{byteLength} enthält die Ziellänge der Adressen, in bytes.
 	
 \end{description}
 

@@ -7,6 +7,7 @@
 
 \newglossaryentry{p2pnet}{
 	name=Peer-to-Peer-Netzwerk,
+	plural=Peer-to-Peer-Netzwerke,
 	description={Ein Kommunikationsnetzwerk, in dem die einzelnen Kommunikationspartner im Gegensatz zu einer klassischen Client-Server-Infrastruktur direkt miteinander kommunizieren}
 }
 
@@ -35,11 +36,6 @@
 	description={Algorithmus, der eine große Eingabemenge auf eine kleinere Zielmenge (\gls{hashval}) abbildet \cite{wikipedia:hash}}
 }
 
-\newglossaryentry{Hash}{
-	name=Hash,
-	description={Im Quellcode von \gls{dcl} definierte Klasse zur Anwendung von \glspl{hash} auf \gls{Data}-Objekte}
-}
-
 \newglossaryentry{hashval}{
 	name=Hashwert,
 	plural=Hashwerte,
@@ -51,19 +47,110 @@
 	description={Die Länge der \glspl{hashval} eines \gls{hash}}
 }
 
-\newglossaryentry{cnt}{
-	name=CircleNetworkType,
-	description={Standard \gls{nt} im \gls{dcl}},
-	see={[Siehe:]{nt}}
+\newglossaryentry{sha1}{
+	name=SHA-1,
+	description={Im \gls{dcl} standardmäßig verwendeter \gls{hash}. SHA steht für Secure Hash Algorithm},
+	see={[Siehe:]{hash}}
+}
+
+\newglossaryentry{net}{
+	name=Netzwerk,
+	plural=Netzwerke,
+	description={Ein \gls{p2pnet} innerhalb des \gls{dcl}},
+	see={[Siehe:]{cnet}}
 }
 
 \newglossaryentry{nt}{
 	name=Network Type,
-	description={Beschreibt ein Netzwerk innerhalb des \gls{dcl} samt Adresskonzept und Routingverfahren},
-	see={[Siehe:]{cnt}}
+	plural=Network Types,
+	description={Beschreibt ein \gls{net} innerhalb des \gls{dcl} samt Adresskonzept und Routingverfahren},
+	see={[Siehe:]{net}}
 }
+
+\newglossaryentry{ntid}{
+	name=Network Type Identifier,
+	plural=Network Type Identifiers,
+	description={Der eindeutige Name eines \gls{nt}},
+	see={[Siehe:]{nt}}
+}
+
+\newglossaryentry{cnet}{
+	name=Circle Network,
+	description={Standard \gls{net} im \gls{dcl}, \gls{ntid} \code{\cnetid{}}},
+	see={[Siehe:]{net}}
+}
+
+\newglossaryentry{cnt}{
+	name=CircleNetworkType,
+	description={Im Quellcode von \gls{dcl} definierte Klasse zur Darstellung des \gls{nt} des \gls{cnet}},
+	see={[Siehe:]{nt}}
+}
+
+\newglossaryentry{service}{
+	name=DCL-Service,
+	description={Ein Teilnehmer des \gls{dcl}. Kann mehrere Adressen in mehreren unterschiedlichen \glslink{net}{Netzwerken} hosten}, % TODO
+	see={[Siehe:]{dcl}}
+}
+
+\newglossaryentry{endp}{
+	name=Endpunkt,
+	plural=Endpunkte,
+	description={Eine auf dem lokalen bzw. einem direkt verbundenen \gls{service} gehostete Adresse in einem bestimmten \gls{net}},
+	see={[Siehe:]{Nexthops}}
+}
+
+\newglossaryentry{isproto}{
+	name=Interservice-Protokoll,
+	description={Das zur Kommunikation zwischen zwei direkt verbundenen \glspl{service} verwendete Protokoll}
+}
+
+\newglossaryentry{appch}{
+	name=Application Channel,
+	description={Ein verlässlicher Übertragungskanal zur Kommunikation zwischen zwei Instanzen einer auf dem \gls{dcl} aufbauenden Anwendung}
+}
+
+% DCL source classes
 
 \newglossaryentry{Data}{
 	name=Data,
 	description={Im Quellcode von \gls{dcl} definierte Klasse zur Speicherung von Binärdaten}
+}
+
+\newglossaryentry{Hash}{
+	name=Hash,
+	description={Im Quellcode von \gls{dcl} definierte Klasse zur Anwendung von \glspl{hash} auf \gls{Data}-Objekte}
+}
+
+\newglossaryentry{Address}{
+	name=Address,
+	description={Im Quellcode von \gls{dcl} definierte Klasse zur Speicherung von öffentlichen Schlüsseln anderer Teilnehmer}
+}
+
+\newglossaryentry{Nexthops}{
+	name=Nexthops,
+	description={Im Quellcode von \gls{dcl} definierte Klasse zur Speicherung von verbundenen \glslink{endp}{Endpunkten} in
+			der Form von \gls{ForwardDestination}-Objekten}
+}
+
+\newglossaryentry{ForwardDestination}{
+	name=ForwardDestination,
+	description={Im Quellcode von \gls{dcl} definierte Klasse zur Speicherung eines verbundenen \glslink{endp}{Endpunkts},
+			an den eine Nachricht weitergeleitet werden kann, inklusive dessen \gls{Address}- und
+			\gls{InterserviceChannel}-Objekten},
+	see={[Siehe:]{endp}}
+}
+
+\newglossaryentry{InterserviceChannel}{
+	name=InterserviceChannel,
+	description={Im Quellcode von \gls{dcl} definierte Klasse zur Verwaltung einer Verbindung zwischen zwei \glspl{service}}
+}
+
+\newglossaryentry{FlexNum}{
+	name=FlexNum,
+	description={Im \gls{dcl} definierter \gls{PacketComponent} zur Übertragung einer bis zu 64 Bits großen Ganzzahl. Siehe \link{dcl-packetcomponents-flexnum}}
+}
+
+\newglossaryentry{PacketComponent}{
+	name=PacketComponent,
+	description={Im \gls{dcl} definierte abstrakte Klasse zum Lesen und Schreiben bestimmter Teile von Messages}
 }
