@@ -1,0 +1,18 @@
+Damit sblit reibungslos und an die Ansprüche des Benutzers angepasst laufen kann, benötigt es eine Konfiguration. Diese wird unter Windows im Verzeichnis "%APPDATA%/SBLIT" und unter Unix basierenden Systemen im Home-Verzeichnis im ".SBLIT"-Ornder gespeichert. Dieses Verzeichnis sollte jedoch nicht per Hand editiert werden. Sämtliche Einstellungen, die vom Benutzer getätigt werden können finden sich im Einstellungsmenü, das über den System-Tray erreicht werden kann.\\
+Die Konfiguration enthält folgende Dateien:
+\begin{description}
+	\item[{freceivers.txt:}] \label(freceivers)
+	Diese Datei enthält eine Liste der Partnergeräte. In freceivers.txt wird ebenfalls festgehalten, ob Partnergeräte die eigenen Dateien speichern oder nur Dateien am eigenen Gerät speichern. Warum dies zu unterscheiden ist, kann im Kapitel "\nameref{Partnerschaften}" auf der Seite \pageref{Partnerschaften} nachgelesen werden.
+	\item[{logs.txt:}]
+	In der Datei logs.txt wird das Logfile \referenz{Logfile} gespeichert.
+	\item[{receivers.txt}]
+	Diese Datei enthält eine Liste an Geräten, auf die der Ordner synchronisert werden soll. Zu diesen Geräten wird ebenfalls ein Name gespeichert, um es dem Benutzer zu erleichtern, den Überblick über die Geräte zu bewahren.
+	\item[{rk.txt:}]
+	In dieser Datei steht der Private-Key des Gerätes. Dieser dient zum Adressbeweis und ist unbedingt geheim zu halten, da sonst fremde Geräte behaupten können, das eigene Gerät zu sein.
+	\item[{sblitDirectory.txt:}]
+	Diese Datei enthält den Pfad zum synchronisierenden Ordner.
+	\item[{symmetricKey.txt:}]
+	In dieser Datei wird der symmetrische Schlüssel festgehalten. Dieser dient zum Entschlüsseln der Daten, die auf den Partnergeräten gespeichert werden.
+	\item[{uk.txt:}]
+	Diese Datei enthält den Public-Key des Gerätes, der gleichzeitig die Adresse ist. Beim Verbinden mit \gls{dcl} wird diese Adresse bekanntgegeben.
+\end{description}
