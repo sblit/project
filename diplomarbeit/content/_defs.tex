@@ -1,4 +1,14 @@
 
+\newcommand{\kap}[1]{(\textbf{deprecated}) \link{#1}} % TODO remove
+
+\newcommand{\linkt}[1]{\ref{#1} \nameref{#1}, Seite \pageref{#1}}
+\newcommand{\link}[1]{\hyperref[#1]{\linkt{#1}}}
+\newcommand{\siehet}[1]{siehe \linkt{#1}}
+\newcommand{\siehe}[1]{\hyperref[#1]{\siehet{#1}}}
+\newcommand{\referenz}[1]{\hyperref[#1]{(\siehet{#1})}}
+
+\newcommand{\codeline}[1]{\sloppy{\mbox{\code{#1}}}}
+
 \newcommand{\tags}[2]{\hspace{0in}#2}
 
 \newcommand{\sblit}{sblit\xspace}
@@ -9,6 +19,12 @@
 
 \newcommand{\javaarg}{Argument\xspace}
 \newcommand{\javainstvar}{Instanzvariable\xspace}
+
+\newcommand{\cnettype}{org.dclayer.circle}
+\newcommand{\cnetattr}{sha1/20}
+\newcommand{\cnetid}{\cnettype{} \cnetattr{}}
+
+\newcommand{\isprotoversion}{\hyperref[dcl-isproto-version]{Version}}
 
 % listings
 
