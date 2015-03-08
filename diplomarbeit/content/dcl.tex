@@ -1,17 +1,27 @@
 \chapter{Decentralized Communication Layer}
 \renewcommand{\kapitelautor}{Autor: Martin Exner}
 
+\section{Einleitung}
 Um die Hauptanforderung an die Umsetzung, den Verzicht auf zentrale Server im System, realisieren zu können,
-wird ein Peer-to-Peer-Netzwerk benötigt. Über dieses läuft die Kommunikation der Synchronisationsanwendung.
+wird ein \gls{p2pnet} benötigt. Über dieses läuft die Kommunikation der Synchronisationsanwendung.
 Dabei muss das Netzwerk vollständig dezentral aufgebaut sein, um ohne Server funktionieren zu können.
+Gleichzeitig müssen alle Teilnehmer des Netzwerks die selben Berechtigungen haben, weswegen es keinen
+Teilnehmer geben kann, der besondere Befugnisse hat. Deshalb ist es notwendig, dass sich das Netzwerk
+und die Teilnehmer selbst organisieren und verwalten, ohne dabei auf ein zentrales Organ angewiesen
+zu sein.
 
-Dieses Peer-to-Peer-Netzwerk ist in einer separaten Kommunikationsschicht, genannt Decentralized Communication Layer, umgesetzt.
-Das ermöglicht es einerseits, DCL für Anwendungen von fremden Entwicklern zu öffnen, sodass diese auf das schon bestehende Netzwerk
+Dieses \gls{p2pnet} ist in einer separaten \gls{cl}, \gls{dcl}, umgesetzt.
+Das ermöglicht es einerseits, \gls{dcl} für Anwendungen von fremden Entwicklern zu öffnen, sodass diese auf das schon bestehende Netzwerk
 zurückgreifen können und nicht erst ein eigenes umsetzen müssen, und andererseits erleichtert die klare Abgrenzung der Funktionen
-zwischen Kommunikationsschicht und eigentlicher Synchronisationsanwendung die Umsetzung beider erheblich.
+zwischen \gls{cl} und eigentlicher Synchronisationsanwendung die Umsetzung beider erheblich.
 
-\section{Anforderungen an die Kommunikationsschicht}
+\section{Anforderungen an die \gls{cl}}
 \input{content/dcl_anforderungen.tex}
 
 \section{Adressierung}
 \input{content/dcl_adressierung.tex}
+
+\section{Routing}
+\input{content/dcl_routing.tex}
+
+% TODO networks

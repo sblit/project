@@ -21,9 +21,6 @@
  pdfsubject={Diplomarbeit},
  pdfkeywords={Diplomarbeit}}
 
-% Serifenschrift für Überschriften
-\addtokomafont{disposition}{\rmfamily}
-
 \makeatletter
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
@@ -51,6 +48,12 @@
 \usepackage{enumitem}
 %\setitemize{leftmargin=*} 
 
+% Serifenschrift für Überschriften
+\addtokomafont{disposition}{\rmfamily}
+
+% Serifenschrift für Description-Lists
+\setlist[description]{font=\rmfamily}
+
 %\usepackage{caladea}
 %\usepackage[T1]{fontenc}
 \usepackage{lmodern}
@@ -65,6 +68,20 @@
 \addto\captionsnaustrian{\renewcommand{\lstlistingname}{Listing}}
 \addto\captionsngerman{\renewcommand{\lstlistingname}{Listing}}
 \renewcommand{\lstlistingname}{Listing}
+
+% to insert a space after use of an argument-less command depending on what follows (\xspace)
+\usepackage{xspace}
+
+% to use with java syntax highlighting
+\usepackage{color}
+
+% global definitions
+\input{content/_defs.tex}
+
+% glossaries
+\usepackage[toc,acronym]{glossaries}
+\makeglossaries
+\input{content/glossary.tex}
 
 \begin{document}
 %%%%%%
@@ -115,11 +132,6 @@
 % einfaches "siehe ..." - das Ziel muss man markieren
 \newcommand{\kap}[1]{Kapitel~\ref{#1}, Seite~\pageref{#1}}
 \newcommand{\siehe}[1]{siehe \kap{#1}}
-
-
-%### TAGS COMMAND ####
-\newcommand{\tags}[2]{\hspace{0in}#2}
-%\newcommand{\tags}[1]{\textit{Tags: #1}}
 
 %%%%%Anfang Titelseite
 \pagenumbering{roman}
@@ -255,6 +267,7 @@ Prof. DI Herbert Sasshofer, \textit{Betreuer}
 
 \input{content/dcl.tex}
 \input{content/sblit.tex}
+\input{content/gui.tex}
 
 
 \chapter{Beschreibung der Formatierung}
@@ -805,5 +818,8 @@ was auch immer
 
 \bibliographystyle{plaindin}
 \bibliography{diplom}
+
+\printglossary[type=\acronymtype]
+\printglossary
 
 \end{document}

@@ -20,8 +20,8 @@ DCL
 		Künftige Variationen - Direct, Routed
 	Tutorial DCL Application Library
 sblit
-	Idee
 	Anforderungen
+	Konfiguration
 	Kommunikation
 	File-Verarbeitung
 		Konflikterkennung /-lösung

@@ -1,0 +1,69 @@
+
+\newglossaryentry{cl}{
+	name=Kommunikationsschicht,
+	description={Eine Schicht im netzwerktechnischen Sinne, die zur Kommunikation verwendet wird},
+	see={[Siehe:]{gls_dcl}}
+}
+
+\newglossaryentry{p2pnet}{
+	name=Peer-to-Peer-Netzwerk,
+	description={Ein Kommunikationsnetzwerk, in dem die einzelnen Kommunikationspartner im Gegensatz zu einer klassischen Client-Server-Infrastruktur direkt miteinander kommunizieren}
+}
+
+\newglossaryentry{gls_dcl}{
+	name=Decentralized Communication Layer,
+	description={Die auf einem dezentralen \gls{p2pnet} basierende \gls{cl}, die \sblit zur Kommunikation benutzt}
+}
+
+\newacronym[see={[Glossar:]{gls_dcl}}]{dcl}{DCL}{Decentralized Communication Layer\glsadd{gls_dcl}}
+
+\newglossaryentry{aenc}{
+	name=Asymmetrisches Verschlüsselungsverfahren,
+	description={Verschlüsselungsverfahren, bei dem zur Entschlüsselung einer Nachricht ein anderer Schlüssel verwendet wird, als zur Verschlüsselung verwendet wurde},
+	see={[Siehe:]{rsa}}
+}
+
+\newglossaryentry{rsa}{
+	name=RSA,
+	description={\gls{aenc}, benannt nach und erstmals veröffentlich von Ron Rivest, Adi Shamir and Leonard Adleman \cite{wikipedia:rsa}},
+	see={[Siehe:]{aenc}}
+}
+
+\newglossaryentry{hash}{
+	name=Hashalgorithmus,
+	plural=Hashalgorithmen,
+	description={Algorithmus, der eine große Eingabemenge auf eine kleinere Zielmenge (\gls{hashval}) abbildet \cite{wikipedia:hash}}
+}
+
+\newglossaryentry{Hash}{
+	name=Hash,
+	description={Im Quellcode von \gls{dcl} definierte Klasse zur Anwendung von \glspl{hash} auf \gls{Data}-Objekte}
+}
+
+\newglossaryentry{hashval}{
+	name=Hashwert,
+	plural=Hashwerte,
+	description={Ergebnis bei Anwendung eines \gls{hash}}
+}
+
+\newglossaryentry{digestlength}{
+	name=Digest Length,
+	description={Die Länge der \glspl{hashval} eines \gls{hash}}
+}
+
+\newglossaryentry{cnt}{
+	name=CircleNetworkType,
+	description={Standard \gls{nt} im \gls{dcl}},
+	see={[Siehe:]{nt}}
+}
+
+\newglossaryentry{nt}{
+	name=Network Type,
+	description={Beschreibt ein Netzwerk innerhalb des \gls{dcl} samt Adresskonzept und Routingverfahren},
+	see={[Siehe:]{cnt}}
+}
+
+\newglossaryentry{Data}{
+	name=Data,
+	description={Im Quellcode von \gls{dcl} definierte Klasse zur Speicherung von Binärdaten}
+}

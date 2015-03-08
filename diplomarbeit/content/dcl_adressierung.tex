@@ -1,11 +1,26 @@
 
-Da die Internetanbindungen der meisten Haushalte und somit des Großteils der Zielgruppe von sblit über
-öffentliche IP-Adressen verfügen, die sich periodisch ändern, ist ein anderes Adressierungskonzept
-innerhalb der Kommunikationsschicht von Nöten, um Teilnehmer permanent identifizieren zu können. %TODO Notwendigkeit von permanenter Identifikation
+\subsection{Notwendigkeit}
+Um im \gls{dcl} Synchronisationgruppen zu bilden, ist es nötig, die Teilnehmer dieser Gruppen als solche
+erkennen zu können. Das erfordert wiederum die permanente und eindeutige Adressierung dieser Teilnehmer.
+Da sich die öffentlichen IP-Adressen der meisten privaten Internetanschlüsse und somit des Großteils der
+Zielgruppe von \sblit periodisch ändern, eignen sich diese jedoch nicht als Adressen im \gls{dcl}. Es
+wird also ein anderes Adresskonzept benötigt, mit dem ohne höhere Behörde allen Teilnehmern eindeutige
+Adressen zugewiesen werden können, die auf ihre Echtheit überprüfbar sind.
 
-Asymmetrische Verschlüsselungsverfahren wie RSA eignen sich durch ihre Eigenschaften ausgezeichnet für
-die Adressierung innerhalb der Kommunikationsschicht.
+Es ist nicht ausreichend, die Teilnehmer ihre Adressen willkürlich selbst bestimmen zu lassen und eine
+Funktion zu implementieren, die überprüft, ob eine neu generierte Adresse im Netzwerk schon existiert,
+da dieser Ansatz keinerlei Sicherheit vor einer absichtlichen Übernahme der Adresse eines anderen
+Teilnehmers durch einen Angreifer bietet.
+
+% TODO schwierigkeit: keine zentrale Stelle, Eindeutigkeit
+
+\subsection{Adressierung mit \gls{rsa}}
+\glslink{aenc}{Asymmetrische Verschlüsselungsverfahren} wie \gls{rsa} eignen sich durch ihre Eigenschaften
+ausgezeichnet für die Adressierung innerhalb eines Netzwerks, in dem alle Teilnehmer die gleichen
+Berechtigungen haben und in dem keine höhere Instanz existiert, die Adressen vergeben und diese
+verifizieren kann.
 \tags{key-info, schlüsselpaar, asymmetrisch}
+
 Bei asymmetrischen Verschlüsselungsverfahren kommen sogenannte Schlüsselpaare, bestehend aus zwei
 Schlüsseln, zum Einsatz. Die Besonderheit liegt darin, dass eine Nachricht, die mit einem Schlüssel
 aus dem Schlüsselpaar verschlüsselt wurde, bei asymmetrischen Verfahren im Gegensatz zu symmetrischen
@@ -15,33 +30,114 @@ Gleichzeitig kann aus einem Schlüssel eines Schlüsselpaars der dazugehörige a
 Schlüsselpaars nicht in absehbarer Zeit berechnet werden.
 
 Dadurch wird es möglich, ein Adressierungssystem umzusetzen, das die Anforderungen im Bezug auf
-Überprüfbarkeit der Adressen erfüllt. Dazu wird einer der beiden Schlüssel aus dem Schlüsselpaar
-als Adresse angenommen und somit bewusst veröffentlicht, während der andere Schlüssel aus dem
-Schlüsselpaar geheim gehalten wird.
+Überprüfbarkeit der Adressen erfüllt. Dazu wird eine Adresse angenommen, die sich aus einem der
+beiden Schlüssel aus dem Schlüsselpaar ableitet. Dieser Schlüssel wird bewusst veröffentlicht,
+während der andere Schlüssel aus dem Schlüsselpaar geheim gehalten wird.
 Der Schlüssel aus dem Schlüsselpaar, der veröffentlicht wird, wird auch \emph{Öffentlicher Schlüssel}
 oder \emph{Public Key} genannt, der weiterhin geheim gehaltene Schlüssel \emph{Privater Schlüssel} oder
 \emph{Private Key}.
 
-Öffentliche Schlüssel als Adressen haben den Vorteil, dass sie ohne höhere Behörde oder zentrale Stelle
-auf ihre Echtheit überprüft werden können und somit fälschungssicher sind. Ein Mechanismus zur
-Überprüfung solch einer Adresse wird im Nächsten Abschnitt beschrieben.
+Öffentliche Schlüssel als Grundlage für Adressen haben den Vorteil, dass die Adressen ohne höhere
+Behörde oder zentrale Stelle auf ihre Echtheit überprüft werden können und somit fälschungssicher sind.
+Ein Mechanismus zur Überprüfung solch einer Adresse wird im nächsten Abschnitt beschrieben.
 
 \subsection{Überprüfung von Adressen}
 Dadurch, dass eine mit einem öffentlichen Schlüssel verschlüsselte Nachricht nicht mit wieder mit dem
 öffentlichen Schlüssel entschlüsselt werden kann, sondern ausschließlich mit dem dazugehörigen privaten
 Schlüssel, kann der Besitz des gesamten Schlüsselpaars bewiesen werden, ohne mehr als den öffentlichen
 Schlüssel preisgeben zu müssen: Eine beliebige Folge von Daten wird vom überprüfenden Teilnehmer
-generiert, mit der Adresse, also dem öffentlichen Schlüssel des zu überprüfenden Teilnehmers
-verschlüsselt und anschließend an diesen übermittelt. Dort wird die empfangene Nachricht vom zu
-überprüfenden Teilnehmer wieder entschlüsselt und zurück an den überprüfenden Teilnehmer gesendet.
+generiert, mit der Grundlage der Adresse des zu überprüfenden Teilnehmers, also seinem öffentlichen
+Schlüssel verschlüsselt und anschließend an diesen übermittelt. Dort wird die empfangene Nachricht vom zu
+überprüfenden Teilnehmer mit seinem privaten Schlüssel, den nur dieser Teilnehmer besitzt, wieder
+entschlüsselt und zurück an den überprüfenden Teilnehmer gesendet.
+
 Decken sich die ursprünglich vom überprüfenden Teilnehmer generierten Daten mit denen, die vom zu
 überprüfenden Teilnehmer entschlüsselt wurden, ist der Besitz des gesamten Schlüsselpaars, und nicht
-lediglich des öffentlichen Schlüssels, bewiesen.
+lediglich des öffentlichen Schlüssels, bewiesen. In anderen Worten, die vom überprüften Teilnehmer
+bekanntgegebene Adresse ist echt.
 
 %TODO konkretes Beispiel
 
 %TODO Erklärung der Challenge mit Nikolas mergen
 
 \subsection{Eindeutigkeit von Adressen}
+Die Eindeutigkeit der generierten \gls{rsa}-Schlüsselpaare und somit der Adressen kann zwar nicht
+garantiert werden, eine Kollision ist jedoch aufgrund der Länge der verwendeten Schlüssel und der
+Anzahl der dadurch möglichen Schlüsselpaare dermaßen unwahrscheinlich, dass davon ausgegangen
+werden kann, dass eine Kollision praktisch nicht auftritt. \cite{crypto.stackexchange.com/a/2559:rsa-key-collision}
 
-Siehe \cite{crypto.stackexchange.com/a/2559:rsa-key-collision}.
+\subsection{Adressformat}
+
+\subsubsection{\gls{rsa}-Schlüssellänge}
+Die für die Adressen im \gls{dcl} verwendeten öffentlichen \gls{rsa}-Schlüssel haben eine Länge von \addrkeybits
+Bits, was \addrkeybytes Bytes entspricht.
+IPv4 und IPv6-Adressen haben mit jeweils 32 Bits (4 Bytes) bzw. 128 Bits (16 Bytes) vergleichsweise kurze
+Adressen. Trotzdem ist eine Adressierung mit 128 Bits mehr als ausreichend und wesentlich längere
+Adressen, wie sie beispielsweise bei direkter Verwendung von RSA-Schlüsseln entstehen, bringen
+lediglich Nachteile und keinerlei Vorteile mit sich, da der dabei entstehende Overhead bei Nachrichten
+eine wesentliche Reduktion der Übertragungseffizienz mit sich bringt.
+
+\subsubsection{Adressverkürzung}
+Die im \gls{dcl} verwendeten Adressen decken sich nicht mit den öffentlichen \gls{rsa}-Schlüsseln,
+sondern basieren lediglich darauf. Da ohne Weiterverarbeitung der Schlüssel zu lange Adressen entstünden,
+wird auf die Daten der öffentlichen Schlüssel ein \gls{hash} angewandt, welcher die Daten in einem ersten
+Schritt wesentlich verkürzt. In einem optionalen zweiten Schritt können die bereits verkürzten
+Daten weiter verkürzt werden, um unnötig lange Adressen zu eliminieren.
+
+Nachfolgend ist jener Teil des Quellcodes von \gls{dcl} angeführt, welcher im \code{\gls{cnt}}
+zur Adressverkürzung angewandt wird.
+
+\javalisting
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[caption={Adressverkürzung (Java)},captionpos=b]
+public Data scaleAddress(Address address) {
+	
+	Data fullData = address.toData();
+	Data hashedData = hash.update(fullData).finish();
+	
+	if(byteLength == hashedData.length()) return hashedData;
+	
+	Data scaledData = new Data(byteLength);
+	
+	for(int i = 0; i < hashedData.length(); i++) {
+		int scaledIndex = i % scaledData.length();
+		scaledData.setByte(
+			scaledIndex,
+			(byte)( scaledData.getByte(scaledIndex)
+					^ hashedData.getByte(i))
+		);
+	}
+	
+	return scaledData;
+	
+}
+\end{lstlisting}
+\end{minipage}
+
+\begin{description}
+	
+	\item [{\code{address}:}]
+		Das \javaarg \code{address} referenziert ein \code{Address}-Objekt, welches den als
+		Grundlage für eine Adresse verwendeten öffentlichen Schlüssel beinhaltet.
+	
+	\item [{\code{\gls{Data}}:}]
+		\glsdesc{Data}.
+	
+	\item [{\code{hash}:}]
+		Die \javainstvar \code{hash} referenziert ein \code{\gls{Hash}}-Objekt, welches den
+		im \gls{nt} angegebenen \gls{hash} implementiert.
+	
+	\item [{\code{byteLength}:}]
+		Die Instanzvariable \code{byteLength} beinhaltet die Ziellänge der Adressen, in bytes.
+	
+\end{description}
+
+Mit \code{address.toData()} wird der öffentliche Schlüssel der übergebenen Adresse zuerst in Binärdaten
+umgewandelt, auf welche dann ein \gls{hash} angewandt wird. Entspricht die Ziellänge von Adressen im
+\gls{nt} der \gls{digestlength} des verwendeten \gls{hash}, so wird der \gls{hashval} \code{hashedData}
+direkt zurückgegeben.
+
+Anderenfalls wird der \gls{hashval} aus \code{hashedData} auf Binärdaten der Länge \code{byteLength},
+gespeichert in \code{scaledData}, abgebildet und diese zurückgegeben.
+
+
