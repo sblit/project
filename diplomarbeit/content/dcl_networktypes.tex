@@ -1,0 +1,46 @@
+
+\subsection{Notwendigkeit}
+Um \gls{dcl} für eine breite Menge an Anwendungen benutzbar zu machen, muss es möglich sein, alle
+Eigenschaften, die ein \gls{p2pnet} zur Kommunikation zwischen den Instanzen dieser Anwendungen
+haben muss, erfüllen zu können. Das lässt sich am besten Realisieren, indem der \gls{dcl} so umgesetzt
+wird, dass mehrere unterschiedliche \glspl{p2pnet} darüber aufgebaut werden können.
+Das hat den Vorteil, auch mit \glslink{p2pnet}{Peer-to-Peer-Netzwerken}, die andere Anforderungen
+als bisher existente \glspl{net} haben, auf die bereits bestehende Menge an Hosts aus dem \gls{dcl}
+zurückgreifen zu können. So können neue \glspl{net} schnell und stabil zur Verfügung gestellt werden
+und neue Teilnehmer erhöhen nicht nur die Verfügbarkeit ihres \glslink{net}{Netzwerks}, sondern auch
+die aller anderen auf \gls{dcl} aufbauender \glspl{net}.
+
+\subsection{Definition}
+Ein \gls{nt} beschreibt ein \gls{net} innerhalb des \gls{dcl} durch Festlegung folgender Eigenschaften:
+
+\begin{description}
+	
+	\item [{Adresskonzept:}]
+		Beinhaltet die Länge von Adressen und die Verfahren zur Bildung sowie zur Überprüfung
+		von Adressen.
+	
+	\item [{Routingverfahren:}]
+		Beinhaltet den Vorgang zur Weiterleitung von Nachrichten, die an andere Teilnehmer des
+		\glslink{net}{Netzwerks} adressiert sind.
+	
+\end{description}
+
+\subsection{Notation}
+Für jeden \gls{nt} gibt einen sogenannten \gls{ntid}, mit dem er identifiziert wird. Dieser setzt sich aus
+einem Typstring im Stil von Java Package Names und einem Attributstring für Untereigenschaften zusammen.
+
+\subsection{\gls*{cnet}}
+Das im \gls{dcl} standardmäßig verwendete \gls{net} ist das \gls{cnet}. Der Typstring des \gls{nt} des
+\gls{cnet} ist \code{\cnettype}.
+
+Adressen werden im \gls{cnet} standardmäßig durch Anwendung des \gls{hash} \gls{sha1} auf die öffentlichen
+\gls{rsa}-Schlüssel erzeugt und haben eine Länge von 20 Bytes, was der \gls{digestlength} von \gls{sha1}
+entspricht.
+
+Das Format des Attributstrings des \gls{nt} des \gls{cnet} ist
+\sloppy{\mbox{\code{\gls{hash}/Adresslänge}}}.
+Der standardmäßige Attributstring für den \gls{nt} des \gls{cnet} ist also
+\sloppy{\mbox{\code{\cnetattr}}}.
+
+Daraus ergibt sich der standardmäßige \gls{ntid} des \gls{cnet},
+\sloppy{\mbox{\code{\cnetid}}}.

@@ -1,0 +1,135 @@
+
+\subsection{Zweck}
+Das \gls{isproto} wird zur Kommunikation zwischen zwei direkt miteinander verbundenen \glspl{service}
+verwendet. Es dient zur Übertragung von Nachrichten und von in \glspl{appch} gesendeten Nutzdaten,
+zur Bekanntgabe von \glspl{endp} samt Adressen und beigetretenen \glspl{net}, sowie zum Einstieg in
+\glspl{net} des \gls{dcl}.
+
+Dieses Unterkapitel beschreibt das \gls{isproto} in Version 0.
+
+\subsection{Initialisierung}
+Die Kommunikation über das \gls{isproto} wird mit der Aushandlung einer Protokollversion begonnen.
+Dazu werden, beginnend mit dem Initiator, also dem \gls{service}, der die Verbindung angefordert hat,
+so lange \isprotoversion-Messages abwechselnd zwischen den \glspl{service} gesendet, bis die letzten
+zwei übertragenen \isprotoversion-Messages die selben Versionsnummern enthalten.
+
+%	\begin{figure*}[ht!]
+%	  \centering
+%	  \begin{bytefield}{32}
+%	    \bitheader{31,24,23,16,15,8,7,0} \\
+%	    \begin{rightwordgroup}{Network Header}
+%	      \wordbox{1}{Destination} \\
+%	      \wordbox{1}{Source} \\
+%	      \wordbox{1}{Length} 
+%	    \end{rightwordgroup} \\
+%	    \begin{rightwordgroup}{Payload}
+%	      \wordbox[lrt]{2}{$N$ data words} \\
+%	      \skippedwords \\
+%	      \wordbox[lrb]{2}{}
+%	    \end{rightwordgroup} \\
+%	    \begin{rightwordgroup}{Footer}
+%	      \wordbox{1}{Checksum}
+%	    \end{rightwordgroup}
+%	  \end{bytefield}
+%	  \caption{\label{fig:mwe_packet}Sample packet}
+%	\end{figure*}
+%
+%	\begin{figure*}
+%	  \centering
+%	  \begin{bytefield}{32}
+%	    \bitheader{31,24,23,16,15,8,7,0} \\
+%	    \bitbox{1}{\tiny{M\\E\\M}} & \bitbox{3}{SEL} & \bitbox{23}{} & \bitbox{4}{Mem\\Type} & \bitbox{4}{ID} \\    
+%	  \end{bytefield}
+%	  \caption{\label{fig:mwe_cmd}Cmd word}
+%	\end{figure*}
+
+%	\begin{bytefield}[bitwidth=1.1em]{32}
+%	\bitheader{0-31} \\
+%	\begin{rightwordgroup}{RTP \\ Header}
+%	\bitbox{2}{V=2} & \bitbox{1}{P} & \bitbox{1}{X}
+%	& \bitbox{4}{CC} & \bitbox{1}{M} & \bitbox{7}{PT}
+%	& \bitbox{16}{sequence number} \\
+%	\bitbox{32}{timestamp}
+%	\end{rightwordgroup} \\
+%	\bitbox{32}{synchronization source (SSRC) identifier} \\
+%	\wordbox[tlr]{1}{contributing source (CSRC) identifiers} \\
+%	\wordbox[blr]{1}{$\cdots$} \\
+%	\begin{rightwordgroup}{RTP \\ Payload}
+%	\wordbox[tlr]{3}{MPEG-4 Visual stream (byte aligned)} \\
+%	\bitbox[blr]{16}{}
+%	& \bitbox{16}{\dots\emph{optional} RTP padding}
+%	\end{rightwordgroup}
+%	\end{bytefield}
+
+
+\subsection{Messageaufbau}
+Eine Message im \gls{isproto} ist generell so aufgebaut, dass ein FlexNum-Component am Anfang der
+Message den Typ angibt, anhand dessen die restliche Nachricht interpretiert wird.
+
+\begin{figure}[tbh]
+\begin{centering}
+
+\begin{bytefield}[bitwidth=3em]{8}
+	\\
+	\bitheader{0-7} \\
+	
+	\wordbox[tlr]{2}{\isprotomsgtype \\ FlexNum, 1 -- 9 Bytes} \\
+	\skippedwords \\
+	\wordbox[lr]{1}{} \\
+	
+	\wordbox[tlr]{2}{\isprotomsgdata \\ $N$ Bytes} \\
+	\skippedwords \\
+	\wordbox[blr]{1}{}
+	
+%	\begin{rightwordgroup}{RTP \\ Header}
+%		\bitbox{2}{V=2} & \bitbox{1}{P} & \bitbox{1}{X} & \bitbox{4}{CC} \\
+%		\bitbox{1}{M} & \bitbox{7}{PT} \\
+%		\wordbox[tlr]{2}{sequence number} \\
+%		\wordbox[tlr]{4}{timestamp}
+%	\end{rightwordgroup} \\
+%	\bitbox{32}{synchronization source (SSRC) identifier} \\
+%	\wordbox[tlr]{1}{contributing source (CSRC) identifiers} \\
+%	\wordbox[blr]{1}{$\cdots$} \\
+%	\begin{rightwordgroup}{RTP \\ Payload}
+%		\wordbox[tlr]{3}{MPEG-4 Visual stream (byte aligned)} \\
+%		\bitbox[blr]{16}{}
+%		& \bitbox{16}{\dots\emph{optional} RTP padding}
+%	\end{rightwordgroup}
+\end{bytefield}
+
+\par\end{centering}
+\protect\caption{\gls*{isproto} -- Genereller Messageaufbau}
+\end{figure}
+
+\subsection{Messages}
+
+\subsubsection{Version}
+\label{dcl-isproto-version}
+Die \isprotoversion-Message enthält eine Versionsnummer in Form eines FlexNum-Components und wird
+benutzt, um am Beginn der Verbindung die verwendete Version des \gls{isproto} auszuhandeln.
+
+\begin{figure}[tbh]
+\begin{centering}
+
+\begin{bytefield}[bitwidth=3em]{8}
+	\\
+	\bitheader{0-7} \\
+	
+	\begin{rightwordgroup}{\isprotomsgtype}
+		\wordbox[tlr]{1}{\code{0}}
+	\end{rightwordgroup} \\
+	
+	\begin{rightwordgroup}{\isprotomsgdata}
+		\wordbox[tlr]{2}{Version ID \\ FlexNum, 1 -- 9 Bytes} \\
+		\skippedwords \\
+		\wordbox[blr]{1}{}
+	\end{rightwordgroup}
+	
+\end{bytefield}
+
+\par\end{centering}
+\protect\caption{\gls*{isproto} -- \isprotoversion-Message}
+\end{figure}
+
+% TODO GLOSSARY ENTRY FOR FlexNum
+
