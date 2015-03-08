@@ -1,6 +1,179 @@
 
 \subsection{Notwendigkeit}
+Da es bereits ab einer geringen Anzahl an Teilnehmern im \gls{p2pnet} nicht mehr praktikabel ist,
+ein vollständig vermaschtes Netz zu führen, weil die Anzahl an dafür notwendigen Verbindungen die
+Kapazitäten der Teilnehmer überschreitet, ist es nötig, einen Routingmechanismus in das Netzwerk
+zu implementieren. Damit können Nachrichten im \gls{p2pnet} von jedem Teilnehmer zu jedem beliebigen
+anderen Teilnehmer gesendet werden, ohne dass die beiden kommunizierenden Teilnehmer direkt
+miteinander verbunden sein müssen.
 
+Dieses Unterkapitel beschreibt das Routing im \gls{cnet}.
+
+\subsection{Schwierigkeit}
+Im Gegensatz zu herkömmlichen Computernetzwerken sind die Verbindungen zwischen den einzelnen
+Teilnehmern in einem \gls{p2pnet} variabel und ändern sich ständig. Die Wege für Pakete statisch
+vorzugeben funktioniert deshalb nicht, stattdessen ist es notwendig, dynamisches Routing zu
+implementieren.
+
+Die meisten im Einsatz befindlichen Verfahren zum dynamischen Routing betrachten die gesamte
+Topologie und suchen darin Wege für Pakete. Bei zu großen Topologien werden Teile des Netzwerks
+zusammengefasst und die Teilnehmer innerhalb dieses Teils von Außerhalb als ein einziger Teilnehmer
+betrachtet. Der Pfadfindungsprozess kann dann effizienter gestaltet werden, indem das Routing in
+2 Schritten erfolgt: zuerst außerhalb bis zum zusammengefassten Teil und anschließend innerhalb
+des zusammengefassten Teils des Netzwerks, wo das Routing zum endgültigen Ziel erfolgt.
+
+Diese Technik funktioniert jedoch nur in einem hierarchisch aufgebauten Netzwerk, in dem Teilnehmer
+mit ähnlichen Adressen logisch nah beieinander sind, wie das beispielsweise in einem IPv4-Subnet
+der Fall ist. In einem dezentralen \gls{p2pnet}, dessen Topologie sich ständig ändert und in dem
+die Adresse eines Teilnehmers nicht mit seiner Position in der Topologie zusammenhängt, können
+keine Teilnehmer zusammengefasst werden.
+
+Gleichzeitig ist die Topologie des \gls{p2pnet} so groß und ändert sich so oft, dass es praktisch 
+unmöglich ist, bei jedem Teilnehmer des Netzwerks eine Kopie aller bestehenden Verbindungen zu
+speichern und diese aktuell zu halten, um basierend darauf die Wege zur Weiterleitung von
+Nachrichten zu finden.
 
 \subsection{Distanzbasiertes Routing}
+Im \gls{cnet} des \gls{dcl} werden nicht die Wege anhand der Topologie gesucht, sondern die
+Topologie anhand der gewünschten Wege aufgebaut. Das bedeutet konkret, dass die Teilnehmer, mit
+denen sich ein Teilnehmer verbindet, nicht zufällig gewählt werden, sondern ein Teilnehmer sich
+tendentiell mit mehr Teilnehmern verbindet, die eine ähnliche Adresse haben, als mit solchen,
+deren Adresse sich von der eigenen stark unterscheidet.
+
+Ähnlich sind zwei Adressen dann, wenn ihre numerische Differenz gering ist. Dabei gilt es, auch
+den Überlauf beim Überschreiten des mit der Adresslänge maximal darstellbaren Wertes zu beachten.
+Nimmt man zur vereinfachten Darstellung eine Adresslänge von 16 Bits an, dann weisen die
+hexadezimal angegebenen Adressen \code{E539} und \code{1092} eine Distanz von \code{2B59} auf,
+obwohl \code{E539 - 1092 = D4A7}, weil die Distanz über den Überlauf kürzer ist:
+\code{10000 - E539 + 1092 = 2B59}.
+
+Des Weiteren werden Teilnehmer, die exakt die selbe Adresse aufweisen, stets direkt miteinander
+verbunden, um sicherzustellen, dass Nachrichten deren Zieladresse auf mehrere Teilnehmer verweist,
+an alle zugestellt werden. Dass zwei Teilnehmer die selbe Adresse bekommen ist jedoch erstens
+extrem unwahrscheinlich und bedeutet zweitens nicht unbedingt, dass ihre Adressen auf den selben
+öffentlichen Schlüsseln basieren. Siehe dazu \link{dcl-addr-uniqueness}.
+
+Dadurch, dass die Teilnehmer des Netzwerks jeweils mehr Verbindungen zu Teilnehmern mit Adressen
+ähnlich zur eigenen haben, als Verbindungen zu Teilnehmern mit Adressen, die eine hohe Differenz
+zur eigenen aufweisen, können Nachrichten einfach an den Teilnehmer weitergeleitet werden, dessen
+Adresse die niedrigste Differenz zur Zieladresse der Nachricht aufweist. Auf diese weise gelangt
+die Nachricht, logisch betrachtet, immer näher an ihr Ziel und wird schlussendlich an den Adressat
+zugestellt.
+
+\subsection{Umsetzung im Quellcode von DCL}
+Nachfolgend ist jener Teil des Quellcodes von \gls{dcl} angeführt, welcher im \code{\gls{cnt}}
+zum Routinglookup angewandt wird.
+
+\javalisting
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[caption={Routing im \gls*{cnt} (Java)},captionpos=b]
+Nexthops lookup( Data scaledDestinationAddress,
+						Address originAddress,
+						Object originIdentifierObject ) {
+	Nexthops nexthops
+	 = localEndpointRoutes.get(scaledDestinationAddress);
+	if(nexthops != null) {
+		Nexthops twinNeighbors
+		 = remoteServiceRoutes.get(scaledDestinationAddress);
+		if(twinNeighbors != null) {
+			boolean append = true;
+			for(ForwardDestination forwardDestination
+				 : twinNeighbors) {
+				if( forwardDestination.getIdentifierObject()
+					 == originIdentifierObject ) {
+					append = false;
+					break;
+				}
+			}
+			if(append) {
+				nexthops.append(twinNeighbors);
+			}
+		}
+		return nexthops;
+	}
+	nexthops = remoteServiceRoutes
+			   .getClosest(scaledDestinationAddress);
+	if(nexthops == null) {
+		return null;
+	}
+	for(ForwardDestination forwardDestination : nexthops) {
+		if(forwardDestination.getIdentifierObject()
+			 == originIdentifierObject) {
+			return null;
+		}
+	}
+	return nexthops.getLast();
+}
+\end{lstlisting}
+\end{minipage}
+
+\begin{description}
+	
+	\item [{\code{scaledDestinationAddress}:}]
+		Das \javaarg \code{scaledDestinationAddress} referenziert ein \code{\gls{Data}}-Objekt,
+		welches die Zieladresse enthält, für die ein Routinglookup durchgeführt werden soll.
+	
+	\item [{\code{originAddress}:}]
+		Das \javaarg \code{originAddress} referenziert ein \code{\gls{Address}}-Objekt, welches
+		den öffentlichen Schlüssel des Teilnehmers enthält, von welchem die zu weiterleitende
+		Nachricht empfangen wurde.
+	
+	\item [{\code{originIdentifierObject}:}]
+		Das \javaarg \code{originIdentifierObject} referenziert ein Objekt, das den Teilnehmer
+		identifiziert, von welchem die zu weiterleitende Nachricht empfangen wurde. Dieses wird
+		benötigt, um später sicherzustellen, dass die Nachricht nicht zum selben Teilnehmer
+		weitergeleitet wird, von welchem sie schon empfangen wurde.
+	
+	\item [{\code{\gls{Nexthops}}:}]
+		\glsdesc{Nexthops}.
+	
+	\item [{\code{\gls{ForwardDestination}}:}]
+		\glsdesc{ForwardDestination}.
+	
+	\item [{\code{localEndpointRoutes}:}]
+		Die \javainstvar \code{localEndpointRoutes} referenziert ein Objekt, das zu Schlüsseln
+		in Form von \code{\gls{Data}}-Objekten Werte in Form von \code{\gls{Nexthops}}-Objekten
+		speichert. Dieses wird benutzt, um zu Adressen die entsprechenden
+		\code{\gls{Nexthops}}-Objekte finden zu können, an die Nachrichten weitergeleitet werden
+		können. In diesem Fall handelt es sich dabei ausschließlich um Adressen, deren Endpunkte
+		sich am lokalen \gls{service} befinden.
+	
+	\item [{\code{remoteServiceRoutes}:}]
+		Die \javainstvar \code{localEndpointRoutes} referenziert ein Objekt, das zu Schlüsseln
+		in Form von \code{\gls{Data}}-Objekten Werte in Form von \code{\gls{Nexthops}}-Objekten
+		speichert. Dieses wird benutzt, um zu Adressen die entsprechenden
+		\code{\gls{Nexthops}}-Objekte finden zu können, an die Nachrichten weitergeleitet werden
+		können. In diesem Fall handelt es sich dabei ausschließlich um Adressen, deren Endpunkte
+		sich auf direkt verbundenen, aber nicht am lokalen \gls{service} befinden.
+	
+\end{description}
+
+Mit \code{localEndpointRoutes.get(scaledDestinationAddress)} wird zu Beginn des Routinglookups
+nach lokalen \glslink{endp}{Endpunkten} mit der genauen Zieladresse dieser Nachricht gesucht.
+Werden ein oder mehrere \glspl{endp} gefunden, so wird weiters geprüft, ob es entfernte Endpunkte
+gibt, die die selbe Adresse haben. Gibt es solche \glspl{endp}, dann wird sichergestellt, dass
+keiner dieser \glspl{endp} derjenige \gls{endp} ist, von dem die Nachricht empfangen wurde und
+dass die Nachricht somit nicht wieder zu diesem \gls{endp} weitergeleitet wird.
+Anschließend werden die \glspl{endp} mit der gleichen Adresse wie der lokale \gls{endp} zur Liste
+der \glspl{endp}, an die die Nachricht weitergeleitet werden soll, hinzugefügt.
+Das geschieht, indem das von \code{twinNexthops} referenzierte \code{\gls{Nexthops}}-Objekt
+mit \code{nexthops.append(twinNexthops)} an das von \code{nexthops} referenzierte
+\code{\gls{Nexthops}}-Objekt angehängt wird.
+
+Wurden keine lokalen \glspl{endp} mit der Zieladresse der Nachricht gefunden, dann wird mit
+\code{remoteServiceRoutes.getClosest(scaledDestinationAddress)} nach direkt verbundenen
+\glslink{endp}{Endpunkten} gesucht, deren Adresse der Zieladresse am ähnlichsten ist.
+Anschließend wird, wie schon bei den lokalen \glslink{endp}{Endpunkten}, sichergestellt,
+dass die Liste von \glspl{endp} nicht den \gls{endp} enthält, von dem die Nachricht empfangen
+wurde.
+Falls das der Fall ist, wird \code{null} zurückgegeben und die Nachricht in Folge verworfen.
+
+Anderenfalls wird nur der letzte \gls{endp} in der von \code{nexthops} referenzierten
+Liste der \glspl{endp} zurückgegeben: Enthält die Liste mehrere Einträge, so haben die darin
+enthaltenen \glspl{endp} die selbe Adresse. Die Nachricht soll in diesem Fall abernur an einen
+dieser \glspl{endp} weitergeleitet werden, da sie von dort an die restlichen \glspl{endp} mit der
+gleichen Adresse weitergeleitet wird.
+
+
+
 
