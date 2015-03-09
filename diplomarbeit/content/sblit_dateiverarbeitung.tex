@@ -22,3 +22,75 @@ Ist der aktuelle Hash der lokalen Datei jedoch nicht in der Dateianfrage enthalt
 \subsubsection{Konfliktlösung}
 Damit die Änderungen von einem Gerät nicht überschrieben werden, speichert \sblit beide Versionen. Da jedoch beide Dateien nicht den gleichen Namen haben können, benennt das Gerät, das den Konflikt erkennt, (im Folgenden Gerät A) die lokale Datei um. Anschließend schickt Gerät A eine Antwort an das Gerät, das die Dateianfrage geschickt hat,  (im Folgenden Gerät B) in der es die neue Version anfordert, als ob kein Konflikt aufgetreten wäre. Außerdem schickt Gerät A eine Dateianfrage mit der neuen Datei an Gerät B. Gerät B sendet nun die angeforderte Datei an Gerät A und akzeptiert die Konfliktdatei, da es eine Datei mit dem gleichen Namen noch nicht besitzt. \\
 Nach dem Empfang der Datei speichtert Gerät A diese unter dem ursprünglichen Namen. Des Weiteren sendet Gerät A die Konfliktdatei mit dem geänderten Namen an Gerät B. Die neue Datei wird auf Gerät B unter dem neuen Namen gespeichert.
+
+\subsubsection{Umsetzung}
+
+Um Konflikte zu erkennen und zu lösen wird der folgende Code verwendet:
+\javalisting
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[caption={Erkennen eines Konflikts},captionpos=b]
+private void handleConflict(LinkedList<Data> requestedHashes,
+			LinkedList<Data> ownHashes, String path)
+			throws IOException {
+		String sblitDirectory = Configuration
+				.getSblitDirectory() + Configuration.slash;
+		if (!requestedHashes.contains(ownHashes.get(ownHashes
+				.size() - 1))) {
+			int dotIndex = path.lastIndexOf(".");
+			File conflictFile;
+			if (dotIndex > path
+					.lastIndexOf(Configuration.slash) + 1) {
+				for (int i = 1;; i++) {
+					if (!new File(sblitDirectory
+							+ path.substring(0, dotIndex)
+							+ "(Conflict " + i + ")"
+							+ path.substring(dotIndex))
+							.exists()) {
+						conflictFile = new File(
+								sblitDirectory
+										+ path.substring(0,
+												dotIndex)
+										+ "(Conflict "
+										+ i + ")"
+										+ path
+										.substring(dotIndex));
+						break;
+					}
+				}
+			} else {
+				for (int i = 1;; i++) {
+					if (!new File(sblitDirectory + path
+							+ "(Conflict " + i + ")")
+							.exists()) {
+						conflictFile = new File(
+								sblitDirectory + path
+										+ "(Conflict " + i
+										+ ")");
+						break;
+					}
+				}
+			}
+			File file = new File(sblitDirectory + path);
+			Files.copy(file.toPath(), conflictFile.toPath());
+		}
+	}
+
+\end{lstlisting}
+\end{minipage}
+\begin{description}
+	\item[{requestedHashes:}] Der Parameter gibt an, welche Hashes in der Dateianfrage geschickt wurden. Die Hashes haben den Datentyp Data, welcher in \gls{dcl} definiert wurden. Um eine unbestimmte Menge davon speichern zu können, werden diese in eine LinkedList geschrieben. Diese hat den Vorteil, dass die Elemente die Reihenfolge behalten, in der sie in die Liste geschrieben wurden.
+	
+	\item[{ownHashes:}] Dieser Parameter enthält eine LinkedList an Hashes vom Datentyp Data, welche die den Versionsverlauf der lokalen Datei enthält. 
+	
+	\item[{path:}] Der Parameter path hat den Datentyp String. Dieser enthält den zum \sblit-Ordner relativen Pfad.
+	
+	\item[{sblitDirectory:}] Diese Variable vom Datentyp String enthält den absoluten Pfad des \sblit-Ordners. Dieser setzt sich zusammen aus \code{Configuration.getSblitDirectory()} und \code{Configuration.slash}. \code{Configuration.getSblitDirectory()} liefert den \sblit-Ordner zurück, der in der \code{Configuration}-Klasse definiert ist. Außerdem wird, je nach dem, ob das Betriebssystem Windows oder Unix-basierend ist, ein Backslash oder ein Slash an den Pfad gehängt. Die Zuweisung des richtigen Slashes wird am Programmstart bei der Initialisierung der \code{Configuration}-Klasse vorgenommen.
+
+	\item[{dotIndex:}] In dieser Variable befindet sich der Index des letzten Punktes im Dateipfad. Dieser dient dazu, um herauszufinden, ob die Datei eine Endung hat.
+	
+	\item[{conflictFile:}] Das conflictFile ist die neue Datei, die erzeugt wird, wenn ein Konflikt auftritt.
+	
+	\item[{file:}] Die Variable file enthält die ursprüngliche Datei.
+\end{description}
+Mithilfe der if-Anweisung in Zeile sechs wird überprüft, ob der empfangene Versionsverlauf den letzten Hash, der im lokalen Logfile gespeichert ist, enthält. Das Rufzeichen vor der Anweisung negiert das Ergebnis. 
+%TODO fertigstellen
