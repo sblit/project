@@ -1,11 +1,30 @@
-\newglossaryentry{Partnergerät}{
+\newglossaryentry{partnerdevice}{
 	name=Partnergerät,
 	description={Ein Gerät eines anderen \sblit-Nutzers, mit dem eine Partnerschaft besteht}
 }
-\newglossaryentry{gls_authreq}{
+\newglossaryentry{authreq}{
 	name=Authenticity Request,
-	description={Eine Message zur Anforderung einer Challenge, um die Authentizität des Gegenübers sicherzustellen}
+	description={Eine Nachricht zur Anforderung einer Challenge, um die Authentizität des Gegenübers sicherzustellen}
 }
-
-\newacronym[see={[Glossar:]{gls_authreq}}]{authreq}{AuthReq}{Authenticity Request\glsadd{gls_authreq}}
+\newglossaryentry{authres}{
+	name=Authenticity Response,
+	description={Die Antwort auf den \gls{authreq}, um die eigene Authentizität zu beweisen.}
+}
+\newglossaryentry{filereq}{
+	name=File Request,
+	description={Die Anfrage an das Gegenüber, ob eine Datei benötigt wird.}
+}
+\newglossaryentry{fileres}{
+	name=File Response,
+	description={Die Antwort auf einen File Request, der eine Datei akzeptiert oder verweigert.}
+}
+\newglossaryentry{filemsg}{
+	name=File Message,
+	description={Die eigentliche Übertragung einer Datei.}
+}
+\newglossaryentry{filedel}{
+	name=File Delete Message,
+	description={Eine Nachricht, die dazu dient, alle Geräte über eine Löschung einer Datei zu informieren}
+}
+%\newacronym[see={[Glossar:]{authreq}}]{authreq}{AuthReq}{Authenticity Request\glsadd{authreq}}
 
