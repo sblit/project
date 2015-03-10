@@ -1,19 +1,66 @@
 
+\label{dcl-packetcomponents}
+
 \subsection*{FlexNum}
 \label{dcl-packetcomponents-flexnum}
-Ein \gls{FlexNum}-Component ist ein \gls{PacketComponent} zur Übertragung einer bis zu 64 Bits großen
+Ein \gls{fnumc} ist ein \gls{pktc} zur Übertragung einer bis zu 64 Bits großen
 Ganzzahl.
-Die Besonderheit liegt darin, dass der \gls{FlexNum}-Component zwar Zahlen bis zu $2^{64}-1$ übertragen
-kann, für Zahlen bis $2^{7}-1$, welche bereits mit 7 Bits darstellbar sind, aber trotzdem nur ein Byte
+Die Besonderheit liegt darin, dass der \gls{fnumc} zwar Zahlen bis zu $2^{64}-1$ übertragen kann,
+für Zahlen bis $2^{7}-1$, welche bereits mit 7 Bits darstellbar sind, aber trotzdem nur ein Byte
 zur Übertragung benötigt.
 
+Das funktioniert durch Kodierung der Anzahl der folgenden Bytes im ersten Byte. Hierbei zeigt die
+Anzahl der führenden Bits mit dem Wert 1 im ersten Byte an, wie viele Bytes für die Darstellung der
+Zahl folgen.
+Ein Bit mit dem Wert 0 wird im ersten Byte also jedenfalls benötigt, um die Abfolge der führenden
+Bits mit dem Wert 1 zu beenden. Im Fall von Zahlen von 0 bis 127 ($2^{7}-1$) hat das erste Bit im
+ersten Byte den Wert 0 und zeigt damit an, dass keine Bytes folgen. Die restlichen 7 Bits werden
+zur Darstellung der Zahl verwendet.
+
+Nachfolgend ist eine Tabelle angeführt, die einen Überblick über die mit einem \gls{fnumc}
+darstellbaren Wertbereiche, das Bitpräfix im Initialisierungsbyte, die Anzahl der folgenden Bytes
+sowie die Effizienz der Speichernutzung gibt.
+
+Die Effizienz berechnet sich durch $\dfrac{log_2(n_{max})}{N_{bytes} \cdot 8}$, wobei $n_{max}$ der
+mit der jeweiligen Anzahl an Folgebits maximal darstellbare Wert ist und $N_{bytes}$ der
+Gesamtanzahl an benötigten Bytes entspricht.
+
+\begin{table}[H]
+\begin{centering}
+\begin{tabular}{|c|l|c|r|}
+	\hline 
+	Erstes Byte & Wertbereich & Folgebytes & Effizienz\tabularnewline
+	\hline 
+	\hline 
+	\code{0XXXXXXX} & $0$ -- $127$ & $0$ & $87,50\%$\tabularnewline
+	\hline
+	\code{10XXXXXX} & $128$ -- $16511$ & $1$ & $87,57\%$\tabularnewline
+	\hline
+	\code{110XXXXX} & $16512$ -- $2113663$ & $2$ & $87,55\%$\tabularnewline
+	\hline
+	\code{1110XXXX} & $2113664$ -- $270549119$ & $3$ & $87,54\%$\tabularnewline
+	\hline
+	\code{11110XXX} & $270549120$ -- $34630287487$ & $4$ & $87,53\%$\tabularnewline
+	\hline
+	\code{111110XX} & $34630287488$ -- $4432676798591$ & $5$ & $87,52\%$\tabularnewline
+	\hline
+	\code{1111110X} & $4432676798592$ -- $567382630219903$ & $6$ & $87,52\%$\tabularnewline
+	\hline
+	\code{11111110} & $567382630219904$ -- $72624976668147839$ & $7$ & $87,52\%$\tabularnewline
+	\hline
+	\code{11111111} & $72624976668147840$ -- $18519369050377699455$ & $8$ & $88,90\%$\tabularnewline
+	\hline
+\end{tabular}
+\par\end{centering}
+\protect\caption{FlexNum -- Darstellbare Werte}
+\end{table}
 
 Nachfolgend ist jener Teil des Quellcodes von \gls{dcl} angeführt, welcher zum Lesen eines
-\gls{FlexNum}-Components angewandt wird.
+\gls{fnumc} angewandt wird.\\
 
 \javalisting
 \begin{minipage}{\linewidth}
-\begin{lstlisting}[caption={Lesen eines \gls*{FlexNum}-Components (Java)},captionpos=b]
+\begin{lstlisting}[caption={Lesen eines \gls*{fnumc} (Java)},captionpos=b]
 long readFlexNum() {
 	
 	byte iByte = read();

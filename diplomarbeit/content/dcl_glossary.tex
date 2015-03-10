@@ -109,6 +109,22 @@
 	description={Ein verlässlicher Übertragungskanal zur Kommunikation zwischen zwei Instanzen einer auf dem \gls{dcl} aufbauenden Anwendung}
 }
 
+\newglossaryentry{pktc}{
+	name=Packet Component,
+	description={Teil einer Message, beispielsweise Ganzzahl oder String. Siehe \link{dcl-packetcomponents}}
+}
+
+\newglossaryentry{fnumc}{
+	name=FlexNum-Component,
+	description={\gls{pktc} zur Übertragung einer bis zu 64 Bits großen Ganzzahl. Siehe \link{dcl-packetcomponents-flexnum}}
+}
+
+\newglossaryentry{lla}{
+	name=Lower Level Address,
+	plural=Lower Level Addresses,
+	description={Die Adresse eines \gls{service} auf der Netzwerkschicht unter \gls{dcl}, de facto die IP-Adresse und Port, unter der ein \gls{service} erreichbar ist}
+}
+
 % DCL source classes
 
 \newglossaryentry{Data}{
@@ -145,12 +161,3 @@
 	description={Im Quellcode von \gls{dcl} definierte Klasse zur Verwaltung einer Verbindung zwischen zwei \glspl{service}}
 }
 
-\newglossaryentry{FlexNum}{
-	name=FlexNum,
-	description={Im \gls{dcl} definierter \gls{PacketComponent} zur Übertragung einer bis zu 64 Bits großen Ganzzahl. Siehe \link{dcl-packetcomponents-flexnum}}
-}
-
-\newglossaryentry{PacketComponent}{
-	name=PacketComponent,
-	description={Im \gls{dcl} definierte abstrakte Klasse zum Lesen und Schreiben bestimmter Teile von Messages}
-}

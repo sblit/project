@@ -1,0 +1,111 @@
+
+\newcommand{\isgeneralbytefield}{\begin{figure}[tbh]\begin{centering}\begin{bytefield}[bitwidth=3.0em]{8} \\ \bitheader{0-7} \\ \wordbox[lrt]{2}{\isprotomsgtype \\ \flexnumfield} \\ 
+\skippedwords \\ 
+\wordbox[lr]{1}{} \\ 
+\wordbox[lrt]{2}{\isprotomsgdata \\ $N$ Bytes} \\ 
+\skippedwords \\ 
+\wordbox[lrb]{1}{}\end{bytefield}\par\end{centering}\protect\caption{\gls*{isproto} -- Genereller Messageaufbau}\end{figure}}
+
+\newcommand{\isprotoversionbytefield}{\begin{figure}[tbh]\begin{centering}\begin{bytefield}[bitwidth=3.0em]{8} \\ 
+\bitheader{0-7} \\ 
+\begin{rightwordgroup}{Message Type}
+\wordbox[lrt]{1}{\code{0}}
+
+\end{rightwordgroup}
+ \\ 
+\wordbox[lrt]{2}{Version \\ \flexnumfield} \\ 
+\skippedwords \\ 
+\wordbox[lrb]{1}{}
+\end{bytefield}\par\end{centering}
+\protect\caption{\gls*{isproto} -- \isprotoversion-Message}
+\end{figure}}
+
+\newcommand{\isprotollareqbytefield}{\begin{figure}[tbh]\begin{centering}\begin{bytefield}[bitwidth=3.0em]{8} \\ 
+\bitheader{0-7} \\ 
+\begin{rightwordgroup}{Message Type}
+\wordbox[lrt]{1}{\code{1}}
+
+\end{rightwordgroup}
+ \\ 
+\wordbox[lrt]{2}{Limit \\ \flexnumfield} \\ 
+\skippedwords \\ 
+\wordbox[lrb]{1}{}
+\end{bytefield}\par\end{centering}
+\protect\caption{\gls*{isproto} -- \isprotollareq-Message}
+\end{figure}}
+
+\newcommand{\isprotollarepbytefield}{\begin{figure}[H]\begin{centering}\begin{bytefield}[bitwidth=3.0em]{8} \\ 
+\bitheader{0-7} \\ 
+\begin{rightwordgroup}{Message Type}
+\wordbox[lrt]{1}{\code{2}}
+
+\end{rightwordgroup}
+ \\ 
+\begin{rightwordgroup}{LLA}
+\wordbox[lrt]{2}{LLA Type \\ \flexnumfield} \\ 
+\skippedwords \\ 
+\wordbox[lr]{1}{}
+ \\ 
+\wordbox[lrt]{2}{LLA Data} \\ 
+\skippedwords \\ 
+\wordbox[lr]{1}{}
+
+\end{rightwordgroup}
+ \\ 
+\begin{rightwordgroup}{LLA}
+\wordbox[lrt]{2}{$\cdots$} \\ 
+\skippedwords \\ 
+\wordbox[lrb]{1}{}
+
+\end{rightwordgroup}
+\end{bytefield}\par\end{centering}
+\protect\caption{\gls*{isproto} -- \isprotollarep-Message}
+\end{figure}}
+
+\newcommand{\isprototsbytefield}{\begin{figure}[tbh]\begin{centering}\begin{bytefield}[bitwidth=3.0em]{8} \\ 
+\bitheader{0-7} \\ 
+\begin{rightwordgroup}{Message Type}
+\wordbox[lrt]{1}{\code{3}}
+
+\end{rightwordgroup}
+ \\ 
+\wordbox[lrt]{2}{Address Slot \\ \flexnumfield} \\ 
+\skippedwords \\ 
+\wordbox[lr]{1}{}
+ \\ 
+\begin{rightwordgroup}{Address Key}
+\wordbox[lrt]{1}{Key Type}
+ \\ 
+\wordbox[lrt]{2}{Key Data} \\ 
+\skippedwords \\ 
+\wordbox[lrb]{1}{}
+
+\end{rightwordgroup}
+\end{bytefield}\par\end{centering}
+\protect\caption{\gls*{isproto} -- \isprotots-Message}
+\end{figure}}
+
+\newcommand{\isprotoccreqbytefield}{\begin{figure}[tbh]\begin{centering}\begin{bytefield}[bitwidth=3.0em]{8} \\ 
+\bitheader{0-7} \\ 
+\begin{rightwordgroup}{Message Type}
+\wordbox[lrt]{1}{\code{4}}
+
+\end{rightwordgroup}
+ \\ 
+\wordbox[lrt]{2}{Address Slot \\ \flexnumfield} \\ 
+\skippedwords \\ 
+\wordbox[lr]{1}{}
+ \\ 
+\begin{rightwordgroup}{Challenge Data}
+\wordbox[lrt]{2}{Data Length \\ \flexnumfield} \\ 
+\skippedwords \\ 
+\wordbox[lr]{1}{}
+ \\ 
+\wordbox[lrt]{2}{Data} \\ 
+\skippedwords \\ 
+\wordbox[lrb]{1}{}
+
+\end{rightwordgroup}
+\end{bytefield}\par\end{centering}
+\protect\caption{\gls*{isproto} -- \isprotoccreq-Message}
+\end{figure}}
