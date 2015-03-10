@@ -66,21 +66,23 @@ zwei übertragenen \isprotoversion-Messages die selben Versionsnummern enthalten
 Eine Message im \gls{isproto} ist generell so aufgebaut, dass ein FlexNum-Component am Anfang der
 Message den Typ angibt, anhand dessen die restliche Nachricht interpretiert wird.
 
-\begin{figure}[tbh]
-\begin{centering}
+\isgeneralbytefield
 
-\begin{bytefield}[bitwidth=3em]{8}
-	\\
-	\bitheader{0-7} \\
-	
-	\wordbox[tlr]{2}{\isprotomsgtype \\ FlexNum, 1 -- 9 Bytes} \\
-	\skippedwords \\
-	\wordbox[lr]{1}{} \\
-	
-	\wordbox[tlr]{2}{\isprotomsgdata \\ $N$ Bytes} \\
-	\skippedwords \\
-	\wordbox[blr]{1}{}
-	
+%\begin{figure}[tbh]
+%\begin{centering}
+%
+%\begin{bytefield}[bitwidth=3em]{8}
+%	\\
+%	\bitheader{0-7} \\
+%	
+%	\wordbox[tlr]{2}{\isprotomsgtype \\ \flexnumfield} \\
+%	\skippedwords \\
+%	\wordbox[lr]{1}{} \\
+%	
+%	\wordbox[tlr]{2}{\isprotomsgdata \\ $N$ Bytes} \\
+%	\skippedwords \\
+%	\wordbox[blr]{1}{}
+%	
 %	\begin{rightwordgroup}{RTP \\ Header}
 %		\bitbox{2}{V=2} & \bitbox{1}{P} & \bitbox{1}{X} & \bitbox{4}{CC} \\
 %		\bitbox{1}{M} & \bitbox{7}{PT} \\
@@ -95,11 +97,11 @@ Message den Typ angibt, anhand dessen die restliche Nachricht interpretiert wird
 %		\bitbox[blr]{16}{}
 %		& \bitbox{16}{\dots\emph{optional} RTP padding}
 %	\end{rightwordgroup}
-\end{bytefield}
-
-\par\end{centering}
-\protect\caption{\gls*{isproto} -- Genereller Messageaufbau}
-\end{figure}
+%\end{bytefield}
+%
+%\par\end{centering}
+%\protect\caption{\gls*{isproto} -- Genereller Messageaufbau}
+%\end{figure}
 
 \subsection{Messages}
 
@@ -108,28 +110,55 @@ Message den Typ angibt, anhand dessen die restliche Nachricht interpretiert wird
 Die \isprotoversion-Message enthält eine Versionsnummer in Form eines FlexNum-Components und wird
 benutzt, um am Beginn der Verbindung die verwendete Version des \gls{isproto} auszuhandeln.
 
-\begin{figure}[tbh]
-\begin{centering}
+\isprotoversionbytefield
 
-\begin{bytefield}[bitwidth=3em]{8}
-	\\
-	\bitheader{0-7} \\
-	
-	\begin{rightwordgroup}{\isprotomsgtype}
-		\wordbox[tlr]{1}{\code{0}}
-	\end{rightwordgroup} \\
-	
-	\begin{rightwordgroup}{\isprotomsgdata}
-		\wordbox[tlr]{2}{Version ID \\ FlexNum, 1 -- 9 Bytes} \\
-		\skippedwords \\
-		\wordbox[blr]{1}{}
-	\end{rightwordgroup}
-	
-\end{bytefield}
+%\begin{figure}[tbh]
+%\begin{centering}
+%
+%\begin{bytefield}[bitwidth=3em]{8}
+%	\\
+%	\bitheader{0-7} \\
+%	
+%	\begin{rightwordgroup}{\isprotomsgtype}
+%		\wordbox[tlr]{1}{\code{0}}
+%	\end{rightwordgroup} \\
+%	
+%	\begin{rightwordgroup}{\isprotomsgdata}
+%		\wordbox[tlr]{2}{Version ID \\ \flexnumfield} \\
+%		\skippedwords \\
+%		\wordbox[blr]{1}{}
+%	\end{rightwordgroup}
+%	
+%\end{bytefield}
+%
+%\par\end{centering}
+%\protect\caption{\gls*{isproto} -- \isprotoversion-Message}
+%\end{figure}
 
-\par\end{centering}
-\protect\caption{\gls*{isproto} -- \isprotoversion-Message}
-\end{figure}
+\subsubsection{LLA Request}
+\label{dcl-isproto-llareq}
+Die \isprotollareq-Message wird benutzt, um vom Gegenüber eine Liste an \glspl{lla} anzufordern.
+Die Message enthält ein Feld für die Maximalanzahl an \glspl{lla}, die in der
+\isprotollarep-Message zurückgesendet werden sollen.
 
-% TODO GLOSSARY ENTRY FOR FlexNum
+\isprotollareqbytefield
+
+\subsubsection{LLA Reply}
+\label{dcl-isproto-llarep}
+Blah blah blub.
+
+\isprotollarepbytefield
+
+\subsubsection{Trusted Switch}
+\label{dcl-isproto-ts}
+Blah blah blub.
+
+\isprototsbytefield
+
+\subsubsection{Crypto Challenge Request}
+\label{dcl-isproto-ccreq}
+Blah blah blub.
+
+\isprotoccreqbytefield
+
 
