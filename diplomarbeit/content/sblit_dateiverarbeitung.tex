@@ -32,57 +32,45 @@ Um Konflikte zu erkennen und zu lösen wird der folgende Code verwendet:
 private void handleConflict(LinkedList<Data> requestedHashes,
 			LinkedList<Data> ownHashes, String path)
 			throws IOException {
-		String sblitDirectory = Configuration
-				.getSblitDirectory() + Configuration.slash;
-		if (!requestedHashes.contains(ownHashes.get(ownHashes
-				.size() - 1))) {
-			int dotIndex = path.lastIndexOf(".");
-			File conflictFile;
-			if (dotIndex > path
-					.lastIndexOf(Configuration.slash) + 1) {
-				for (int i = 1;; i++) {
-					if (!new File(sblitDirectory
-							+ path.substring(0, dotIndex)
-							+ "(Conflict " + i + ")"
-							+ path.substring(dotIndex))
-							.exists()) {
-						conflictFile = new File(
-								sblitDirectory
-										+ path.substring(0,
-												dotIndex)
-										+ "(Conflict "
-										+ i + ")"
-										+ path
-										.substring(dotIndex));
-						break;
-					}
-				}
-			} else {
-				for (int i = 1;; i++) {
-					if (!new File(sblitDirectory + path
-							+ "(Conflict " + i + ")")
-							.exists()) {
-						conflictFile = new File(
-								sblitDirectory + path
-										+ "(Conflict " + i
-										+ ")");
-						break;
-					}
+	String sblitDirectory = Configuration.getSblitDirectory()
+			+ Configuration.slash;
+	if (!requestedHashes.contains(ownHashes.get(ownHashes
+			.size() - 1))) {
+		int dotIndex = path.lastIndexOf(".");
+		File conflictFile;
+		if (dotIndex > path.lastIndexOf(Configuration.slash) 
+				+ 1) {
+			for (int i = 1;; i++) {
+				conflictFile = new File(sblitDirectory
+						+ path.substring(0, dotIndex)
+						+ "(Conflict " + i + ")"
+						+ path.substring(dotIndex));
+				if (!conflictFile.exists()) {
+					break;
 				}
 			}
-			File file = new File(sblitDirectory + path);
-			Files.copy(file.toPath(), conflictFile.toPath());
+		} else {
+			for (int i = 1;; i++) {
+				conflictFile = new File(sblitDirectory + path
+						+ "(Conflict " + i + ")");
+				if (!conflictFile.exists()) {
+					break;
+				}
+			}
 		}
+		File file = new File(sblitDirectory + path);
+		Files.copy(file.toPath(), conflictFile.toPath());
 	}
+}
 
 \end{lstlisting}
 \end{minipage}
 \begin{description}
 	\item[{requestedHashes:}] Der Parameter gibt an, welche Hashes in der Dateianfrage geschickt wurden. Die Hashes haben den Datentyp Data, welcher in \gls{dcl} definiert wurden. Um eine unbestimmte Menge davon speichern zu können, werden diese in eine LinkedList geschrieben. Diese hat den Vorteil, dass die Elemente die Reihenfolge behalten, in der sie in die Liste geschrieben wurden.
 	
-	\item[{ownHashes:}] Dieser Parameter enthält eine LinkedList an Hashes vom Datentyp Data, welche die den Versionsverlauf der lokalen Datei enthält. 
+	\item[{ownHashes:}] Dieser Parameter enthält eine LinkedList an Hashes vom Datentyp Data, welche gemeinsam den Versionsverlauf der lokalen Datei ergeben. 
 	
-	\item[{path:}] Der Parameter path hat den Datentyp String. Dieser enthält den zum \sblit-Ordner relativen Pfad.
+	\item[{path:}] Der Parameter path enthält den zum \sblit-Ordner relativen Pfad.
 	
 	\item[{sblitDirectory:}] Diese Variable vom Datentyp String enthält den absoluten Pfad des \sblit-Ordners. Dieser setzt sich zusammen aus \code{Configuration.getSblitDirectory()} und \code{Configuration.slash}. \code{Configuration.getSblitDirectory()} liefert den \sblit-Ordner zurück, der in der \code{Configuration}-Klasse definiert ist. Außerdem wird, je nach dem, ob das Betriebssystem Windows oder Unix-basierend ist, ein Backslash oder ein Slash an den Pfad gehängt. Die Zuweisung des richtigen Slashes wird am Programmstart bei der Initialisierung der \code{Configuration}-Klasse vorgenommen.
 
@@ -92,5 +80,6 @@ private void handleConflict(LinkedList<Data> requestedHashes,
 	
 	\item[{file:}] Die Variable file enthält die ursprüngliche Datei.
 \end{description}
-Mithilfe der if-Anweisung in Zeile sechs wird überprüft, ob der empfangene Versionsverlauf den letzten Hash, der im lokalen Logfile gespeichert ist, enthält. Das Rufzeichen vor der Anweisung negiert das Ergebnis. 
-%TODO fertigstellen
+Mithilfe der \code{if}-Anweisung in Zeile sechs wird überprüft, ob der empfangene Versionsverlauf den letzten Hash, der im lokalen Logfile gespeichert ist, nicht enthält. Somit wird überprüft ob ein Konflikt aufgetreten ist. \\
+In der \code{if}-Anweisung in Zeile 10 wird herausgefunden, ob die Datei eine Dateiendung besitzt. Dafür wird überprüft, ob der letzte Slash mehr als einen Platz vor dem Punkt ist, damit versteckte Dateien und Ordner unter Linux ausgeschlossen werden können. Diese werden nämlich mit einem Punkt vor dem Datei- oder Ordnernamen gekennzeichnet.\\
+Die \code{for}-Schleife in Zeile 15 stellt zusammen mit der \code{if}-Anweisung in Zeile 21 sicher, dass die Konfliktdatei nicht schon vorhanden ist. Existiert diese noch nicht, wird die Schleife abgebrochen und der Name der Konfliktdatei bleibt erhalten.
