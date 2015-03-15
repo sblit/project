@@ -6,7 +6,82 @@ Damit \sblit weiß, wann die Dateien von den Partnergeräten \referenz{Partnerge
 
 \subsection{Reaktionen auf Dateiänderungen}
 Wenn eine Datei neu erstellt, bearbeitet oder gelöscht wird, erkennt dies \sblit und kann diese Daten an den Synchronisationsprozess weiterleiten. Außerdem ist das Erkennen einer Änderung im \sblit-Ordner wichtig, da diese im \gls{logfile} protokolliert wird. Dieses wird sowohl für die Konflikterkennung \referenz{Konflikterkennung} als auch für eine Reduktion der benötigten Bandbreite \referenz{Dateianfrage} verwendet.\\
-Um diese Änderungen zu erkennen, verwendet \sblit das sogenannte Watchservice. Das Watchservice ist eine Schnittstelle zum Dateisystem, welche vom Dateisystem benachrichtigt wird, wenn sich eine Datei in einem bestimmten Ordner ändert. In diesem Fall ist das der Ordner, der vom Benutzer für die Synchronisation festgelegt wurde. Je nach dem, ob eine Datei angelegt, verändert oder gelöscht wurde, passieren drei unterschiedliche Dinge. Wird eine Datei angelegt, werden eine neue Datei samt Hash in das \gls{logfile} geschrieben und eine Dateianfrage an die anderen, eigenen Geräte geschickt. Wird eine bereits vorhandene Datei verändert, werden ein neuer Hash zu den bereits vorhandenen Hashes hinzugefügt und ebenfalls eine Dateianfrage an die anderen eigenen Geräte gesendet. Wird die Datei gelöscht, wird diese samt Hashes aus dem \gls{logfile} gelöscht und eine Löschanfrage wird an die eigenen Geräte versendet.
+Um diese Änderungen zu erkennen, verwendet \sblit das sogenannte \gls{watchservice}. In diesem Fall wird dieses bei Änderungen in dem Ordner benachrichtigt, der vom Benutzer für die Synchronisation festgelegt wurde. Je nach dem, ob eine Datei angelegt, verändert oder gelöscht wurde, passieren drei unterschiedliche Dinge. Wird eine Datei angelegt, werden eine neue Datei samt Hash in das \gls{logfile} geschrieben und eine Dateianfrage an die anderen, eigenen Geräte geschickt. Wird eine bereits vorhandene Datei verändert, werden ein neuer Hash zu den bereits vorhandenen Hashes hinzugefügt und ebenfalls eine Dateianfrage an die anderen eigenen Geräte gesendet. Wird die Datei gelöscht, wird diese samt Hashes aus dem \gls{logfile} gelöscht und eine Löschanfrage wird an die eigenen Geräte versendet.\\ \\
+\javalisting
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[caption={Initialisierung des \gls{watchservice}},captionpos=b]
+WatchService watcher = filesDirectory.getFileSystem()
+		.newWatchService();
+filesDirectory.register(watcher,
+		StandardWatchEventKinds.ENTRY_CREATE,
+		StandardWatchEventKinds.ENTRY_DELETE,
+		StandardWatchEventKinds.ENTRY_MODIFY);
+WatchKey watchKey = watcher.take();
+List<WatchEvent<?>> events = watchKey.pollEvents();
+Thread.sleep(TIME_TO_SLEEP);
+\end{lstlisting}
+\end{minipage}
+\begin{description}
+	\descriptionitem{filesDirectory}
+	Diese Variable enthält den vom Benutzer festgelegten \sblit-Ordner.
+	\descriptionitem{watcher}
+	Dies ist eine Variable vom Typ \gls{watchservice} und wird dazu benötigt, das Watchservice auf einen bestimmten Ordner horchen zu lassen.
+	\descriptionitem{watchKey}
+	Der \gls{watchkey} enthält eine Liste an Dateien, die neu erstellt, geändert oder gelöscht wurden.
+	\descriptionitem{events}
+	Jedes WatchEvent enthält eine Datei, die sich geändert hat und ob sie neu erstellt, verändert oder gelöscht wurde. 
+\end{description}
+In Zeile 1 wird ein neues Objekt der Klasse \gls{watchservice} erstellt, welches auf Änderungen im \sblit-Ordner horcht. Als nächstes wird in den Zeilen 3-6 das \gls[watchservice} im Dateisystem registriert. Dabei werden in der \code{register}-Methode das \gls{watchservice}-Objekt und die Fälle, in denen das \gls{watchservice} benachrichtigt werden soll, festgelegt. In diesem Fall ist sind das neue Dateien (ENTRY_CREATE), Dateiänderungen (ENTRY_MODIFY) und gelöschte Dateien (ENTRY_DELETE). In Zeile 7 wird dem \gls{watchkey}-Objekt der Rückgabewert der \code{.take()}-Methode des \gls{watchservice} zugewiesen. Diese Methode wartet, bis sich etwas in dem festgelegten Ordner ändert und gibt dann die Änderungen in dem \gls{watchkey}-Objekt zurück. \\ \\
+\javalisting
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[caption={Erkennen eines Konflikts},captionpos=b]
+Map<String, LinkedList<Data>> files = getLogs();
+Map<String, LinkedList<Data>> synchronizedDevices = 
+		getSynchronizedDevices();
+filesToPush = new File[0];
+filesToDelete = new File[0];
+for (WatchEvent event : events) {
+	String path = event.context().toString();
+	File changedFile = new File(
+			Configuration.getSblitDirectory()
+					+ Configuration.slash + path);
+	if (event.kind() == StandardWatchEventKinds.ENTRY_CREATE) {
+		byte[] fileContent = readFile(event);
+		Data hash = Crypto.sha1(new Data(fileContent));
+		LinkedList<Data> hashes = new LinkedList<>();
+		hashes.add(hash);
+		files.put(path, hashes);
+		LinkedList<Data> synchronizedDevice = new LinkedList<>();
+		synchronizedDevice.add(Configuration
+				.getPublicAddressKey().toData());
+		synchronizedDevices
+				.put(path, synchronizedDevice);
+		filesToPush = refreshFilesArray(filesToPush,
+				changedFile);
+	} else if (event.kind() == StandardWatchEventKinds.ENTRY_DELETE) {
+		files.remove(event.context().toString());
+		filesToDelete = refreshFilesArray(filesToDelete,
+				changedFile);
+	} else if (event.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
+		byte[] fileContent = readFile(event);
+		Data hash = Crypto.sha1(new Data(fileContent));
+		LinkedList<Data> hashes = files.get(path);
+		if (!hashes.contains(hash)) {
+			hashes.add(hash);
+				filesToPush = refreshFilesArray(filesToPush,
+					changedFile);
+			LinkedList<Data> synchronizedDevice = new LinkedList<>();
+			synchronizedDevice.add(Configuration
+					.getPublicAddressKey().toData());
+			synchronizedDevices.put(path,
+				synchronizedDevice);
+		}
+	}
+}
+logFile.createNewFile();
+write(files, synchronizedDevices);
+\end{lstlisting}
+\end{minipage}
  
 \subsection{Konflikte}\label{Konflikt}
 \subsubsection{Allgemein}
