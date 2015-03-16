@@ -1,4 +1,4 @@
-Um zu verhindern, dass Daten werden, verwendet \sblit den sicheren \nameref{Applicationchannel} (siehe Seite \pageref{Applicationchannel}) der Kommunikationsschicht.\\
+Um zu verhindern, dass Daten mitgelesen werden, verwendet \sblit den sicheren \nameref{Applicationchannel} (siehe Seite \pageref{Applicationchannel}) der Kommunikationsschicht.\\
 \sblitg verwendet zur Kommunikation fünf verschiedene Nachrichten:
 \begin{itemize}
 	\item Authentifizierungsanfragen
@@ -30,6 +30,7 @@ Angenommen zwei Geräte eines Besitzers wollen Daten austauschen. Wie können si
 \par\end{centering}
 \protect\caption{\gls{authreq}}
 \end{figure}
+%TODO Umformulieren
 Die Gesamtlänge der Daten, die mit RSA-2048 verschlüsselt werden, darf maximal 128 Byte lang sein. Um Gerät A 64 Byte zur Verfügung zu stellen, beträgt die Länge der von Gerät B gesendeten Daten 64 Byte. Diese 64 Byte werden von Gerät A benötigt, um zu verhindern, dass Gerät B sich gewünschte Werte von Gerät A verschlüsseln lässt.
 
 \subsection{\gls{authres}}
@@ -55,7 +56,7 @@ Der Aufbau der Nachricht lautet wie folgt:
 \par\end{centering}
 \protect\caption{\gls{authres}}
 \end{figure}
-Wird dieses Paket nun von Gerät B empfangen, kann der Inhalt mit dem Public-Key des Gerätes A, also dessen Adresse, entschlüsselt werden. Von den erhaltenen Daten werden die ersten 64 Byte mit den ursprünglich gesendeten 64 Byte verglichen. Stimmen die beiden Werte überein, kann das Gerät seine Authentizität beweisen. Stimmen diese jedoch nicht überein, handelt es sich um einen Betrüger, der offensichtlich den richtigen Private-Key zur vorgetäuschten Adresse nicht kennt.
+Wird dieses Paket nun von Gerät B empfangen, kann der Inhalt mit dem Public-Key des Gerätes A, also dessen Adresse, entschlüsselt werden. Von den erhaltenen Daten werden die ersten 64 Byte mit den ursprünglich gesendeten 64 Byte verglichen. Stimmen die beiden Werte überein, kann das Gerät seine Authentizität beweisen. Stimmen diese jedoch nicht überein, handelt es sich um einen Betrüger, der offensichtlich den richtigen Private-Key zur von ihm angegebenen Adresse nicht kennt.
 		
 \subsection{\gls{filereq}} \label{Dateianfrage}
 Bevor eine Datei an ein anderes Gerät (im Folgenden Gerät B) verschickt wird, schickt das Gerät, das die Datei besitzt (im Folgenden Gerät A), eine Dateianfrage an das Gerät B. Dies hat 2 Gründe: Erstens muss eruiert werden, ob die Datei überhaupt von Gerät B benötigt wird, oder ob besagtes Gerät schon diese Datei besitzt. Zweitens besteht die Möglichkeit eines Konfliktes \referenz{Konflikt}. Daher ist die Dateianfrage folgendermaßen aufgebaut:
@@ -122,14 +123,14 @@ Die Antwort auf eine Dateianfrage beinhaltet folgende Parameter:
 
 \begin{description}
 	\item[{Need-Flag}] \hfill \\
-		Dieses Feld enthält einen Hexadezimalwert, der darüber Auskunft gibt, ob die Datei benötigt wird oder nicht. Steht in diesem Feld der Hexadezimalwert 0x00, wird die Datei nicht benötigt. Steht hier hingegen der Hexadezimalwert 0x01, wird die Datei benötigt. Dieses Byte hilft den Datenverkehr zu reduzieren, da hiermit nicht unnötigerweise eine ganze Datei verschickt werden muss, obwohl diese gar nicht gebraucht wird.
+		Dieses Feld enthält einen Hexadezimalwert, der darüber Auskunft gibt, ob die Datei benötigt wird oder nicht. Steht in diesem Feld der Hexadezimalwert 0x00, wird die Datei nicht benötigt. Steht hier hingegen der Hexadezimalwert 0x01, wird die Datei benötigt. Dieses Byte hilft den Datenverkehr zu reduzieren. So muss nicht eine ganze Datei verschickt werden muss, obwohl diese gar nicht gebraucht wird.
 	\item[{Dateipfad}] \hfill \\
 		Wie auch bei der Dateianfrage wird in der Antwort auf die Dateianfrage der zu \sblit's Hauptordner relative Pfad mitgeschickt.
 	\item[{Hash}] \hfill \\
 		Hier wird noch einmal der letzte Hash des Versionsverlaufs der Dateianfrage verschickt, um sicherzustellen, dass die Datei in der Zwischenzeit nicht geändert wurde. 
 \end{description}
-Nach Empfang der Dateianfrage wird zunächst geprüft, ob die Datei vorhanden und in der aktuellsten Version ist.  Ist die lokale Datei nicht aktuell, wird das Need-Flag, auf den Hexadezimalwert 0x01 gesetzt. Ist die Datei auf dem aktuellsten Stand, wird besagtes Flag auf den Hexadezimalwert 0x00 gesetzt. Außerdem wird überprüft, ob ein Konflikt aufgetreten ist \referenz{Konflikterkennung}.\\
-Nach Empfang der Antwort wird zunächst überprüft, ob der Hashwert der Datei mit dem erhaltenen Pfad übereinstimmt. Stimmt der Hashwert in der Anfrage nicht mit dem aktuellen Hashwert überein, wird die Antwort verworfen. Dies kann beispielsweise passieren, wenn in der Zwischenzeit eine neuere Version der Datei erzeugt wurde. Stimmt dieser jedoch überein kann die Datei nun im nächsten Schritt verschickt werden.
+Nach Empfang der Dateianfrage wird zunächst geprüft, ob die Datei vorhanden und in der aktuellst ist.  Ist die lokale Datei nicht aktuell, wird das Need-Flag, auf den Hexadezimalwert 0x01 gesetzt. Ist die Datei auf dem aktuellsten Stand, wird besagtes Flag auf den Hexadezimalwert 0x00 gesetzt. Außerdem wird überprüft, ob ein Konflikt aufgetreten ist \referenz{Konflikterkennung}.\\
+Nach Empfang der Antwort wird zunächst überprüft, ob der Hashwert der Datei mit dem erhaltenen Pfad übereinstimmt. Stimmt der Hashwert in der Anfrage nicht mit dem aktuellen Hashwert überein, wird die Antwort verworfen. Dies kann beispielsweise passieren, wenn in der Zwischenzeit eine neuere Version der Datei erzeugt wurde. Stimmt dieser jedoch überein, kann die Datei nun im nächsten Schritt verschickt werden.
 		
 \subsection{Die eigentliche Übertragung der Datei}
 Bei der eigentlichen Übertragung der Datei werden folgenden Daten mit der Datei mitgesendet: 
@@ -170,7 +171,7 @@ Bei der eigentlichen Übertragung der Datei werden folgenden Daten mit der Datei
 	\item[{Geräte mit der aktuellen Version}] \hfill \\
 		Hier stehen die Adressen aller Geräte, die die neuste Version schon haben. Ist die Version auf allen Geräten aktuell, kann diese von den Partnergeräten gelöscht werden. Daher wird diese Liste an Geräten immer mit der Datei mitgeschickt. Außerdem können somit unnötige Anfragen an Geräte, die die Datei schon besitzen verhindert werden.
 	\item[{Dateipfad}] \hfill \\
-		Der Dateipfad wird benötigt, damit die Datei auf dem zu synchronisierenden Gerät weiß, an welchen Ort die Datei gespeichert werden soll. Dies ist der gleiche relative Ort, wie auf dem Gerät, dass die Anfrage geschickt hat.
+		Der Dateipfad wird benötigt, damit die Datei auf dem zu synchronisierenden Gerät weiß, an welchen Ort die Datei gespeichert werden soll. Dies ist der gleiche relative Ort, wie auf dem Gerät, das die Anfrage geschickt hat.
 	\item[{Hashes}] \hfill \\
 		Die Hashes werden mitgeschickt, um einen einheitlichen Versionsverlauf sicherzustellen. Das verhindert das auftreten von Konflikten, welche gar keine sind. Weiters dient der aktuellste Hash dazu,  sicherzustellen, dass die Datei, die versendet wurde, auch so ankommt, wie sie versendet wurde. Verhasht man die neue Datei, muss das Ergebnis mit dem aktuellsten mitgeschickten Hash übereinstimmen. Andernfalls muss die Datei neu gesendet werden.
 \end{description}
