@@ -1,11 +1,42 @@
-\newglossaryentry{Partnergerät}{
+\newglossaryentry{partnerdevice}{
 	name=Partnergerät,
 	description={Ein Gerät eines anderen \sblit-Nutzers, mit dem eine Partnerschaft besteht}
 }
-\newglossaryentry{gls_authreq}{
+\newglossaryentry{authreq}{
 	name=Authenticity Request,
-	description={Eine Message zur Anforderung einer Challenge, um die Authentizität des Gegenübers sicherzustellen}
+	description={Eine Nachricht zur Anforderung einer Challenge, um die Authentizität des Gegenübers sicherzustellen}
 }
-
-\newacronym[see={[Glossar:]{gls_authreq}}]{authreq}{AuthReq}{Authenticity Request\glsadd{gls_authreq}}
+\newglossaryentry{authres}{
+	name=Authenticity Response,
+	description={Die Antwort auf den \gls{authreq}, um die eigene Authentizität zu beweisen}
+}
+\newglossaryentry{filereq}{
+	name=File Request,
+	description={Die Anfrage an das Gegenüber, ob eine Datei benötigt wird}
+}
+\newglossaryentry{fileres}{
+	name=File Response,
+	description={Die Antwort auf einen File Request, der eine Datei akzeptiert oder verweigert}
+}
+\newglossaryentry{filemsg}{
+	name=File Message,
+	description={Die eigentliche Übertragung einer Datei}
+}
+\newglossaryentry{filedel}{
+	name=File Delete Message,
+	description={Eine Nachricht, die dazu dient, alle Geräte über eine Löschung einer Datei zu informieren}
+}
+\newglossaryentry{logfile}{
+	name=Logfile,
+	description={Die Datei, in der der Versionsverlauf einer Datei steht. Außerdem werden hier die Geräte, auf denen die Datei schon vorhanden ist, gelistet}
+}
+\newglossaryentry{watchservice}{
+	name=\code{WatchService},
+	description={Eine Schnittstelle zum Filesystem, welche benachrichtigt wird, wenn sich eine Datei in einem bestimmten Ordner ändert}
+}
+\newglossaryentry{watchkey}{
+	name=\code{WatchKey},
+	description={Ein Objekt, das vom \gls{watchservice} erstellt wird, wenn sich etwas in dem zu überwachenden Ordner ändert}
+}
+%\newacronym[see={[Glossar:]{authreq}}]{authreq}{AuthReq}{Authenticity Request\glsadd{authreq}}
 
