@@ -50,7 +50,7 @@
 \definecolor{javadoc}{rgb}{0.25,0.35,0.75} % javadoc
 
 \newcommand{\javalisting}{\lstset{language=Java, basicstyle=\ttfamily, keywordstyle=\color{javakeyword}\bfseries, stringstyle=\color{javastring}, commentstyle=\color{javacomment}, morecomment=[s][\color{javadoc}]{/**}{*/}, numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=5pt, tabsize=4, showspaces=false, showstringspaces=false, frame=single}}
-\newcommand{\startmessage}{\begin{figure}[H] \begin{centering} \begin{bytefield}[bitwidth=3em]{8} \\}
-\newcommand{\endmessage}[1]{\end{bytefield} \par\end{centering} \protect\caption{#1} \end{figure}}
+\newcommand{\messagestart}{\begin{figure}[thb] \begin{centering} \begin{bytefield}[bitwidth=3em]{8} \\}
+\newcommand{\messageend}[1]{\end{bytefield} \par\end{centering} \protect\caption{#1} \end{figure}}
 
 %\lstset{numbers=right, numberstyle=\tiny, stepnumber=2, numbersep=5pt, showspaces=false, frame=single}
