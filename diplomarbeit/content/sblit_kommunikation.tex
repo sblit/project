@@ -1,17 +1,17 @@
 \subsection{Allgemein}
-Um zu verhindern, dass Daten mitgelesen werden, verwendet \sblit den sicheren \nameref{Applicationchannel} (siehe Seite \pageref{Applicationchannel}) der Kommunikationsschicht.\\
-Dabei unterscheidet man grundsätzlich zwischen zwei Typen von Nachrichten: Nachrichten, die an Partnergeräte \referenz{Partnergerät} geschickt und Nachrichten, die an die eigenen Geräte geschickt werden. Weiters gibt es Nachrichten, die bei beiden Geräten gleich sind.
+Um zu verhindern, dass Daten mitgelesen werden, verwendet \sblit den sicheren \nameref{Applicationchannel} (siehe Seite \pageref{Applicationchannel}) der \gls{cl}.\\
+Dabei unterscheidet man grundsätzlich zwischen Nachrichten, die an Partnergeräte \referenz{Partnergerät} und Nachrichten, die an die eigene Geräte geschickt werden. Weiters gibt es Nachrichten, die bei beiden Arten von Geräten gleich sind.
 
 \subsection{Nachrichten an alle Geräte}
 \subsubsection{Allgemein}
-Wenn ein fremdes Gerät eine Verbindung aufbauen will, muss auf jeden Fall überprüft werden, ob das Gerät auch das ist, welches es behauptet zu sein. Daher werden folgende Nachrichten versendet, bevor die restliche Kommunikation stattfindet:
+Bevor ein fremdes Gerät eine Verbindung aufbaut, muss auf jeden Fall seine Identität überprüft werden. Dabei werden folgende Nachrichten versendet:
 \begin{itemize}
 	\item \gls{authreq}s
 	\item \gls{authres}s
 \end{itemize}
 
 \subsubsection{\gls{authreq}}
-Angenommen zwei Geräte eines Besitzers wollen Daten austauschen. Wie können sich diese sicher sein, dass es sich auch um das richtige Gerät handelt? Hier kommt die Authentifizierung ins Spiel. \gls{authreq}s dienen zur Sicherstellung der Authentizität des Gerätes (im Folgenden Gerät A), mit dem ein anderes Gerät (im Folgenden Gerät B) eine Verbindung aufbaut. Dazu schickt das Gerät B zufällige Daten an Gerät A mit der Aufforderung, diese zu verschlüsseln. 
+Angenommen zwei Geräte eines Besitzers wollen Daten austauschen. Zunächst müssen sie die Identität des jeweiligen Kommunikationspartners überprüfen. Dies erfolgt über \gls{authreq}s. Dabei schickt das Gerät B zufällige Daten an das Gerät A mit der Aufforderung, diese zu verschlüsseln. 
 \messagestart
 	\bitheader{0-7} \\
 	
@@ -28,7 +28,7 @@ Angenommen zwei Geräte eines Besitzers wollen Daten austauschen. Wie können si
 Die Gesamtlänge der Daten, die mit RSA-2048 verschlüsselt werden, darf maximal 128 Byte lang sein. Um Gerät A 64 Byte zur Verfügung zu stellen, beträgt die Länge der von Gerät B gesendeten Daten 64 Byte. Diese 64 Byte werden von Gerät A benötigt, um zu verhindern, dass Gerät B sich gewünschte Werte von Gerät A verschlüsseln lässt.
 
 \subsubsection{\gls{authres}}
-Bevor die Daten wieder zurückgeschickt werden, müssen diese von Gerät B verschlüsselt werden. Dies geschieht mit dem Private-Key des Gerätes B. Dabei wird vorher noch ein zufälliger Wert an die empfangenen Daten angefügt, um das unter Authentifizierungsanfragen beschriebene Problem zu lösen.
+Bevor die Daten wieder zurückgeschickt werden, müssen diese von Gerät B verschlüsselt werden. Dies geschieht mit dem Private-Key des Gerätes B. Dabei wird vorher noch ein zufälliger Wert an die empfangenen Daten angefügt, um zu verhindern, dass Gerät B den private-Key von Gerät A ausnutzt.
 \messagestart
 	\bitheader{0-7} \\
 	

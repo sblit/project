@@ -150,7 +150,8 @@ Angenommen, Susanne schaltet nun den Laptop aus. Später bearbeitet sie die Date
 %TODO eventuell noch ergänzen
 
 \subsubsection{Konflikterkennung}\label{Konflikterkennung}
-Um Konflikte zu erkennen, verwendet \sblit eine interne Versionierung der Dateien. Diese wird im Kapitel \linkt{Logfile} näher erklärt. Bei einer Dateianfrage \referenz{Dateianfrage} werden alle Hashes einer Datei mitgesendet. Diese werden nach dem Empfang der Anfrage dann mit dem lokalen \gls{logfile} verglichen. Stimmen die beiden aktullen Hashes aus Dateianfrage und \gls{logfile} überein, muss die Datei gar nicht übertragen werden, da sie schon auf dem neusten Stand ist. Das heißt natürlich auch, dass kein Konflikt auftritt. Stimmt der aktuelle Hash im lokalen \gls{logfile} mit einem in der Dateianfrage überein, tritt ebenfalls kein Konflikt auf, da der aktuelle lokale Hash dem Gerät, dass die Anfrage verschickt hat, schon bekannt ist. \\
+Um Konflikte zu erkennen, verwendet \sblit eine interne Versionierung der Dateien. Diese wird im Kapitel \linkt{Logfile} näher erklärt. Bei einer Dateianfrage \referenz{Dateianfrage} werden alle Hashes einer Datei mitgesendet. Diese werden nach dem Empfang der Anfrage mit den Hashes der Datei mit dem gleichen Namen und aller Konfliktdateien dieser Datei im lokalen \gls{logfile} verglichen. Stimmen die beiden aktullen Hashes aus Dateianfrage und der Datei mit dem gleichen Namen im \gls{logfile} überein, muss die Datei gar nicht übertragen werden, da sie schon auf dem neusten Stand ist. Das heißt natürlich auch, dass kein Konflikt auftritt. Stimmt der aktuelle Hash im lokalen \gls{logfile} mit einem in der Dateianfrage überein, tritt ebenfalls kein Konflikt auf, da der aktuelle lokale Hash dem Gerät, dass die Anfrage verschickt hat, schon bekannt ist. \\
+Stimmt der Versionsverlauf aus dem \gls{filereq} mit dem einer Konfliktdatei überein, wurde eine Version synchronisiert, bevor ein drittes Gerät einen Konflikt bemerkt hat. In diesem Falle könnten mehrere Konfliktdateien mit nur zwei verschiedenen Inhalten erstellt werden. Passiert dies, werden die Namen der beiden Dateien vertauscht um das eben genannte Szenario zu verhindern.
 Ist der aktuelle Hash der lokalen Datei jedoch nicht in der Dateianfrage enthalten, wurde die lokale Datei bearbeitet, bevor diese auf den aktuellen Stand gebracht werden konnte. Anders gesagt: Ein Konflikt ist aufgetreten.
 
 \subsubsection{Konfliktlösung}
@@ -201,7 +202,7 @@ private void handleConflict(LinkedList<Data> requestedHashes,
 \begin{description}
 	\descriptionitem{requestedHashes} Der Parameter gibt an, welche Hashes in der Dateianfrage geschickt wurden. Die Hashes haben den Datentyp Data, welcher in \gls{dcl} definiert wurden. Um eine unbestimmte Menge davon speichern zu können, werden diese in eine LinkedList geschrieben. Diese hat den Vorteil, dass die Elemente die Reihenfolge behalten, in der sie in die Liste geschrieben wurden.
 	
-	\descriptionitem{ownHashes} Dieser Parameter enthält eine LinkedList an Hashes vom Datentyp Data, welche gemeinsam den Versionsverlauf der lokalen Datei ergeben. 
+	\descriptionitem{ownHashes} Dieser Parameter enthält eine \code{LinkedList} an Hashes vom Datentyp Data, welche gemeinsam den Versionsverlauf der lokalen Datei ergeben. 
 	
 	\descriptionitem{path} Der Parameter path enthält den zum \sblit-Ordner relativen Pfad.
 	

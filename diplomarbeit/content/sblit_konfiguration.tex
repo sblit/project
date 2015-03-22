@@ -1,12 +1,13 @@
 \subsection{Allgemein}
-Damit \sblit reibungslos und an die Ansprüche des Benutzers angepasst laufen kann, benötigt es eine Konfiguration. Diese wird unter Windows im Appdata-Verzeichnis im Ordner SBLIT und unter Unix basierenden Systemen im Home-Verzeichnis im ".SBLIT"-Ordner gespeichert. Dieses Verzeichnis sollte jedoch nicht per Hand editiert werden. Sämtliche Einstellungen, die vom Benutzer getätigt werden können finden sich im Einstellungsmenü, das über den System-Tray erreicht werden kann.\\
+Mit dem Konfigurieren von \sblit werden benutzerspezifische Anforderungen berücksichtigt und ein reibungsloser Betrieb sichergestellt. Die Konfiguration wird unter Windows im Appdata-Verzeichnis im Ordner \datei{SBLIT} und auf Unix-basierten Systemen im Home-Verzeichnis im Ordner \datei{.SBLIT} gespeichert. Dieses Verzeichnis sollte jedoch nicht direkt editiert werden. Sämtliche Einstellungen erfolgen über das Einstellungsmenü, das über den System-Tray erreicht werden kann.\\
 Die Konfiguration enthält folgende Dateien:
-\subsection{freceivers.txt}
-Diese Datei enthält eine Liste der Partnergeräte. In freceivers.txt wird ebenfalls festgehalten, ob Partnergeräte die eigenen Dateien speichern oder nur Dateien am eigenen Gerät speichern. Warum dies zu unterscheiden ist, kann im Kapitel \linkt{Partnerschaften} nachgelesen werden. Die Adress-Bytes der Partnergeräte werden in hexadezimaler Form in der Datei gespeichert und werden durch Beistriche getrennt. \\
-Um die Datei zu schreiben wird folgender Code verwendet: \\  \\
+\subsection{Gerätedatei freceivers.txt}
+\datei{freceivers.txt} enthält eine Liste der Partnergeräte. Darin wird festgehalten, ob die eigenen Dateien auf Partnergeräten \referenz{Partnergerät} gespeichert werden. Eine detaillierte Beschreibung findet sich im Kapitel \linkt{Partnerschaften}. \\
+Die Adress-Bytes der Partnergeräte werden durch Beistriche getrennt in hexadezimaler Form gespeichert. \\ %TODO Formattierung
+Zum Schreiben der Datei wird folgender Code verwendet: \\  \\
 \javalisting
 \begin{minipage}{\linewidth}
-\begin{lstlisting}[caption={Schreiben der Gerätedatei},captionpos=b]
+\begin{lstlisting}[caption={Schreiben der Gerätedatei freceivers.txt},captionpos=b]
 private synchronized void updateDevices(File file,
 		Map<String, String> devices) throws IOException {
 	String temp = devices.toString();
@@ -18,26 +19,27 @@ private synchronized void updateDevices(File file,
 \end{minipage}
 \begin{description}
 	\descriptionitem{file}
-	Der Parameter spezifiziert die Datei, in die die Geräte geschrieben werden sollen. Dieser Parameter ist notwendig, da diese Methode auch für das Schreiben von receivers.txt \referenz{receivers} verwendet wird.
+	Der Parameter \code{file} legt die Datei fest, die die Adressen der Partnergeräte enthält. Diese Parametrisierung ist deswegen notwendig, weil die Methode \code{updateDevices(file, devices)} auch für das Schrieben von receivers.txt \referenz{receivers} verwendet wird.
 	\descriptionitem{devices}
-	Dieser Parameter enthält die Liste an Geräten, auf denen die Daten gespeichert werden.
+	Der Parameter \code{devices} enthält die Liste aller Geräte, auf denen die Daten gespeichert werden.
 	\descriptionitem{IOException}
-	Diese Exception tritt auf, wenn Fehler beim Schreiben der Datei auftritt.
-	\descriptionitem{temp}
-	Diese Variable enthält den Inhalt, der in die Datei geschrieben werden soll. 
+	\code{IOException} weist auf einen Fehler beim Schreiben der Datei hin.
+	\descriptionitem{temp}%TODO Variablennamen ändern
+	\code{temp} enthält den Inhalt, der in die Datei geschrieben werden soll. 
 \end{description}
-In der Zeile 3 und 4 werden die Geräte in eine Form gebracht, wie sie in einer Datei gespeichert werden können. Zeile 4 ist deswegen notwendig, da bei der \code{.toString()}-Methode am Anfang geschwungene Klammern angefügt werden, welche bei der Speicherung nicht benötigt werden. In Zeile 5 wird die im \code{file}-Parameter angegebene Datei mit den Neuerungen überschrieben. \code{StandardOpenOption.TRUNCATE\_EXISTING} bedeutet, dass die Datei überschrieben wird, falls diese schon vorhanden ist.
+In den Zeilen 3 und 4 werden die Adressen der Partnergeräte in das Speicherformat übertragen. In Zeile 4 werden die durch die \code{.toString()}-Methode  eingefügten geschwungenen Klammern wieder entfernt. In Zeile 5 wird die im \code{file}-Parameter angegebene Datei mit den neuen Adressen aktualisiert. \code{StandardOpenOption.TRUNCATE\_EXISTING} bedeutet, dass die Datei \datei{freceivers.txt} überschrieben wird, falls diese schon vorhanden ist.
 
-\subsection{logs.txt}
-In der Datei logs.txt wird das \gls{logfile} \referenz{Logfile} gespeichert. Diese werden in folgendem Format in der Datei gespeichert: \\ \code{Pfad=Version1,Version2;Adresse1,Adresse2}. \\
-Der Pfad ist der relative Pfad zum \sblit-Ordner. Die unterschiedlichen Versionen sind Hashwerte der Dateien, deren Bytes in hexadezimaler Form in der Datei gespeichert werden. Wie die Versionen, werden auch die Adressen der Geräte, auf denen schon die Datei auf der aktuellsten Verison ist, in hexadezimaler Form gespeichert. \\
-Um das \gls{logfile} zu schreiben, wird folgende Methode verwendet: \\ \\
+\subsection{\gls{logfile} logs.txt}
+Das \gls{logfile} \referenz{Logfile} \datei{logs.txt} enthält die Versionsverläufe aller Dateien im \sblit-Ordner und dessen Unterordnern im Format: \\ \code{Pfad1=Version1,Version2;Adresse1,Adresse2;Pfad2} \\
+\code{Pfad1} bezeichnet den relativen Pfad vom \sblit-Ordner zur betrachteten \datei{Datei 1}. Die einzelnen Versionen (\code{Version1}, \code{Version2}) sind Hashwerte der \datei{Datei 1} zu verschiedenen Zeitpunkten, deren Bytes in hexadezimaler Form im \gls{logfile} gespeichert werden. Analog dazu werden auch die Adressen der Geräte, die bereits die aktuellste Version der \datei{Datei 1} enthalten, in hexadezimaler Form gespeichert. \code{Pfad2} ist der Pfad zu jener Datei, mit der \datei{Datei 1} in Konflikt steht. Dieser ist optional.\\
+Zum Schreiben des \gls{logfile}s, wird folgende Methode verwendet: \\ \\
 \javalisting
 \begin{minipage}{\linewidth}
-\begin{lstlisting}[caption={Schreiben des Logfiles},captionpos=b]
+\begin{lstlisting}[caption={Schreiben des Logfiles \datei{logs.txt}},captionpos=b]
 private synchronized void write(
 		Map<String, LinkedList<Data>> versions,
-		Map<String, LinkedList<Data>> synchronizedDevices)
+		Map<String, LinkedList<Data>> synchronizedDevices
+		Map<String, String> conflictOf)
 		throws IOException {
 	String logs = "";
 	if (versions.size() > 0) {
@@ -54,6 +56,9 @@ private synchronized void write(
 				temp += "," + data.toString();
 			}
 			logs += temp.substring(1);
+			if(conflictOf.get(path) != null) {
+				temp += ";" + conflictOf.get(path);
+			}
 		}
 		logs = logs.substring(1);
 	}
@@ -63,27 +68,27 @@ private synchronized void write(
 \end{minipage}
 \begin{description}
 	\descriptionitem{versions}
-	Dieser Parameter enthält alle vorhandenen Dateien und deren Versionsverlauf.
+	\code{versions} enthält alle im \sblit-Ordner vorhandenen Dateien und deren Versionsverlauf.
 	\descriptionitem{synchronizedDevices}
-	Dieser Parameter enthält alle vorhandenen Dateien und die Geräte, auf denen die aktuellste Version bereits gespeichert ist.
-	\descriptionitem{logs}
-	In dieser Variable wird der Text gespeichert, der anschließend in die Datei geschrieben werden soll.
+	\code{synchronizedDevices} enthält alle im \sblit-Ordner vorhandenen Dateien und die Geräte, auf denen die aktuellste Version bereits gespeichert ist.
+	\descriptionitem{logs}%TODO eventuell "Versionsverlauf" ändern
+	\code{logs} enthält die formatierten Versionsverläufe.
 	\descriptionitem{temp}
-	Diese Variable enthält eine diese Zeile, die gerade bearbeitet wird.
+	Diese Variable enthält einen bestimmten Versionsverlauf, der gerade bearbeitet wird.
 \end{description}
-Die \code{if}-Anweisung in Zeile 6 überprüft, ob überhaupt Dateien in der Verisionsliste vorhanden sind. Falls die Daten vohanden sind, werden die einzelnen Dateien mithilfe der \code{for}-Schleife in Zeile 7 separiert. In Zeile 8 wird die \code{logs} Variable in eine neue Zeile geschrieben und um den neuen Pfad ergänzt. Weiters wird hier ein \code{=} angefügt, um den Pfad nachher noch von der Logdatei trennen zu können. In der nächsten Zeile wird die Variable temp erstellt und in der darauf folgenden \code{for}-Schleife um die Versionen, getrennt durch einen Beistrich, ergänzt. In Zeile 13 wird der erste Beistrich mit der Anweisung \code{temp.substring(1)} gekürzt und ein ";" angefügt, um die Versionen von den Geräten, auf denen die Datei synchronisert ist, zu trennen. Anschließend wird die Variable \code{temp} zurückgesetzt und die Geräte genau so wie die Versionen in die Variable \code{temp} geschrieben. Schließlich wird der Zeilenumbruch am Anfang der Variable \code{logs} entfernt und die Datei wird in Zeile 23 geschrieben.
+Die \code{if}-Anweisung in Zeile 6 überprüft, ob Dateien in der Versionsliste \code{versions} überhaupt vorhanden sind, um sie dann mithilfe der \code{for}-Schleife in Zeile 7 zu separieren. In Zeile 8 wird die \code{logs} Variable in eine neue Zeile geschrieben und um den neuen Pfad ergänzt. Weiters wird hier ein \code{=} angefügt, um den Pfad nachher noch von der Logdatei trennen zu können. In der nächsten Zeile wird die Variable temp erstellt und in der darauf folgenden \code{for}-Schleife um die Versionen, getrennt durch einen Beistrich, ergänzt. In Zeile 13 wird der erste Beistrich mit der Anweisung \code{temp.substring(1)} gekürzt und ein ";" angefügt, um die Versionen von den Geräten, auf denen die Datei synchronisert ist, zu trennen. Anschließend wird die Variable \code{temp} zurückgesetzt und die Geräte genau so wie die Versionen in die Variable \code{temp} geschrieben. Weiters wird, falls vorhanden, der Pfad zur Datei, von der diese Datei die Konfliktdatei ist, ebenfalls angegeben. Ob eine solche Datei existiert wird durch die \code{if}-Anweisung in Zeile 20 überprüft. In Zeile 21 wird diese, falls vorhanden, ebenfalls getrennt durch einen ";" angefügt. Schließlich wird der Zeilenumbruch am Anfang der Variable \code{logs} entfernt und die Datei wird in Zeile 26 geschrieben.
 
-\subsection{receivers.txt} \label{receivers}
-Diese Datei enthält eine Liste mit Geräten, auf die der Ordner synchronisert werden soll. Zu diesen Geräten wird ebenfalls ein Name gespeichert, um es dem Benutzer zu erleichtern, den Überblick über die Geräte zu bewahren. Diese werden in der Form \code{Adresse=Name} gespeichert, wobei die Adresse wieder eine hexadezimale Darstellung der Bytes ist und der Name vom Nutzer beliebig vergeben werden kann, um die verschiedenen Geräte besser auseinanderhalten zu können.
+\subsection{Gerätedatei receivers.txt} \label{receivers}
+\datei{receivers.txt} enthält eine Liste der Geräte, auf denen der \sblit-Ordner synchronisiert werden soll. Zu diesen Geräten wird optional ein Name gespeichert, um es dem Benutzer zu erleichtern, den Überblick über die Geräte zu bewahren. Diese werden in der Form \code{Adresse=Name} gespeichert, wobei die Adresse wieder eine hexadezimale Darstellung der Bytes ist und der Name vom Nutzer beliebig vergeben werden kann.
 
 \subsection{rk.txt}
-In dieser Datei steht der Private-Key des Gerätes. Dieser dient dazu, die Adresse zu beweisen und ist unbedingt geheim zu halten, da sonst fremde Geräte behaupten können, dieses Gerät zu sein. Dieser wird in hexadezimaler Form in der Datei gespeichert. Die Datei ist außerdem versteckt.
+\datei{rk.txt} enthält den Private-Key des Gerätes. Dieser dient dazu, den Besitz Adresse zu beweisen und ist unbedingt geheim zu halten, da sonst fremde Geräte Identitätsklau begehen könnten. Der Private-Key wird in hexadezimaler Form in der Datei gespeichert. Die Datei ist außerdem versteckt.
 
 \subsection{sblitDirectory.txt}
-Diese Datei enthält den Pfad zum synchronisierenden Ordner. Hierbei wird ein String gespeichert, der den Dateipfad enthält. 
+\datei{sblitDirectory.txt} enthält den Pfad zum \sblit-Ordner. Darin wird ein \code{String} gespeichert, der den Dateipfad enthält. 
 
 \subsection{symmetricKey.txt} \label{symmetricKey}
-In dieser Datei wird der symmetrische Schlüssel festgehalten. Dieser dient zum Entschlüsseln der Daten, die auf den Partnergeräten gespeichert werden. Der symmetrische Schlüssel wird, wie alle binären Daten, in hexadezimaler Form in der Datei gespeichert. Zusätzlich wird diese Datei auf Windows PCs versteckt gespeichert.
+In \datei{symmetricKey.txt} wird der symmetrische Schlüssel festgehalten. Dieser dient zum Entschlüsseln der Daten, die auf den Partnergeräten gespeichert werden. Der symmetrische Schlüssel wird, wie alle binären Daten, in hexadezimaler Form in der Datei gespeichert. Zusätzlich ist diese Datei versteckt.
 
 \subsection{uk.txt}
-Diese Datei enthält den Public-Key des Gerätes, der gleichzeitig die Adresse ist. Beim Verbinden mit \gls{dcl} wird diese Adresse bekanntgegeben. Die Bytes dieses Schlüssels werden ebenfalls in Hexadezimalzahlen umgewandelt und in der Datei gespeichert.
+\datei{uk.txt} enthält den Public-Key des Gerätes, der gleichzeitig die Geräteadresse ist. Beim Verbinden mit \gls{dcl} wird diese Adresse bekanntgegeben. Der Schlüssel werden in Hexadezimalzahlen umgewandelt und in der Datei gespeichert.
