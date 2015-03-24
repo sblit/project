@@ -109,6 +109,11 @@
 	description={Ein verlässlicher Übertragungskanal zur Kommunikation zwischen zwei Instanzen einer auf dem \gls{dcl} aufbauenden Anwendung}
 }
 
+\newglossaryentry{cchlg}{
+	name=Crypto Challenge,
+	description={Anforderung, mit dem einem bekannten öffentlichen Schlüssel zugehörigen privaten Schlüssel Daten zu signieren, um so den Besitz des gesamten Schlüsselpaars zu beweisen}
+}
+
 \newglossaryentry{pktc}{
 	name=Packet Component,
 	description={Teil einer Message, beispielsweise Ganzzahl oder String. Siehe \link{dcl-packetcomponents}}
@@ -119,10 +124,53 @@
 	description={\gls{pktc} zur Übertragung einer bis zu 64 Bits großen Ganzzahl. Siehe \link{dcl-packetcomponents-flexnum}}
 }
 
-\newglossaryentry{lla}{
+\newglossaryentry{gls_lla}{
 	name=Lower Level Address,
 	plural=Lower Level Addresses,
 	description={Die Adresse eines \gls{service} auf der Netzwerkschicht unter \gls{dcl}, de facto die IP-Adresse und Port, unter der ein \gls{service} erreichbar ist}
+}
+
+\newacronym[plural={LLAs}, longplural={Lower Level Addresses}, see={[Glossar:]{gls_lla}}]{lla}{LLA}{Lower Level Address\glsadd{gls_lla}}
+
+\newglossaryentry{netpkt}{
+	name=Network Packet,
+	description={Geroutete Nachrichten innerhalb eines \glslink{net}{Netzwerks}},
+	see={[Siehe:]{netpktc}}
+}
+
+\newglossaryentry{netpktc}{
+	name=NetworkPacket-Component,
+	description={Basis für \glspl{pktc} zur Übertragung von \gls{netpkt}. Siehe \link{dcl-packetcomponents-netpkt}}
+}
+
+\newglossaryentry{keyc}{
+	name=Key-Component,
+	description={Basis für \glspl{pktc} zur Übertragung von Schlüsseldaten}
+}
+
+\newglossaryentry{addrslot}{
+	name=Address Slot,
+	description={Zahl zur Referenzierung von auf einem \gls{service} gehosteten Adressen}
+}
+
+\newglossaryentry{netslot}{
+	name=Network Slot,
+	description={Zahl zur Referenzierung von \glspl{net}, denen ein \gls{service} mit einer oder mehreren Adressen beigetreten ist}
+}
+
+\newglossaryentry{appchslot}{
+	name=Application Channel Slot,
+	description={Zahl zur Referenzierung von \glspl{appch} auf einem \gls{isch}}
+}
+
+\newglossaryentry{isch}{
+	name=Interservice Channel,
+	description={Verbindung zwischen zwei \glspl{service}, innerhalb der mit dem \gls{isproto} kommuniziert wird}
+}
+
+\newglossaryentry{connbase}{
+	name=Connection Base,
+	description={Berechtigungslevel für einen \gls{addrslot} eines \gls{isch}} % TODO
 }
 
 % DCL source classes
@@ -158,6 +206,7 @@
 
 \newglossaryentry{InterserviceChannel}{
 	name=InterserviceChannel,
-	description={Im Quellcode von \gls{dcl} definierte Klasse zur Verwaltung einer Verbindung zwischen zwei \glspl{service}}
+	description={Im Quellcode von \gls{dcl} definierte Klasse zur Verwaltung einer Verbindung zwischen zwei \glspl{service}},
+	see={[Siehe:]{isch}}
 }
 

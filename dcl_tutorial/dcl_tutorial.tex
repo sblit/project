@@ -1,0 +1,180 @@
+\documentclass[a4paper,twocolumn]{article}
+
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{listings}
+
+\title{DCL Integration Tutorial}
+\author{Martin Exner}
+\date{\today}
+
+\newcommand{\code}[1]{\texttt{#1}}
+
+\definecolor{javastring}{rgb}{0.6,0,0} % for strings
+\definecolor{javacomment}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javakeyword}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadoc}{rgb}{0.25,0.35,0.75} % javadoc
+
+\newcommand{\javalisting}{
+    \lstset{language=Java, basicstyle=\footnotesize\ttfamily,
+    keywordstyle=\color{javakeyword}\bfseries,
+    stringstyle=\color{javastring},
+    commentstyle=\color{javacomment},
+    morecomment=[s][\color{javadoc}]{/**}{*/},
+    numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=5pt,
+    tabsize=4, showspaces=false, showstringspaces=false, frame=single}
+}
+
+\newcommand{\shortjavalisting}{
+    \lstset{language=Java, basicstyle=\small\ttfamily,
+    keywordstyle=\color{javakeyword}\bfseries,
+    stringstyle=\color{javastring},
+    commentstyle=\color{javacomment},
+    morecomment=[s][\color{javadoc}]{/**}{*/},
+    tabsize=2, showspaces=false, showstringspaces=false}
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This article aims in providing a simple tutorial on how to use the
+Decentralized Communication Layer with third party applications written
+in Java.
+\end{abstract}
+
+\section*{Introduction}
+The Decentralized Communication Layer (DCL) is a network of decentralized
+peer-to-peer networks that can be used to route communication of third party
+applications through secure and private channels. Each of these networks has a
+unique network identifier.
+
+At the time of writing, the only network defined for DCL is the circle network
+with the identifier \code{org.dclayer.circle}. In this network, each node has
+an address which is computed by hashing the RSA public key of an RSA keypair
+the node generates at startup. As hash algorithm, \code{SHA-1} is used, which
+yields addresses that are 20 bytes in length. Those addresses can then be
+validated by performing a crypto challenge with the node that should be checked.
+
+Messages in the circle network are routed in a way similar to the Kademlia
+model. Each node forwards the message to the neighbor with the address that is
+numerically closest to the message's destination address. In order for this to
+work, each node needs to be connected to many nodes with addresses that are
+numerically close to its own address and each node must be connected to the two
+nodes that have addresses with the shortest possible distance to its own. The
+amount of connections to nodes with numerically distant addresses does affect
+the number of hops required for routing messages, but does not influence routing
+as much.
+
+\section*{Communication}
+There are two ways application instances can communicate over the DCL. The first
+is via unconnected packets, which are routed through a specific DCL network and
+may or may not arrive at their destination. The second method is via encrypted
+and connected application channels, which provide reliable transmission of data.
+For both initiating application channels and sending unreliable packets over the
+circle network, the public key of the remote node is required as destination
+address.
+
+\section*{Overview}
+For integration of DCL communication features in third party applications,
+DCL provides a Java library that manages the TCP connection to the DCL
+service, including creating and accepting application channels and sending and
+receiving unconnected messages.
+
+The \code{org.dclayer} package contains all required classes.
+
+\section*{Usage}
+
+\subsection*{Connecting to the DCL service}
+To use DCL in an application, a \code{Service} object needs to be created
+first. Below is an example, where \code{port} is an integer containing the port
+number the DCL service is listening on.
+
+\shortjavalisting
+\begin{minipage}{\linewidth}
+\begin{lstlisting}
+Service service
+        = new Service(port);
+\end{lstlisting}
+\end{minipage}
+
+Afterwards, an \code{ApplicationInstance} object needs to be created for the
+application to be connected to the service. This works best by utilizing an
+\code{ApplicationInstanceBuilder} object, which is returned by
+\code{Service.applicationInstance()}.
+
+\shortjavalisting
+\begin{minipage}{\linewidth}
+\begin{lstlisting}
+ApplicationInstanceBuilder builder
+  = service.applicationInstance();
+\end{lstlisting}
+\end{minipage}
+
+This fluent interface can be used to set the address keypair to use for the
+application, to join DCL networks and to connect the application to the service.
+The code below will use the \code{KeyPair} object referenced by
+\code{addrKeyPair} as this application's address, join the default DCL networks,
+register the object referenced by \code{listener} as the
+\code{NetworkEndpointActionListener} for the default networks and connect the
+application to the DCL service.
+
+\shortjavalisting
+\begin{minipage}{\linewidth}
+\begin{lstlisting}
+ApplicationInstance application
+  = builder
+    .addressKeyPair(addrKeyPair)
+    .joinDefaultNetworks(listener)
+    .connect();
+\end{lstlisting}
+\end{minipage}
+
+The call to \code{connect()} will block until the TCP connection to the service
+is established and the application-to-service protocol is initiated. If an error
+occurs, a \code{ConnectionException} will be thrown.
+Otherwise, \code{connect()} will return a new \code{ApplicationInstance} object,
+which can be used to send unconnected packets and to initiate application
+channels.
+
+\subsection*{Callbacks}
+\subsubsection*{NetworkEndpointActionListener}
+The \code{NetworkEndpointActionListener} interface defines methods for receiving
+callbacks upon joining of DCL networks, receipt of unconnected packets and
+incoming application channel requests.
+
+\subsection*{Unconnected packets}
+\subsubsection*{Sending}
+In order to send unconnected packets, the \code{send()} method of an
+\code{ApplicationInstance} object needs to be called.
+
+\subsubsection*{Receiving}
+
+\subsection*{Application channels}
+\subsubsection*{Accepting}
+\subsubsection*{Initiating}
+
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+
+Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.
+
+Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
+
+Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.
+
+At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. sanctus sea sed takimata ut vero voluptua. est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.
+
+Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus.
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+
+Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.
+
+Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo
+
+\end{document}
