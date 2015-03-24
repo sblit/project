@@ -3,11 +3,10 @@
 
 \subsection*{FlexNum}
 \label{dcl-packetcomponents-flexnum}
-Ein \gls{fnumc} ist ein \gls{pktc} zur Übertragung einer bis zu 64 Bits großen
-Ganzzahl.
+Ein \gls{fnumc} ist ein \gls{pktc} zur Übertragung einer bis zu 64 Bits langen Ganzzahl.
 Die Besonderheit liegt darin, dass der \gls{fnumc} zwar Zahlen bis zu $2^{64}-1$ übertragen kann,
-für Zahlen bis $2^{7}-1$, welche bereits mit 7 Bits darstellbar sind, aber trotzdem nur ein Byte
-zur Übertragung benötigt.
+für Zahlen von $0$ bis $2^{7}-1$, welche bereits mit 7 Bits darstellbar sind, aber trotzdem nur ein
+Byte zur Übertragung benötigt.
 
 Das funktioniert durch Kodierung der Anzahl der folgenden Bytes im ersten Byte. Hierbei zeigt die
 Anzahl der führenden Bits mit dem Wert 1 im ersten Byte an, wie viele Bytes für die Darstellung der
@@ -88,5 +87,14 @@ long readFlexNum() {
 \end{lstlisting}
 \end{minipage}
 
+\subsection*{NetworkPacket}
+\label{dcl-packetcomponents-netpkt}
+
+%TODO
+
+\subsection*{KeyComponent}
+\label{dcl-packetcomponents-key}
+
+%TODO
 
 

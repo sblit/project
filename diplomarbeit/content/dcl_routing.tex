@@ -68,8 +68,8 @@ zum Routinglookup angewandt wird.
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[caption={Routing im \gls*{cnt} (Java)},captionpos=b]
 Nexthops lookup( Data scaledDestinationAddress,
-						Address originAddress,
-						Object originIdentifierObject ) {
+				 Address originAddress,
+				 Object originIdentifierObject ) {
 	Nexthops nexthops
 	 = localEndpointRoutes.get(scaledDestinationAddress);
 	if(nexthops != null) {
@@ -109,28 +109,28 @@ Nexthops lookup( Data scaledDestinationAddress,
 
 \begin{description}
 	
-	\item [{\code{scaledDestinationAddress}:}]
+	\descriptionitem{\code{scaledDestinationAddress}}
 		Das \javaarg \code{scaledDestinationAddress} referenziert ein \code{\gls{Data}}-Objekt,
 		welches die Zieladresse enthält, für die ein Routinglookup durchgeführt werden soll.
 	
-	\item [{\code{originAddress}:}]
+	\descriptionitem{\code{originAddress}}
 		Das \javaarg \code{originAddress} referenziert ein \code{\gls{Address}}-Objekt, welches
 		den öffentlichen Schlüssel des Teilnehmers enthält, von welchem die zu weiterleitende
 		Nachricht empfangen wurde.
 	
-	\item [{\code{originIdentifierObject}:}]
+	\descriptionitem{\code{originIdentifierObject}}
 		Das \javaarg \code{originIdentifierObject} referenziert ein Objekt, das den Teilnehmer
 		identifiziert, von welchem die zu weiterleitende Nachricht empfangen wurde. Dieses wird
 		benötigt, um später sicherzustellen, dass die Nachricht nicht zum selben Teilnehmer
 		weitergeleitet wird, von welchem sie schon empfangen wurde.
 	
-	\item [{\code{\gls{Nexthops}}:}]
+	\descriptionitem{\code{\gls{Nexthops}}}
 		\glsdesc{Nexthops}.
 	
-	\item [{\code{\gls{ForwardDestination}}:}]
+	\descriptionitem{\code{\gls{ForwardDestination}}}
 		\glsdesc{ForwardDestination}.
 	
-	\item [{\code{localEndpointRoutes}:}]
+	\descriptionitem{\code{localEndpointRoutes}}
 		Die \javainstvar \code{localEndpointRoutes} referenziert ein Objekt, das zu Schlüsseln
 		in Form von \code{\gls{Data}}-Objekten Werte in Form von \code{\gls{Nexthops}}-Objekten
 		speichert. Dieses wird benutzt, um zu Adressen die entsprechenden
@@ -138,7 +138,7 @@ Nexthops lookup( Data scaledDestinationAddress,
 		können. In diesem Fall handelt es sich dabei ausschließlich um Adressen, deren Endpunkte
 		sich am lokalen \gls{service} befinden.
 	
-	\item [{\code{remoteServiceRoutes}:}]
+	\descriptionitem{\code{remoteServiceRoutes}}
 		Die \javainstvar \code{localEndpointRoutes} referenziert ein Objekt, das zu Schlüsseln
 		in Form von \code{\gls{Data}}-Objekten Werte in Form von \code{\gls{Nexthops}}-Objekten
 		speichert. Dieses wird benutzt, um zu Adressen die entsprechenden

@@ -7,158 +7,186 @@ zur Bekanntgabe von \glspl{endp} samt Adressen und beigetretenen \glspl{net}, so
 
 Dieses Unterkapitel beschreibt das \gls{isproto} in Version 0.
 
+\subsection{Address Slots}
+Da \glspl{service} jeweils mehrere Adressen hosten können, ist es notwendig, diese mit dem
+\gls{isproto} auch zu unterstützen. Jede Adresse wird hierbei einem eigenen \gls{addrslot} zugeordnet,
+um sich in den Messages des Protokolls einfach auf einzelne Adressen beziehen zu können, ohne jedes
+mal die ganze Adresse senden zu müssen.
+%TODO Übergang zu connection base; Verbindung Addr Slots <-> Net Slots
+
+\subsection{Network Slots}
+Eine Adresse kann gleichzeitig in mehreren verschiedenen \glspl{net} vertreten sein. Um diese
+\glspl{net} in den Messages des \gls{isproto} einfach referenzieren zu können, ohne jedes mal den
+ganzen \gls{ntid} übertragen und parsen zu müssen, wird jedes \gls{net}, dem ein Service mit einer
+oder mehreren Adressen beitritt einem \gls{netslot} zugeordnet.
+
+Werden \glspl{netpkt} übertragen, so wird auch das \gls{net} in dem diese geroutet werden in der
+\msg{\isprotonp} in Form des entsprechenden \gls{netslot} angeführt, um beim Empfänger die Zuordnung
+zu ermöglichen.
+
+\subsection{Connection Base}
+Die \gls{connbase} gibt an, welche Messages von einem \gls{service} auf einem \gls{addrslot} eines
+\gls{isch} akzeptiert werden. Derzeit sind zwei Werte für die \gls{connbase} implementiert:
+\const{stranger} (\code{0}) und \const{trusted} (\code{1}).
+Ein neuer \gls{addrslot} wird immer mit der \gls{connbase} \const{stranger} initialisiert, unter
+welcher keine mit dem Routing in Verbindung stehenden Messages akzeptiert werden.
+Erst ab der \gls{connbase} \const{trusted} werden die \msg{\isprotonjn}, die \msg{\isprotonln},
+die \msg{\isprotonp}, die \msg{\isprotoireq}, die \msg{\isprotoacsa} und die \msg{\isprotoacd}
+akzeptiert.
+
+Als Voraussetzung für die \gls{connbase} \const{trusted} gilt der Beweise der Adresse auf diesem
+\gls{addrslot}. Ein \gls{service} kann den Wechsel auf die \gls{connbase} \const{trusted} für einen
+existenten \gls{addrslot} anfordern, indem er eine \msg{\isprotots} an sein Gegenüber sendet.
+Der entfernte \gls{service} fordert danach durch Senden einer \msg{}
+
+darüber, dass die \gls{cchlg} erfolgreich durchgeführt wurde, dass die
+vom angegebenen \gls{addrslot} referenziertte Adresse des Empfängers somit vom Sender akzeptiert
+wurde und dass der Empfänger der \msg{\isprotocbn} jetzt Nachrichten über den Sender routen kann.
+
 \subsection{Initialisierung}
 Die Kommunikation über das \gls{isproto} wird mit der Aushandlung einer Protokollversion begonnen.
 Dazu werden, beginnend mit dem Initiator, also dem \gls{service}, der die Verbindung angefordert hat,
-so lange \isprotoversion-Messages abwechselnd zwischen den \glspl{service} gesendet, bis die letzten
-zwei übertragenen \isprotoversion-Messages die selben Versionsnummern enthalten.
-
-%	\begin{figure*}[ht!]
-%	  \centering
-%	  \begin{bytefield}{32}
-%	    \bitheader{31,24,23,16,15,8,7,0} \\
-%	    \begin{rightwordgroup}{Network Header}
-%	      \wordbox{1}{Destination} \\
-%	      \wordbox{1}{Source} \\
-%	      \wordbox{1}{Length} 
-%	    \end{rightwordgroup} \\
-%	    \begin{rightwordgroup}{Payload}
-%	      \wordbox[lrt]{2}{$N$ data words} \\
-%	      \skippedwords \\
-%	      \wordbox[lrb]{2}{}
-%	    \end{rightwordgroup} \\
-%	    \begin{rightwordgroup}{Footer}
-%	      \wordbox{1}{Checksum}
-%	    \end{rightwordgroup}
-%	  \end{bytefield}
-%	  \caption{\label{fig:mwe_packet}Sample packet}
-%	\end{figure*}
-%
-%	\begin{figure*}
-%	  \centering
-%	  \begin{bytefield}{32}
-%	    \bitheader{31,24,23,16,15,8,7,0} \\
-%	    \bitbox{1}{\tiny{M\\E\\M}} & \bitbox{3}{SEL} & \bitbox{23}{} & \bitbox{4}{Mem\\Type} & \bitbox{4}{ID} \\    
-%	  \end{bytefield}
-%	  \caption{\label{fig:mwe_cmd}Cmd word}
-%	\end{figure*}
-
-%	\begin{bytefield}[bitwidth=1.1em]{32}
-%	\bitheader{0-31} \\
-%	\begin{rightwordgroup}{RTP \\ Header}
-%	\bitbox{2}{V=2} & \bitbox{1}{P} & \bitbox{1}{X}
-%	& \bitbox{4}{CC} & \bitbox{1}{M} & \bitbox{7}{PT}
-%	& \bitbox{16}{sequence number} \\
-%	\bitbox{32}{timestamp}
-%	\end{rightwordgroup} \\
-%	\bitbox{32}{synchronization source (SSRC) identifier} \\
-%	\wordbox[tlr]{1}{contributing source (CSRC) identifiers} \\
-%	\wordbox[blr]{1}{$\cdots$} \\
-%	\begin{rightwordgroup}{RTP \\ Payload}
-%	\wordbox[tlr]{3}{MPEG-4 Visual stream (byte aligned)} \\
-%	\bitbox[blr]{16}{}
-%	& \bitbox{16}{\dots\emph{optional} RTP padding}
-%	\end{rightwordgroup}
-%	\end{bytefield}
-
+so lange \msgpl{\isprotoversion} abwechselnd zwischen den \glspl{service} gesendet, bis die letzten
+zwei übertragenen \msgpl{\isprotoversion} die selben Versionsnummern enthalten.
 
 \subsection{Messageaufbau}
 Eine Message im \gls{isproto} ist generell so aufgebaut, dass ein FlexNum-Component am Anfang der
 Message den Typ angibt, anhand dessen die restliche Nachricht interpretiert wird.
 
-\isgeneralbytefield
-
-%\begin{figure}[tbh]
-%\begin{centering}
-%
-%\begin{bytefield}[bitwidth=3em]{8}
-%	\\
-%	\bitheader{0-7} \\
-%	
-%	\wordbox[tlr]{2}{\isprotomsgtype \\ \flexnumfield} \\
-%	\skippedwords \\
-%	\wordbox[lr]{1}{} \\
-%	
-%	\wordbox[tlr]{2}{\isprotomsgdata \\ $N$ Bytes} \\
-%	\skippedwords \\
-%	\wordbox[blr]{1}{}
-%	
-%	\begin{rightwordgroup}{RTP \\ Header}
-%		\bitbox{2}{V=2} & \bitbox{1}{P} & \bitbox{1}{X} & \bitbox{4}{CC} \\
-%		\bitbox{1}{M} & \bitbox{7}{PT} \\
-%		\wordbox[tlr]{2}{sequence number} \\
-%		\wordbox[tlr]{4}{timestamp}
-%	\end{rightwordgroup} \\
-%	\bitbox{32}{synchronization source (SSRC) identifier} \\
-%	\wordbox[tlr]{1}{contributing source (CSRC) identifiers} \\
-%	\wordbox[blr]{1}{$\cdots$} \\
-%	\begin{rightwordgroup}{RTP \\ Payload}
-%		\wordbox[tlr]{3}{MPEG-4 Visual stream (byte aligned)} \\
-%		\bitbox[blr]{16}{}
-%		& \bitbox{16}{\dots\emph{optional} RTP padding}
-%	\end{rightwordgroup}
-%\end{bytefield}
-%
-%\par\end{centering}
-%\protect\caption{\gls*{isproto} -- Genereller Messageaufbau}
-%\end{figure}
+\isprotobytefield
 
 \subsection{Messages}
 
 \subsubsection{Version}
 \label{dcl-isproto-version}
-Die \isprotoversion-Message enthält eine Versionsnummer in Form eines FlexNum-Components und wird
+Die \isprotoversion Message enthält eine Versionsnummer in Form eines FlexNum-Components und wird
 benutzt, um am Beginn der Verbindung die verwendete Version des \gls{isproto} auszuhandeln.
 
 \isprotoversionbytefield
 
-%\begin{figure}[tbh]
-%\begin{centering}
-%
-%\begin{bytefield}[bitwidth=3em]{8}
-%	\\
-%	\bitheader{0-7} \\
-%	
-%	\begin{rightwordgroup}{\isprotomsgtype}
-%		\wordbox[tlr]{1}{\code{0}}
-%	\end{rightwordgroup} \\
-%	
-%	\begin{rightwordgroup}{\isprotomsgdata}
-%		\wordbox[tlr]{2}{Version ID \\ \flexnumfield} \\
-%		\skippedwords \\
-%		\wordbox[blr]{1}{}
-%	\end{rightwordgroup}
-%	
-%\end{bytefield}
-%
-%\par\end{centering}
-%\protect\caption{\gls*{isproto} -- \isprotoversion-Message}
-%\end{figure}
-
 \subsubsection{LLA Request}
 \label{dcl-isproto-llareq}
-Die \isprotollareq-Message wird benutzt, um vom Gegenüber eine Liste an \glspl{lla} anzufordern.
+Die \msg{\isprotollareq} wird benutzt, um vom Gegenüber eine Liste an \glspl{lla} von anderen
+\glspl{service} anzufordern.
 Die Message enthält ein Feld für die Maximalanzahl an \glspl{lla}, die in der
-\isprotollarep-Message zurückgesendet werden sollen.
+\msg{\isprotollarep} zurückgesendet werden sollen.
 
 \isprotollareqbytefield
 
+
 \subsubsection{LLA Reply}
 \label{dcl-isproto-llarep}
-Blah blah blub.
+Die \msg{\isprotollarep} wird als Antwort auf eine zuvor empfangene \msg{\isprotollareq} gesendet
+und enthält \glspl{lla} von anderen \glspl{service}.
 
 \isprotollarepbytefield
 
+
 \subsubsection{Trusted Switch}
 \label{dcl-isproto-ts}
-Blah blah blub.
+Die \msg{\isprotots} wird benutzt, um vom Gegenüber eine \gls{cchlg} für den als Adresse verwendeten,
+angegebenen öffentlichen Schlüssel anzufordern. Dieser Schritt wird benötigt, um dem Gegenüber beweisen
+zu können, dass die angegebene Adresse echt ist. Erst wenn die \gls{cchlg} erfolgreich durchgeführt
+wurde, kann der Sender der \msg{\isprotots} damit am Routing jener \glspl{net} teilnehmen, denen er
+mit der angegebenen Adresse beigetreten ist.
+% TODO: "Erst wenn X, kann Y" oder "Erst wenn X kann Y"? (Beistrich)
+
+Mit dieser Nachricht wird gleichzeitig die in Form eines öffentlichen Schlüssel angegebene Adresse
+mit dem angegebenen \gls{addrslot} assoziiert.
 
 \isprototsbytefield
 
+
 \subsubsection{Crypto Challenge Request}
 \label{dcl-isproto-ccreq}
-Blah blah blub.
+Die \msg{\isprotoccreq} wird als Antwort auf eine \msg{\isprotots} gesendet und fordert das Gegenüber
+auf, die enthaltenen Binärdaten im Rahmen einer \gls{cchlg} mit dem zur angegebenen Adresse
+zugehörigen privaten Schlüssel zu signieren.
 
 \isprotoccreqbytefield
 
+
+\subsubsection{Crypto Challenge Reply}
+\label{dcl-isproto-ccrep}
+Die \msg{\isprotoccrep} wird als Antwort auf eine \msg{\isprotoccreq} gesendet und enthält die Daten
+der gelösten \gls{cchlg}.
+
+\isprotoccrepbytefield
+
+
+\subsubsection{Connection Base Notice}
+\label{dcl-isproto-cbn}
+Die \msg{\isprotocbn} wird als Antwort auf eine \msg{\isprotoccrep} gesendet und benachrichtigt
+den Empfänger über die aktuelle \gls{connbase} der vom angegebenen \gls{addrslot} referenzierten
+Adresse.
+
+\isprotocbnbytefield
+
+
+\subsubsection{Network Join Notice}
+\label{dcl-isproto-njn}
+Die \msg{\isprotonjn} benachrichtigt den Empfänger darüber, dass der sendende \gls{service} mit der
+vom angegebenen \gls{addrslot} referenzierten Adresse dem vom angegebenen \gls{ntid} referenzierten
+\gls{net} beigetreten ist. Sollte der sendende \gls{service} diesem \gls{net} zuvor noch mit keiner
+Adresse beigetreten sein, so wird der Empfänger mit dieser Nachricht außerdem darüber in Kenntnis
+gesetzt, dass ab jetzt Nachrichten zum Routing in diesem \gls{net} an den sendenden \gls{service}
+übermittelt werden können.
+
+\isprotonjnbytefield
+
+\subsubsection{Network Leave Notice}
+\label{dcl-isproto-nln}
+Die \msg{\isprotonln} benachrichtigt den Empfänger darüber, dass der sendende \gls{service} mit der
+vom angegebenen \gls{addrslot} referenzierten Adresse aus dem vom angegebenen \gls{ntid}
+referenzierten \gls{net} austritt. Sollte der sendende \gls{service} aktuell mit keiner anderen
+Adresse diesem \gls{net} beigetreten sein, so wird der Empfänger mit dieser Nachricht außerdem
+darüber in Kenntnis gesetzt, dass ab jetzt keine Nachrichten mehr zum Routing in diesem \gls{net}
+an den Sender übermittelt werden können.
+
+\isprotonlnbytefield
+
+
+\subsubsection{Integration Request}
+\label{dcl-isproto-ireq}
+Die \msg{\isprotoireq} fordert den Empfänger auf, den sendenden \gls{service} in die gemeinsamen
+\glspl{net} zu integrieren. Konkret bedeut das, dafür zu sorgen, dass der sendende \gls{service}
+so mit anderen \glspl{service} verbunden wird, dass das Routing der Adressen des sendenden
+\gls{service} möglichst effizient funktionieren kann.
+
+\isprotoireqbytefield
+
+
+\subsubsection{Integration Connect Request}
+\label{dcl-isproto-icreq}
+Die \msg{\isprotoicreq} fordert den Empfänger auf, eine Verbindung zur angegebenen \gls{lla}
+aufzubauen und wird als Antwort auf eine frühere \msg{\isprotoireq} gesendet. Sie wird benötigt,
+um neue Teilnehmer eines \glslink{net}{Netzwerks} mit ihren entsprechenden Nachbarn verbinden zu
+können.
+
+\isprotoicreqbytefield
+
+
+\subsubsection{Network Packet}
+\label{dcl-isproto-np}
+Die \msg{\isprotonp} enthält ein \gls{netpkt}, das vom Empfänger in dem durch den angegebenen
+\gls{netslot} referenzierten \gls{net} weitergeleitet werden soll.
+
+\isprotonpbytefield
+
+
+\subsubsection{Application Channel Slot Assign}
+\label{dcl-isproto-acsa}
+Die \msg{\isprotoacsa} benachrichtigt den Empfänger darüber, dass Nachrichten eines \gls{appch} % TODO Application ChannelS?
+zwischen den beiden durch die angegebenen \glspl{addrslot} referenzierten Adressen auf dem
+angegebenen \gls{appchslot} entgegen genommen werden.
+
+\isprotoacsabytefield
+
+
+\subsubsection{Application Channel Data}
+\label{dcl-isproto-acd}
+Die \msg{\isprotoacd} wird dazu benutzt, um Daten des durch den angegebenen \gls{appchslot} % TODO Application ChannelS?
+referenzierten \gls{appch} zu übertragen.
+
+\isprotoacdbytefield
 
