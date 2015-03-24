@@ -34,6 +34,7 @@
 \newcommand{\netpktfield}{\glslink{netpkt}{NetworkPacket, $N$ Bytes}}
 
 \newcommand{\descriptionitem}[1]{\item[{#1}] \hfill \\}
+\newcommand{\datei}[1]{\textit{#1}}
 
 \newcommand{\const}[1]{\code{#1}}
 
@@ -47,7 +48,7 @@
 \definecolor{javadoc}{rgb}{0.25,0.35,0.75} % javadoc
 
 \newcommand{\javalisting}{\lstset{language=Java, basicstyle=\ttfamily, keywordstyle=\color{javakeyword}\bfseries, stringstyle=\color{javastring}, commentstyle=\color{javacomment}, morecomment=[s][\color{javadoc}]{/**}{*/}, numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=5pt, tabsize=4, showspaces=false, showstringspaces=false, frame=single}}
-\newcommand{\messagestart}{\begin{figure}[thb] \begin{centering} \begin{bytefield}[bitwidth=3em]{8} \\}
-\newcommand{\messageend}[1]{\end{bytefield} \par\end{centering} \protect\caption{#1} \end{figure}}
+\newcommand{\messagestart}{\begin{figure}[tbh] \begin{centering} \begin{bytefield}[bitwidth=3em]{8} \\}
+\newcommand{\messageend}[1]{\end{bytefield} \par\end{centering} \protect\caption{\gls*{#1}} \label{#1} \end{figure} Siehe \linkt{#1}.}
 
 %\lstset{numbers=right, numberstyle=\tiny, stepnumber=2, numbersep=5pt, showspaces=false, frame=single}

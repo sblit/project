@@ -1,28 +1,59 @@
 \subsection{Ausgangssituation}
-In der heutigen Zeit nimmt die Technik einen großen Einfluss auf unser tägliches Leben. Jeder durchschnittliche Haushalt besitzt mindestens
-einen Computer mit Internetanschluss und die meisten Leute haben heutzutage auch ein Smartphone. Selten allerdings bleibt es bei den zwei
-Gerätschaften und so kommt zum Beispiel ein Notebook für die Schule oder für den Arbeitsplatz zum Einsatz. Oftmals müssen dabei die selben
-Dateien auf verschiedenen Geräten bearbeitet werden und das möglichst ohne Versionskonflikte (Glossareintrag). Daten müssen von
-jedem Gerät und zu jederzeit erreichbar sein, weshalb Cloud- und Dateisynchronisationsdienste einen immer größer werdenden Stellenwert
-bekommen. Das outsourcen von Speicherplatz beziehungsweise Rechenleistung auf eine zentrale Stelle, meistens bestehend aus einem Server
-und die dahinter liegende Datenbank des jeweiligen Anbieters, soll dabei mit hoher Uptime den dauerhaften Zugriff auf die eigenen Dateien sicherstellen. 
+In der heutigen Zeit nimmt die Technik einen großen Einfluss auf unser tägliches
+Leben. Jeder durchschnittliche Haushalt besitzt mindestens einen Computer mit
+Internetanschluss und die meisten Leute haben heutzutage auch ein Smartphone.
+Selten allerdings bleibt es bei den zwei Gerätschaften und so kommt zum Beispiel
+ein Notebook für die Schule oder für den Arbeitsplatz zum Einsatz. Oftmals
+müssen dabei die selben Dateien auf verschiedenen Geräten bearbeitet werden und
+das möglichst ohne Versionskonflikte (Glossareintrag). Daten müssen von jedem
+Gerät und zu jederzeit erreichbar sein, weshalb Cloud- und
+Dateisynchronisationsdienste einen immer größer werdenden Stellenwert bekommen.
+Das Outsourcen von Speicherplatz beziehungsweise Rechenleistung auf eine
+zentrale Stelle, meistens einem Server und die dahinter liegende Datenbank des
+jeweiligen Anbieters, soll dabei mit hoher Uptime den dauerhaften Zugriff auf
+die eigenen Dateien sicherstellen.
 
 \subsection{Funktionsweise üblicher Dateisynchronisationsdienste}
-Die Idee hinter \sblit basiert auf den sicherheitsbezogenen Problemen, die mit der Speicherung von Daten auf einer zentralen Stelle
-einhergehen. Die Erleuterung der Funktionsweise üblicher Dateisynchronsationsdienste soll beim Verstehen der grundsätzlichen 
-Idee hinter \sblit helfen.
+Die Idee hinter \sblit basiert auf den sicherheitsbezogenen Problemen, die mit
+der Speicherung von Daten auf einer zentralen Stelle einhergehen. Die
+Erleuterung der Funktionsweise üblicher Dateisynchronsationsdienste soll beim
+Verstehen der grundsätzlichen Idee hinter \sblit helfen.
 
-Bei der Synchronisation einer Datei, wird eine Kopie dieser Datei auf den vom Betreiber zur Verfügung gestellten Server hochgeladen und gespeichert.
-Wenn diese Datei auf weitere Geräte synchronisiert werden soll, laden sich diese Geräte die jeweiligen Dateien von dem Server herunter. Die Datei wird also über den Server des Anbieters
-synchronisiert.
+Bei der Synchronisation einer Datei, wird eine Kopie dieser Datei auf den vom
+Betreiber zur Verfügung gestellten Server hochgeladen und gespeichert. Wenn
+diese Datei auf weitere Geräte synchronisiert werden soll, laden sich diese
+Geräte die jeweiligen Dateien von dem Server herunter. Die Datei wird also über
+den Server des Anbieters synchronisiert.
 
 \subsection{Problematik}
 
-Aktuelle Ereignisse wie "The Fappening" oder der NSA-Skandal zeigen wie leicht private Daten in falsche Hände fallen können, wenn diese an einem Ort zentral gespeichert werden. Geheimdienste oder staatliche Sicherheitsbehörden haben dabei ein leichtes Spiel, da sie einzelne Anlaufstellen zu den Betreibern von Cloudspeichern haben und diese Betreiber unter Umständen zur Herausgabe der Nutzerdaten gesetzlich verpflichtet sind. 
-Auch wenn der duchschnittliche User nichts zu verbergen hat, ist der dreiste Eingriff in die Privatsphäre doch als äußerst problematisch einzustufen und dieser wird zum Bedauern der betroffenen Benutzer viel zu einfach gemacht.
+Aktuelle Ereignisse wie "The Fappening" oder der NSA-Skandal zeigen wie leicht
+private Daten in falsche Hände fallen können, wenn diese an einem Ort zentral
+gespeichert werden. Geheimdienste oder staatliche Sicherheitsbehörden haben
+dabei ein leichtes Spiel, da sie einzelne Anlaufstellen zu den Betreibern von
+Cloudspeichern haben und diese Betreiber unter Umständen zur Herausgabe der
+Nutzerdaten gesetzlich verpflichtet sind. Auch wenn der duchschnittliche User
+nichts zu verbergen hat, ist der dreiste Eingriff in die Privatsphäre doch als
+äußerst problematisch einzustufen und dieser wird zum Bedauern der betroffenen
+Benutzer viel zu einfach gemacht.
 
 \subsectiom{Idee}
-Hauptursache für diese Problematik stellt die oft unverschlüsselte, zentrale Speicherung der Daten dar. Um nicht auf den Komfort von üblichen Dateisynchronisationsdiensten verzichten zu müssen, werden diese Probleme umgangen. \sblit verfolgt nämlich einen dezentralen Ansatz. Das bedeutet, dass die Daten verteilt auf mehreren Rechnern gespeichert werden, anstatt auf einzelnen Servern beziehungsweise deren Datenbanken. Das dezentrale Prinzip bei \sblit, wird mit sogenannten Partnerschaften realisiert, bei denen es darum geht, dass sich User, die sich gegenseitig nicht kennen, einander ihre Daten über verschlüsselte Kanäle auf den Geräten des jeweilig anderen speichern. Die privaten Dateien nur verschlüsselt zu übertragen, dann aber unverschlüsselt auf den Geräten anderer Nutzer zu speichern, wäre kontraproduktiv, weshalb Dateien in Blöcke aufgeteilt und verschlüsselt werden. Diese verschlüsselten Blöcke werden dann verteilt auf die Partnergeräte gespeichert, sodass diese fremden User nichts damit anfangen können, da sie weder den Schlüssel zum Entschlüsseln, noch die Informationen über den Ort der restlichen Blöcke besitzen. Diese befindet sich ausnahmslos nur bei dem User, dem die Blöcke gehören.
+Hauptursache für diese Problematik stellt die oft unverschlüsselte, zentrale
+Speicherung der Daten dar. Um nicht auf den Komfort von üblichen
+Dateisynchronisationsdiensten verzichten zu müssen, werden diese Probleme bei
+\sblit umgangen. \sblitg verfolgt nämlich einen dezentralen Ansatz.Das bedeutet,
+dass die Daten verteilt auf mehreren Rechnern gespeichert werden, anstatt auf
+einzelnen Servern beziehungsweise deren Datenbanken.Das dezentrale Prinzip bei
+\sblit, wird mit sogenannten Partnerschaften realisiert, dabei geht es darum,
+dass sich User, die sich gegenseitig nicht kennen müssen, einander ihre Daten
+über verschlüsselte Kanäle auf den Geräten des jeweilig anderen speichern. Die
+privaten Dateien verschlüsselt zu übertragen, dann aber unverschlüsselt auf den
+Geräten anderer Nutzer zu speichern, wäre kontraproduktiv, weshalb Dateien in
+Blöcke aufgeteilt und verschlüsselt werden. Diese verschlüsselten Blöcke werden
+dann verteilt auf die Partnergeräte gespeichert, sodass diese fremden User
+nichts damit anfangen können, da sie weder den Schlüssel zum Entschlüsseln,
+noch die Informationen über den Ort der restlichen Blöcke besitzen. Diese
+befindet sich ausnahmslos nur bei dem User, dem die Blöcke gehören.
 
 Für gewöhnlich w
 
