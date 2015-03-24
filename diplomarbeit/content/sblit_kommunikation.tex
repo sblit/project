@@ -110,7 +110,8 @@ Bevor Gerät A eine Datei an Gerät B sendet, muss es zunächst eine Dateianfrag
 	\descriptionitem{Hash}
 		Hier wird noch einmal der letzte Hash des Versionsverlaufs der Dateianfrage verschickt, um sicherzustellen, dass die Datei in der Zwischenzeit nicht geändert wurde. 
 \end{description}
-Nach Empfang der Dateianfrage wird zunächst geprüft, ob die Datei vorhanden und aktuell ist. Ist die lokale Datei nicht aktuell, wird das Need-Flag, auf den Hexadezimalwert \code{0x01} gesetzt. Ist die Datei auf dem aktuellsten Stand, wird es auf den Hexadezimalwert \code{0x00} gesetzt. Außerdem wird überprüft, ob ein Konflikt aufgetreten ist \referenz{Konflikterkennung}.\\
+Nach Empfang der Dateianfrage wird zunächst geprüft, ob die Datei vorhanden und aktuell ist. Ist die lokale Datei nicht aktuell, wird das Need-Flag, auf den Hexadezimalwert \code{0x01} gesetzt. Ist die Datei auf dem aktuellsten Stand, wird es auf den Hexadezimalwert \code{0x00} gesetzt. Außerdem wird überprüft, ob ein Konflikt aufgetreten ist \referenz{Konflikterkennung}.
+
 Nach Empfang der Antwort wird zunächst überprüft, ob der Hashwert der Datei mit dem erhaltenen Pfad übereinstimmt. Stimmt der Hashwert in der Anfrage nicht mit dem aktuellen Hashwert überein, wird die Antwort verworfen. Dies kann beispielsweise passieren, wenn in der Zwischenzeit eine neuere Version der Datei erzeugt wurde. Stimmt dieser jedoch überein, kann die Datei nun im nächsten Schritt verschickt werden.
 		
 \subsubsection{\gls{filemsg}}

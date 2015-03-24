@@ -32,7 +32,8 @@ private synchronized void updateDevices(File file,
 In den Zeilen 3 und 4 werden die Adressen der Partnergeräte in das Speicherformat übertragen. In Zeile 4 werden die durch die \code{.toString()}-Methode  eingefügten geschwungenen Klammern wieder entfernt. In Zeile 5 wird die im \code{file}-Parameter angegebene Datei mit den neuen Adressen aktualisiert. \code{StandardOpenOption.TRUNCATE\_EXISTING} bedeutet, dass die Datei \datei{freceivers.txt} überschrieben wird, falls diese schon vorhanden ist.
 
 \subsection{\gls{logfile} logs.txt}
-Das \gls{logfile} \referenz{Logfile} \datei{logs.txt} enthält die Versionsverläufe aller Dateien im \sblit-Ordner und dessen Unterordnern im Format: \\ \code{Pfad1=Version1,Version2;Adresse1,Adresse2;Pfad2} \\
+Das \gls{logfile} \referenz{Logfile} \datei{logs.txt} enthält die Versionsverläufe aller Dateien im \sblit-Ordner und dessen Unterordnern im Format: \\ \code{Pfad1=Version1,Version2;Adresse1,Adresse2;Pfad2} 
+
 \code{Pfad1} bezeichnet den relativen Pfad vom \sblit-Ordner zur betrachteten \datei{Datei 1}. Die einzelnen Versionen (\code{Version1}, \code{Version2}) sind Hashwerte der \datei{Datei 1} zu verschiedenen Zeitpunkten, deren Bytes in hexadezimaler Form im \gls{logfile} gespeichert werden. Analog dazu werden auch die Adressen der Geräte, die bereits die aktuellste Version der \datei{Datei 1} enthalten, in hexadezimaler Form gespeichert. \code{Pfad2} ist der Pfad zu jener Datei, mit der \datei{Datei 1} in Konflikt steht. Dieser ist optional.\\
 Zum Schreiben des \gls{logfile}s, wird folgende Methode verwendet: \\ \\
 \javalisting
