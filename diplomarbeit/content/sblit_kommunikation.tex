@@ -11,7 +11,7 @@ Bevor ein fremdes Gerät eine Verbindung aufbaut, muss auf jeden Fall seine Iden
 \end{itemize}
 
 \subsubsection{\gls{authreq}}
-Angenommen zwei Geräte eines Besitzers wollen Daten austauschen. Zunächst müssen sie die Identität des jeweiligen Kommunikationspartners überprüfen. Dies erfolgt über \gls{authreq}s. Dabei schickt das Gerät B zufällige Daten an das Gerät A mit der Aufforderung, diese zu verschlüsseln. 
+Sobald zwei Geräte (Gerät A, Gerät B) Daten austauschen wollen, müssen sie die Identität des jeweiligen Kommunikationspartners überprüfen. Dies erfolgt über \gls{authreq}s. Dabei schickt Gerät B zufällige Daten an Gerät A mit der Aufforderung, diese zu verschlüsseln \abbildung{authreq}. 
 \messagestart
 	\bitheader{0-7} \\
 	
@@ -25,10 +25,10 @@ Angenommen zwei Geräte eines Besitzers wollen Daten austauschen. Zunächst müs
 	
 \messageend{authreq}
 %TODO Umformulieren
-Die Gesamtlänge der Daten, die mit RSA-2048 verschlüsselt werden, darf maximal 128 Byte lang sein. Um Gerät A 64 Byte zur Verfügung zu stellen, beträgt die Länge der von Gerät B gesendeten Daten 64 Byte. Diese 64 Byte werden von Gerät A benötigt, um zu verhindern, dass Gerät B sich gewünschte Werte von Gerät A verschlüsseln lässt.
+Die Gesamtlänge der Daten, die mit RSA-2048 verschlüsselt werden, darf maximal 128 Byte betragen. Um zu verhindern, dass Gerät B bestimmte Daten mit dem Private-Key von Gerät A verschlüsseln lässt, werden 64 von den maximal 128 Byte reserviert. Diese 64 Byte nutzt Gerät A, um zufällige Daten hinzuzufügen.
 
 \subsubsection{\gls{authres}}
-Bevor die Daten wieder zurückgeschickt werden, müssen diese von Gerät B verschlüsselt werden. Dies geschieht mit dem Private-Key des Gerätes B. Dabei wird vorher noch ein zufälliger Wert an die empfangenen Daten angefügt, um zu verhindern, dass Gerät B den private-Key von Gerät A ausnutzt.
+Bevor die Daten wieder zurückgeschickt werden, müssen diese von Gerät A verschlüsselt werden. Dies geschieht mit dem Private-Key des Gerätes A. Dabei wird vorher noch ein zufälliger Wert an die empfangenen Daten angefügt.
 \messagestart
 	\bitheader{0-7} \\
 	
@@ -41,7 +41,7 @@ Bevor die Daten wieder zurückgeschickt werden, müssen diese von Gerät B versc
 	\end{rightwordgroup}
 	
 \messageend{authres}
-Wird dieses Paket nun von Gerät B empfangen, kann der Inhalt mit dem Public-Key des Gerätes A, also dessen Adresse, entschlüsselt werden. Von den erhaltenen Daten werden die ersten 64 Byte mit den ursprünglich gesendeten 64 Byte verglichen. Stimmen die beiden Werte überein, kann das Gerät seine Authentizität beweisen. Stimmen diese jedoch nicht überein, handelt es sich um einen Betrüger, der offensichtlich den richtigen Private-Key zur von ihm angegebenen Adresse nicht kennt.
+Wird dieses Paket nun von Gerät B empfangen, kann der Inhalt mit dem Public-Key des Gerätes A, also dessen Adresse, entschlüsselt werden. Von den erhaltenen Daten werden die ersten 64 Byte mit den ursprünglich gesendeten 64 Byte verglichen. Stimmen die beiden Werte überein, kann das Gerät seine Authentizität beweisen. Stimmen diese jedoch nicht überein, handelt es sich um einen Betrüger, der offensichtlich den richtigen Private-Key zur von ihm angegebenen Adresse nicht kennt \abbildung{authres}.
 		
 \subsection{Nachrichten an eigene Geräte}
 \subsubsection{Allgemein}
@@ -55,7 +55,7 @@ Wird dieses Paket nun von Gerät B empfangen, kann der Inhalt mit dem Public-Key
 \end{itemize}
 
 \subsubsection{\gls{filereq}} \label{Dateianfrage}
-Bevor eine Datei an ein anderes Gerät (im Folgenden Gerät B) verschickt wird, schickt das Gerät, das die Datei besitzt (im Folgenden Gerät A), eine Dateianfrage an das Gerät B. Dies hat 2 Gründe: Erstens muss eruiert werden, ob die Datei überhaupt von Gerät B benötigt wird, oder ob besagtes Gerät schon diese Datei besitzt. Zweitens besteht die Möglichkeit eines Konfliktes \referenz{Konflikt}. 
+Bevor Gerät A eine Datei an Gerät B sendet, muss es zunächst eine Dateianfrage an Gerät B senden. Dies hat 2 Gründe: Einerseits muss eruiert werden, ob die Datei bereits auf Gerät B vorhanden ist und andererseits soll ein möglicher Konflikt \referenz{Konflikt} ausgeschlossen werden \abbildung{filereq}.
 \messagestart
 	\bitheader{0-7} \\
 	
@@ -75,7 +75,7 @@ Bevor eine Datei an ein anderes Gerät (im Folgenden Gerät B) verschickt wird, 
 
 \begin{description} 
 	\descriptionitem{Dateipfad}
-		Hierbei wird der zu \sblit's Hauptordner relative Dateipfad mitgeschickt. Der absolute Dateipfad wird aus dem Grund nicht mitgeschickt, da der Ort des \sblit-Ordners nicht auf allen Geräten gleich sein muss. Befindet sich der Ordner auf Gerät A beispielsweise unter C:/Users/Susanne/ kann sich der Ordner auf Gerät B auch unter /home/susanne/dateien/ befinden.
+		Hierbei wird der zu \sblit's Hauptordner relative Dateipfad mitgeschickt. Der absolute Dateipfad wird nicht mitgeschickt, da der Ort des \sblit-Ordners nicht auf allen Geräten gleich sein muss. Befindet sich der Ordner auf Gerät A beispielsweise unter \datei{C:/Users/Susanne/} kann sich der Ordner auf Gerät B auch unter \datei{/home/susanne/dateien/} befinden.
 	\descriptionitem{Versionsverlauf}
 		Der Versionsverlauf beinhaltet alle Hashes einer Datei seit der letzten komplett synchronisierten Version. Das heißt, dass auf jedem Gerät aktuell entweder diese oder eine neuere Version gespeichert ist.
 \end{description}
@@ -103,16 +103,17 @@ Bevor eine Datei an ein anderes Gerät (im Folgenden Gerät B) verschickt wird, 
 
 \begin{description}
 	\descriptionitem{Need-Flag}
-		Dieses Feld enthält einen Hexadezimalwert, der darüber Auskunft gibt, ob die Datei benötigt wird oder nicht. Steht in diesem Feld der Hexadezimalwert 0x00, wird die Datei nicht benötigt. Steht hier hingegen der Hexadezimalwert 0x01, wird die Datei benötigt. Dieses Byte hilft den Datenverkehr zu reduzieren. So muss nicht eine ganze Datei verschickt werden muss, obwohl diese gar nicht gebraucht wird.
+		Dieses Feld enthält einen Hexadezimalwert, der darüber Auskunft gibt, ob die Datei benötigt wird oder nicht. Steht in diesem Feld der Hexadezimalwert \code{0x00}, wird die Datei nicht benötigt, d.h. die aktuellste Version der Datei ist auf dem Gerät vorhanden. Steht hier hingegen der Hexadezimalwert \code{0x01}, wird die Datei benötigt. Dieses Byte hilft den Datenverkehr zu reduzieren. So muss nicht eine ganze Datei verschickt werden, obwohl diese gar nicht gebraucht wird.
 	\descriptionitem{Dateipfad}
-		Wie auch bei der Dateianfrage wird in der Antwort auf die Dateianfrage der zu \sblit's Hauptordner relative Pfad mitgeschickt.
+		Wie auch beim \gls{filereq} wird im \gls{fileres} der zu \sblit's Hauptordner relative Pfad mitgeschickt.
 	\descriptionitem{Hash}
 		Hier wird noch einmal der letzte Hash des Versionsverlaufs der Dateianfrage verschickt, um sicherzustellen, dass die Datei in der Zwischenzeit nicht geändert wurde. 
 \end{description}
-Nach Empfang der Dateianfrage wird zunächst geprüft, ob die Datei vorhanden und in der aktuellst ist.  Ist die lokale Datei nicht aktuell, wird das Need-Flag, auf den Hexadezimalwert 0x01 gesetzt. Ist die Datei auf dem aktuellsten Stand, wird besagtes Flag auf den Hexadezimalwert 0x00 gesetzt. Außerdem wird überprüft, ob ein Konflikt aufgetreten ist \referenz{Konflikterkennung}.\\
+Nach Empfang der Dateianfrage wird zunächst geprüft, ob die Datei vorhanden und aktuell ist. Ist die lokale Datei nicht aktuell, wird das Need-Flag, auf den Hexadezimalwert \code{0x01} gesetzt. Ist die Datei auf dem aktuellsten Stand, wird es auf den Hexadezimalwert \code{0x00} gesetzt. Außerdem wird überprüft, ob ein Konflikt aufgetreten ist \referenz{Konflikterkennung}.\\
 Nach Empfang der Antwort wird zunächst überprüft, ob der Hashwert der Datei mit dem erhaltenen Pfad übereinstimmt. Stimmt der Hashwert in der Anfrage nicht mit dem aktuellen Hashwert überein, wird die Antwort verworfen. Dies kann beispielsweise passieren, wenn in der Zwischenzeit eine neuere Version der Datei erzeugt wurde. Stimmt dieser jedoch überein, kann die Datei nun im nächsten Schritt verschickt werden.
 		
-\subsubsection{Die eigentliche Übertragung der Datei}
+\subsubsection{\gls{filemsg}}
+Die \gls{filemsg} dient zur Übertragung der Datei \abbildung{filemsg}.
 \messagestart
 	\bitheader{0-7} \\
 	
@@ -141,11 +142,11 @@ Nach Empfang der Antwort wird zunächst überprüft, ob der Hashwert der Datei m
 	\descriptionitem{Dateiinhalt}
 		Der Dateiinhalt wird als binäres \code{Data}-Objekt verschickt.
 	\descriptionitem{Geräte mit der aktuellen Version}
-		Hier stehen die Adressen aller Geräte, die die neuste Version schon haben. Ist die Version auf allen Geräten aktuell, kann diese von den Partnergeräten gelöscht werden. Daher wird diese Liste an Geräten immer mit der Datei mitgeschickt. Außerdem können somit unnötige Anfragen an Geräte, die die Datei schon besitzen verhindert werden.
+		Hier stehen die Adressen aller Geräte, die schon die neuste Version schon haben. Ist die Version auf allen Geräten aktuell, kann sie von den Partnergeräten gelöscht werden. Daher wird diese Liste an Geräten immer mit der Datei mitgeschickt. Außerdem können somit unnötige Anfragen an Geräte, die die Datei schon besitzen, verhindert werden.
 	\descriptionitem{Dateipfad}
-		Der Dateipfad wird benötigt, damit die Datei auf dem zu synchronisierenden Gerät weiß, an welchen Ort die Datei gespeichert werden soll. Dies ist der gleiche relative Ort, wie auf dem Gerät, das die Anfrage geschickt hat.
+		Der Dateipfad wird benötigt, damit das Gerät weiß, an welchem Ort die zu synchronisierende Datei gespeichert werden soll. Dies ist der gleiche relative Ort, wie auf dem Gerät, das die Anfrage geschickt hat.
 	\descriptionitem{Versionsverlauf}
-		Der Versionsverlauf wird mitgeschickt, um diesen auf allen Geräten zu vereinheitlichen. Das verhindert das auftreten von Konflikten, welche gar keine sind. Weiters dient der aktuellste Hash dazu,  sicherzustellen, dass die Datei, die versendet wurde, auch so ankommt, wie sie versendet wurde. Verhasht man die neue Datei, muss das Ergebnis mit dem aktuellsten mitgeschickten Hash übereinstimmen. Andernfalls muss die Datei neu gesendet werden.
+		Der Versionsverlauf wird mitgeschickt, damit er auf allen Geräten einheitlich ist. Dies verhindert, dass Konflikte fälschlicherweise erkannt werden, wo keine vorhanden sind. Weiters stellt der aktuellste Hash sicher, dass die versendete Datei korrekt zugestellt wurde. Verhasht man die versandte Datei, muss das Ergebnis mit dem aktuellsten mitgesendeten Hash übereinstimmen. Andernfalls muss die Datei neu gesendet werden.
 \end{description}
 		
 \subsubsection{\gls{filedel}}
@@ -163,9 +164,10 @@ Nach Empfang der Antwort wird zunächst überprüft, ob der Hashwert der Datei m
 	\end{rightwordgroup}
 	
 \messageend{filedel}
-Eine Löschanfrage beinhaltet den Pfad der zu löschenden Datei. Nach Empfang der Löschanfrage wird die Datei gelöscht.
+Eine \gls{filedel} beinhaltet den Pfad zur zu löschenden Datei. Nach Empfang der \gls{filedel} wird die Datei gelöscht \abbildung{filedel}.
 
 \subsubsection{\gls{refdev}}
+Die \gls{refdev} dient zur Aktualisierung von Gerätelisten \abbildung{refdev}.
 \messagestart
 	\bitheader{0-7} \\
 	
@@ -185,7 +187,7 @@ Eine Löschanfrage beinhaltet den Pfad der zu löschenden Datei. Nach Empfang de
 	\descriptionitem{File-Flag}
 	Das File-Flag gibt darüber Auskunft, ob es sich um die Datei für Partnergeräte oder die Datei für die eigenen Geräte handelt.
 	\descriptionitem{Geräte}
-	Hier stehen die Adressen aller Geräte, die in der im File-Flag angegebenen Datei vorhanden sind. Falls es sich um die Adressen der Partnergeräte handelt, werden nur diese mitgeschickt, die auch die eigenen Daten speichern. Im Falle, dass es sich um die eigenen Adressen handelt, werden außerdem die Namen der Geräte, die man in der Konfiguration angegeben hat, mitgeschickt.
+	Hier stehen die Adressen aller Geräte, die in der im File-Flag angegebenen Datei vorhanden sind. Bei Adressen von Partnergeräten, werden nur jene mitgeschickt, die auch die eigenen Dateien speichern. Im Falle von eigenen Adressen handelt, werden außerdem die Namen der Geräte, die man in der Konfiguration angegeben hat, mitgeschickt.
 \end{description}
 
 \subsection{Nachrichten an Partnergeräte}
@@ -198,6 +200,7 @@ Eine Löschanfrage beinhaltet den Pfad der zu löschenden Datei. Nach Empfang de
 \end{itemize}
 
 \subsubsection{\gls{partfilereq}} \label{partnerfilerequest}
+Der \gls{partfilereq} dient, wie der \gls{filereq}, zum Versenden einer Dateianfrage \abbildung{partfilereq}.
 \messagestart
 	\begin{rightwordgroup}{\isprotomsgtype}
 		\wordbox[tlr]{1}{7}
@@ -211,10 +214,11 @@ Eine Löschanfrage beinhaltet den Pfad der zu löschenden Datei. Nach Empfang de
 \messageend{partfilereq}
 \begin{description}
 	\descriptionitem{Versionsverlauf}
-	Der Versionsverlauf wird, wie beim \gls{filereq} mitgeschickt, damit der Partner die Datei identifizieren kann. Dies hat den Vorteil, dass der Partner nicht den Dateipfad besitzt und somit nicht auf den Inhalt der Datei schließen kann. Weiters kann aus diesem Versionsverlauf, der lediglich Hashes enthält, ebenfalls nicht der Inhalt der Datei herausgefunden werden, da das Verhashen eine Einwegfunktion ist. 
+	Der Versionsverlauf wird, wie beim \gls{filereq} mitgeschickt, damit der Partner die Datei identifizieren kann. Dies verhindert, dass der Partner den Dateipfad kennt und somit auf den Inhalt der Datei schließen kann. Weiters kann aus diesem Versionsverlauf, der lediglich Hashes enthält, nicht auf den Inhalt der Datei geschlossen werden, da das Verhashen eine Einwegfunktion ist. 
 \end{description}
 
 \subsubsection{\gls{partfileres}}
+Der \gls{partfileres} dient zum Antworten auf einen \gls{partfilereq} \abbildung{partfileres}.
 \messagestart
 	\begin{rightwordgroup}{\isprotomsgtype}
 		\wordbox[tlr]{1}{8}
@@ -230,12 +234,13 @@ Eine Löschanfrage beinhaltet den Pfad der zu löschenden Datei. Nach Empfang de
 
 \begin{description}
 	\descriptionitem{Versionsverlauf}
-	Da die Datei auf den Partnergeräten mithilfe des Versionsverlaufs identifiziert wird, muss dieser auch hier mitgeschickt werden um Verwechslungen vorzubeugen.
+	Da die Datei auf den Partnergeräten mithilfe des Versionsverlaufs identifiziert wird, muss dieser mitgeschickt werden, um Verwechslungen vorzubeugen.
 	\descriptionitem{Need-Flag}
 	Das Need-Flag im \gls{partfileres} ist äquivalent zum Need-Flag im \gls{fileres} \referenz{fileres}.
 \end{description}
 
 \subsubsection{\gls{partfilemsg}}
+Die \gls{partfilemsg} dient zum Versenden einer Datei an Partnergeräte \referenz{Partnergerät} \abbildung{partfilemsg}.
 \messagestart
 	\begin{rightwordgroup}{\isprotomsgtype}
 		\wordbox[tlr]{1}{9}
@@ -258,16 +263,17 @@ Eine Löschanfrage beinhaltet den Pfad der zu löschenden Datei. Nach Empfang de
 \messageend{partfilemsg}
 \begin{description}
 	\descriptionitem{Versionsverlauf}
-	Da der Versionsverlauf zur Identifikation der Datei benötigt wird, wird dieser auch bei der \gls{partfilemsg} mitgeschickt. Gleichzeitig dient der letzte Hash im Versionsverlauf als Dateiname auf dem Partnergerät.
+	Da der Versionsverlauf zur Identifikation der Datei benötigt wird, wird er auch bei der \gls{partfilemsg} mitgeschickt. Gleichzeitig dient der letzte Hash im Versionsverlauf als Dateiname auf dem Partnergerät.
 	\descriptionitem{Dateiinhalt}
-	Um den Inhalt der Datei vor fremdem Zugriff zu schützen, wird dieser mit dem symmetrischen Schlüssel \referenz{symmetricKey} verschlüsselt. 
+	Um den Inhalt der Datei vor fremdem Zugriff zu schützen, wird er mit dem symmetrischen Schlüssel \referenz{symmetricKey} verschlüsselt. 
 	\descriptionitem{Dateipfad}
-	Wie auch beim \gls{partfilereq} wird der Dateipfad verschlüsselt übertragen. 
+	Der Dateipfad wird, wie auch beim \gls{partfilereq}, verschlüsselt übertragen. 
 	\descriptionitem{Geräte mit der aktuellen Version}
-	Damit alle Geräte auch auf den gleichen Stand kommen, wie durch direkte Kommunikation, werden auch die Geräte mit der aktuellen Version übertragen. 
+	Hier stehen die Adressen aller Geräte, die schon die neuste Version schon haben. Ist die Version auf allen Geräten aktuell, kann sie von den Partnergeräten gelöscht werden. Daher wird diese Liste an Geräten immer mit der Datei mitgeschickt. Außerdem können somit unnötige Anfragen an Geräte, die die Datei schon besitzen, verhindert werden.
 \end{description}
 
 \subsubsection{\gls{partfiledel}}
+Die \gls{partfiledel} dient, wie die \gls{filedel}, zum Löschen von Dateien auf den eigenen Geräten \abbildung{partfiledel}.
 \messagestart
 	\begin{rightwordgroup}{\isprotomsgtype}
 		\wordbox[tlr]{1}{10}
@@ -283,8 +289,9 @@ Eine Löschanfrage beinhaltet den Pfad der zu löschenden Datei. Nach Empfang de
 	\descriptionitem{Dateipfad}
 	Das einzige Attribut der \gls{partfiledel} ist der verschlüsselte Dateipfad. Dieser wird eine Woche lang gespeichert und dann gelöscht.
 \end{description}
+
 \subsubsection{\gls{filedel}}
-Um Platz auf den Partnergeräten zu sparen, werden die Daten gelöscht, sobald diese auf allen Geräten verteilt sind. Dies wird mit der \gls{filedel} initiiert. In der \gls{filedel} zwischen Partnergerät und eigenem Gerät wird jedoch wird der Versionsverlauf statt, wie in der \gls{filedel} zwischen zwei eigenen Geräten, des Pfades angegeben.
+Um Platz auf den Partnergeräten zu sparen, werden die Dateien gelöscht, sobald diese auf allen eigenen Geräten verteilt sind. Dies wird mit der \gls{filedel} initiiert. In der \gls{filedel} zwischen Partnergerät und eigenem Gerät wird der Versionsverlauf statt dem Dateinamen angegeben \abbildung{filedel}.
 \messagestart
 	\begin{rightwordgroup}{\isprotomsgtype}
 		\wordbox[tlr]{1}{11}

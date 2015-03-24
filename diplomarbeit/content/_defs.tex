@@ -6,6 +6,7 @@
 \newcommand{\siehet}[1]{siehe \linkt{#1}}
 \newcommand{\siehe}[1]{\hyperref[#1]{\siehet{#1}}}
 \newcommand{\referenz}[1]{\hyperref[#1]{(\siehet{#1})}}
+\newcommand{\abbildung}[1]{(siehe Abbildung \linkt{#1})}
 
 \newcommand{\codeline}[1]{\sloppy{\mbox{\code{#1}}}}
 
@@ -52,6 +53,6 @@
 
 \newcommand{\javalisting}{\lstset{language=Java, basicstyle=\ttfamily, keywordstyle=\color{javakeyword}\bfseries, stringstyle=\color{javastring}, commentstyle=\color{javacomment}, morecomment=[s][\color{javadoc}]{/**}{*/}, numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=5pt, tabsize=4, showspaces=false, showstringspaces=false, frame=single}}
 \newcommand{\messagestart}{\begin{figure}[tbh] \begin{centering} \begin{bytefield}[bitwidth=3em]{8} \\}
-\newcommand{\messageend}[1]{\end{bytefield} \par\end{centering} \protect\caption{\gls*{#1}} \label{#1} \end{figure} Siehe \linkt{#1}.}
+\newcommand{\messageend}[1]{\end{bytefield} \par\end{centering} \protect\caption{\gls*{#1}} \label{#1} \end{figure} }
 
 %\lstset{numbers=right, numberstyle=\tiny, stepnumber=2, numbersep=5pt, showspaces=false, frame=single}
