@@ -69,19 +69,19 @@ the number of hops required for routing messages, but does not influence routing
 as much.
 
 \section*{Communication}
-There are two ways application instances can communicate over the DCL. The first
-is via unconnected packets, which are routed through a specific DCL network and
-may or may not arrive at their destination. The second method is via encrypted
-and connected application channels, which provide reliable transmission of data.
-For both the initiation of application channels and the transmission of
-unreliable packets over the circle network, the public key of the remote node is
-required as destination address.
+There are two ways application instances can communicate using the DCL.
+The first is via unreliably transmitted packets, which are routed through a
+specific DCL network and may or may not arrive at their destination.
+The second method is via encrypted and connected application channels, which
+provide reliable transmission of data. For both the initiation of application
+channels and the transmission of unreliable packets over the circle network, the
+public key of the remote node is required as destination address.
 
 \section*{Overview}
 For integration of DCL communication features in third party applications,
 DCL provides a Java library that manages the TCP connection to the DCL
 service, including creating and accepting application channels and sending and
-receiving unconnected messages.
+receiving unreliably transmitted messages.
 
 The \code{org.dclayer} package contains all required classes.
 
@@ -122,8 +122,9 @@ connect the application to the DCL service.
 %TODO explain NetworkEndpoints
 %TODO here?
 A network endpoint is a pair existing of an address and a DCL network that
-address has joined. Unconnected packets are sent over a DCL network and between
-two addresses -- thus between two network endpoints on the same network.
+address has joined. Unreliably transmitted packets are sent over a DCL network
+and between two addresses -- thus between two network endpoints on the same
+network.
 The DCL application to service protocol utilizes network endpoint slots,
 which are essentially numbers referring to network endpoints, to specify
 the origin of a message sent from the application and the destination of a
@@ -150,15 +151,15 @@ The call to \code{connect()} will block until the TCP connection to the service
 is established and the application-to-service protocol is initiated. If an error
 occurs, a \code{ConnectionException} will be thrown.
 Otherwise, \code{connect()} will return a new \code{ApplicationInstance} object,
-which can be used to send unconnected packets and to initiate application
-channels.
+which can be used to send unreliably transmitted packets and to initiate
+application channels.
 
 \subsection*{Callbacks}
 \subsubsection*{NetworkEndpointActionListener}
 The \code{NetworkEndpointActionListener} interface defines methods for receiving
-callbacks upon joining of DCL networks (\code{onJoin()}), receipt of unconnected
-packets (\code{onReceive()}) and incoming application channel requests
-(\code{onApplicationChannelRequest()}).
+callbacks upon joining of DCL networks (\code{onJoin()}), receipt of unreliably
+transmitted packets (\code{onReceive()}) and incoming application channel
+requests (\code{onApplicationChannelRequest()}).
 
 \subsubsection*{ApplicationChannelActionListener}
 The \code{ApplicationChannelActionListener} interface defines methods for
@@ -166,9 +167,9 @@ receiving callbacks upon successful connection
 (\code{onApplicationChannelConnected()}) and disconnection
 (\code{onApplicationchannelDisconnected()}) of an application channel.
 
-\subsection*{Unconnected packets}
+\subsection*{Unreliably transmitted packets}
 \subsubsection*{Sending}
-In order to send unconnected packets, the \code{send()} method of an
+In order to send unreliably transmitted packets, the \code{send()} method of an
 \code{ApplicationInstance} object needs to be called.
 The \code{send()} method takes 3 arguments: a \code{NetworkEndpointSlot} object
 decribing the address and network to use, a \code{Data} object containing the
@@ -176,9 +177,9 @@ destination address and another \code{Data} object containing the payload to
 transmit, respectively.
 
 \subsubsection*{Receiving}
-Upon receipt of an unconnected packet, the \code{onReceive()} method of the
-\code{NetworkEndpointActionListener} assigned to the address and network the
-packet was received on is called and passed 3 arguments:
+Upon receipt of an unreliably transmitted packet, the \code{onReceive()} method
+of the \code{NetworkEndpointActionListener} assigned to the address and network
+the packet was received on is called and passed 3 arguments:
 the \code{NetworkEndpointSlot} object corresponding to the address and network
 the packet was received on, a \code{Data} object containing the source address
 and another \code{Data} object containing the payload received, respectively.
