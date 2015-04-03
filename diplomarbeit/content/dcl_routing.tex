@@ -28,7 +28,7 @@ der Fall ist. In einem dezentralen \gls{p2pnet}, dessen Topologie sich ständig 
 die Adresse eines Teilnehmers nicht mit seiner Position in der Topologie zusammenhängt, können
 keine Teilnehmer zusammengefasst werden.
 
-Gleichzeitig ist die Topologie des \gls{p2pnet} so groß und ändert sich so oft, dass es praktisch 
+Gleichzeitig ist die Topologie des \gls{p2pnet} so groß und ändert sich so oft, dass es praktisch
 unmöglich ist, bei jedem Teilnehmer des Netzwerks eine Kopie aller bestehenden Verbindungen zu
 speichern und diese aktuell zu halten, um basierend darauf die Wege zur Weiterleitung von
 Nachrichten zu finden.
@@ -65,71 +65,72 @@ Nachfolgend ist jener Teil des Quellcodes von \gls{dcl} angeführt, welcher im \
 zum Routinglookup angewandt wird.
 
 \javalisting
-\begin{minipage}{\linewidth}
 \begin{lstlisting}[caption={Routing im \gls*{cnt} (Java)},captionpos=b]
-Nexthops lookup( Data scaledDestinationAddress,
-				 Address originAddress,
-				 Object originIdentifierObject ) {
-	Nexthops nexthops
-	 = localEndpointRoutes.get(scaledDestinationAddress);
+Nexthops lookup(Data scaledDestinationAddress, Address originAddress, Object originIdentifierObject) {
+
+	Nexthops nexthops = localEndpointRoutes.get(scaledDestinationAddress);
 	if(nexthops != null) {
-		Nexthops twinNeighbors
-		 = remoteServiceRoutes.get(scaledDestinationAddress);
+
+		Nexthops twinNeighbors = remoteServiceRoutes.get(scaledDestinationAddress);
 		if(twinNeighbors != null) {
+
 			boolean append = true;
-			for(ForwardDestination forwardDestination
-				 : twinNeighbors) {
-				if( forwardDestination.getIdentifierObject()
-					 == originIdentifierObject ) {
+			for(ForwardDestination forwardDestination : twinNeighbors) {
+				if(forwardDestination.getIdentifierObject() == originIdentifierObject) {
 					append = false;
 					break;
 				}
 			}
+
 			if(append) {
 				nexthops.append(twinNeighbors);
 			}
+
 		}
+
 		return nexthops;
+
 	}
-	nexthops = remoteServiceRoutes
-			   .getClosest(scaledDestinationAddress);
+
+	nexthops = remoteServiceRoutes.getClosest(scaledDestinationAddress);
 	if(nexthops == null) {
 		return null;
 	}
+
 	for(ForwardDestination forwardDestination : nexthops) {
-		if(forwardDestination.getIdentifierObject()
-			 == originIdentifierObject) {
+		if(forwardDestination.getIdentifierObject() == originIdentifierObject) {
 			return null;
 		}
 	}
+
 	return nexthops.getLast();
+	
 }
 \end{lstlisting}
-\end{minipage}
 
 \begin{description}
-	
+
 	\descriptionitem{\code{scaledDestinationAddress}}
 		Das \javaarg \code{scaledDestinationAddress} referenziert ein \code{\gls{Data}}-Objekt,
 		welches die Zieladresse enthält, für die ein Routinglookup durchgeführt werden soll.
-	
+
 	\descriptionitem{\code{originAddress}}
 		Das \javaarg \code{originAddress} referenziert ein \code{\gls{Address}}-Objekt, welches
 		den öffentlichen Schlüssel des Teilnehmers enthält, von welchem die zu weiterleitende
 		Nachricht empfangen wurde.
-	
+
 	\descriptionitem{\code{originIdentifierObject}}
 		Das \javaarg \code{originIdentifierObject} referenziert ein Objekt, das den Teilnehmer
 		identifiziert, von welchem die zu weiterleitende Nachricht empfangen wurde. Dieses wird
 		benötigt, um später sicherzustellen, dass die Nachricht nicht zum selben Teilnehmer
 		weitergeleitet wird, von welchem sie schon empfangen wurde.
-	
+
 	\descriptionitem{\code{\gls{Nexthops}}}
 		\glsdesc{Nexthops}.
-	
+
 	\descriptionitem{\code{\gls{ForwardDestination}}}
 		\glsdesc{ForwardDestination}.
-	
+
 	\descriptionitem{\code{localEndpointRoutes}}
 		Die \javainstvar \code{localEndpointRoutes} referenziert ein Objekt, das zu Schlüsseln
 		in Form von \code{\gls{Data}}-Objekten Werte in Form von \code{\gls{Nexthops}}-Objekten
@@ -137,7 +138,7 @@ Nexthops lookup( Data scaledDestinationAddress,
 		\code{\gls{Nexthops}}-Objekte finden zu können, an die Nachrichten weitergeleitet werden
 		können. In diesem Fall handelt es sich dabei ausschließlich um Adressen, deren Endpunkte
 		sich am lokalen \gls{service} befinden.
-	
+
 	\descriptionitem{\code{remoteServiceRoutes}}
 		Die \javainstvar \code{localEndpointRoutes} referenziert ein Objekt, das zu Schlüsseln
 		in Form von \code{\gls{Data}}-Objekten Werte in Form von \code{\gls{Nexthops}}-Objekten
@@ -145,7 +146,7 @@ Nexthops lookup( Data scaledDestinationAddress,
 		\code{\gls{Nexthops}}-Objekte finden zu können, an die Nachrichten weitergeleitet werden
 		können. In diesem Fall handelt es sich dabei ausschließlich um Adressen, deren Endpunkte
 		sich auf direkt verbundenen, aber nicht am lokalen \gls{service} befinden.
-	
+
 \end{description}
 
 Mit \code{localEndpointRoutes.get(scaledDestinationAddress)} wird zu Beginn des Routinglookups
@@ -170,10 +171,6 @@ Falls das der Fall ist, wird \code{null} zurückgegeben und die Nachricht in Fol
 
 Anderenfalls wird nur der letzte \gls{endp} in der von \code{nexthops} referenzierten
 Liste der \glspl{endp} zurückgegeben: Enthält die Liste mehrere Einträge, so haben die darin
-enthaltenen \glspl{endp} die selbe Adresse. Die Nachricht soll in diesem Fall abernur an einen
+enthaltenen \glspl{endp} die selbe Adresse. Die Nachricht soll in diesem Fall aber nur an einen
 dieser \glspl{endp} weitergeleitet werden, da sie von dort an die restlichen \glspl{endp} mit der
 gleichen Adresse weitergeleitet wird.
-
-
-
-

@@ -1,23 +1,28 @@
 
-\subsection{Zweck}
+\subsection{Einleitung}
 Das \gls{isproto} wird zur Kommunikation zwischen zwei direkt miteinander verbundenen \glspl{service}
 verwendet. Es dient zur Übertragung von Nachrichten und von in \glspl{appch} gesendeten Nutzdaten,
-zur Bekanntgabe von \glspl{endp} samt Adressen und beigetretenen \glspl{net}, sowie zum Einstieg in
-\glspl{net} des \gls{dcl}.
+zur Bekanntgabe von \glslink{endp}{Endpunkten} samt Adressen und beigetretenen
+\glslink{net}{Netzwerken}, sowie zum Einstieg in \glspl{net} des \gls{dcl}.
+
+Die Messages des \glslink{isproto}{Interservice-Protokolls} werden über den
+\gls{isch}, einen \gls{channel} des \glslink{link}{Links} zwischen zwei
+\glspl{service}, übertragen. Der \gls{protoid} des
+\glslink{isproto}{Interservice-Protokolls} ist \code{org.dclayer.interservice}.
 
 Dieses Unterkapitel beschreibt das \gls{isproto} in Version 0.
 
 \subsection{Address Slots}
 Da \glspl{service} jeweils mehrere Adressen hosten können, ist es notwendig, diese mit dem
-\gls{isproto} auch zu unterstützen. Jede Adresse wird hierbei einem eigenen \gls{addrslot} zugeordnet,
-um sich in den Messages des Protokolls einfach auf einzelne Adressen beziehen zu können, ohne jedes
-mal die ganze Adresse senden zu müssen.
+\gls{isproto} unterscheiden zu können. Jede Adresse wird hierbei einem eigenen \gls{addrslot}
+zugeordnet, um sich in den Messages des Protokolls einfach auf einzelne Adressen beziehen zu können,
+ohne jedes mal die ganze Adresse senden zu müssen.
 %TODO Übergang zu connection base; Verbindung Addr Slots <-> Net Slots
 
 \subsection{Network Slots}
-Eine Adresse kann gleichzeitig in mehreren verschiedenen \glspl{net} vertreten sein. Um diese
+Eine Adresse kann gleichzeitig in mehreren verschiedenen \glslink{net}{Netzwerken} vertreten sein. Um diese
 \glspl{net} in den Messages des \gls{isproto} einfach referenzieren zu können, ohne jedes mal den
-ganzen \gls{ntid} übertragen und parsen zu müssen, wird jedes \gls{net}, dem ein Service mit einer
+ganzen \gls{ntid} übertragen und parsen zu müssen, wird jedes \gls{net}, dem ein \gls{service} mit einer
 oder mehreren Adressen beitritt einem \gls{netslot} zugeordnet.
 
 Werden \glspl{netpkt} übertragen, so wird auch das \gls{net} in dem diese geroutet werden in der
@@ -34,14 +39,38 @@ Erst ab der \gls{connbase} \const{trusted} werden die \msg{\isprotonjn}, die \ms
 die \msg{\isprotonp}, die \msg{\isprotoireq}, die \msg{\isprotoacsa} und die \msg{\isprotoacd}
 akzeptiert.
 
-Als Voraussetzung für die \gls{connbase} \const{trusted} gilt der Beweise der Adresse auf diesem
-\gls{addrslot}. Ein \gls{service} kann den Wechsel auf die \gls{connbase} \const{trusted} für einen
-existenten \gls{addrslot} anfordern, indem er eine \msg{\isprotots} an sein Gegenüber sendet.
-Der entfernte \gls{service} fordert danach durch Senden einer \msg{}
+Als Voraussetzung für die \gls{connbase} \const{trusted} gilt der Beweise der Adresse dieses
+\glslink{addrslot}{Address Slots}. Ein \gls{service} kann den Wechsel auf die \gls{connbase}
+\const{trusted} für einen existenten \gls{addrslot} anfordern, indem er eine \msg{\isprotots}
+an sein Gegenüber sendet.
+Der entfernte \gls{service} fordert den lokalen \gls{service} danach durch Senden einer
+\msg{\isprotoccreq} auf, mit seiner Adresse eine \gls{cchlg} zu lösen, um ihre Echtheit zu
+beweisen. Siehe dazu \link{dcl-addr-proving}.
+Der lokale \gls{service} antwortet mit einer \msg{\isprotoccrep} und übermittelt die Daten der
+gelösten \gls{cchlg} an den entfernten \gls{service}.
+Ist die Lösung der \gls{cchlg} korrekt, so wird die \gls{connbase} des
+\glslink{addrslot}{Address Slots} auf \const{trusted} gesetzt und der lokale \gls{service} mit
+einer \msg{\isprotocbn} über die geänderte \gls{connbase} benachrichtigt.
 
-darüber, dass die \gls{cchlg} erfolgreich durchgeführt wurde, dass die
-vom angegebenen \gls{addrslot} referenziertte Adresse des Empfängers somit vom Sender akzeptiert
-wurde und dass der Empfänger der \msg{\isprotocbn} jetzt Nachrichten über den Sender routen kann.
+Erst jetzt akzeptiert der entfernte \gls{service} vom lokalen \gls{service} gesendete
+\msgpl{\isprotonjn} und \msgpl{\isprotonln}.
+
+Die Aufforderung zum Weiterleiten von \glspl{netpkt} durch die \msg{\isprotonp} wird nur
+akzeptiert, wenn der sendende \gls{service} dem \gls{net}, das vom \gls{netslot} in der
+\msg{\isprotonp} referenziert wird, zuvor mit mindestens einer Adresse beigetreten ist.
+Das erfordert wiederum die Übertragung einer \msg{\isprotonjn}, für welche die \gls{connbase}
+\const{trusted} notwendig ist.
+
+Die Anforderung von \glspl{lla} geeigneter Nachbarn kann vom Gegenüber ebenfalls erst dann
+bearbeitet werden, wenn der sendende \gls{service} zuvor zumindest einem \gls{net} mit zumindest
+einer Adresse beigetreten ist.
+Das erfordert ebenfalls wiederum die Übertragung einer \msg{\isprotonjn}, für welche die
+\gls{connbase} \const{trusted} notwendig ist.
+
+Damit die Aufforderung zum Weiterleiten von in einem \gls{appch} übertragenen Daten akzeptiert
+werden kann, muss der in der \msg{\isprotoacd} angeführte \gls{appchslot} existieren. Dafür
+muss dieser zuvor mit einer \msg{\isprotoacsa} angelegt worden sein, wofür die \gls{connbase}
+\const{trusted} notwendig ist.
 
 \subsection{Initialisierung}
 Die Kommunikation über das \gls{isproto} wird mit der Aushandlung einer Protokollversion begonnen.
@@ -59,7 +88,7 @@ Message den Typ angibt, anhand dessen die restliche Nachricht interpretiert wird
 
 \subsubsection{Version}
 \label{dcl-isproto-version}
-Die \isprotoversion Message enthält eine Versionsnummer in Form eines FlexNum-Components und wird
+Die \msg{\isprotoversion} enthält eine Versionsnummer in Form eines FlexNum-Components und wird
 benutzt, um am Beginn der Verbindung die verwendete Version des \gls{isproto} auszuhandeln.
 
 \isprotoversionbytefield
@@ -70,6 +99,8 @@ Die \msg{\isprotollareq} wird benutzt, um vom Gegenüber eine Liste an \glspl{ll
 \glspl{service} anzufordern.
 Die Message enthält ein Feld für die Maximalanzahl an \glspl{lla}, die in der
 \msg{\isprotollarep} zurückgesendet werden sollen.
+
+Diese Message stellt keine Anforderungen an die aktuelle \gls{connbase}.
 
 \isprotollareqbytefield
 
@@ -94,6 +125,8 @@ mit der angegebenen Adresse beigetreten ist.
 Mit dieser Nachricht wird gleichzeitig die in Form eines öffentlichen Schlüssel angegebene Adresse
 mit dem angegebenen \gls{addrslot} assoziiert.
 
+Diese Message stellt keine Anforderungen an die aktuelle \gls{connbase}.
+
 \isprototsbytefield
 
 
@@ -103,6 +136,9 @@ Die \msg{\isprotoccreq} wird als Antwort auf eine \msg{\isprotots} gesendet und 
 auf, die enthaltenen Binärdaten im Rahmen einer \gls{cchlg} mit dem zur angegebenen Adresse
 zugehörigen privaten Schlüssel zu signieren.
 
+Diese Message wird vom Empfänger nur dann akzeptiert, wenn sie zuvor durch Senden einer
+\msg{\isprotots} angefordert wurde.
+
 \isprotoccreqbytefield
 
 
@@ -110,6 +146,9 @@ zugehörigen privaten Schlüssel zu signieren.
 \label{dcl-isproto-ccrep}
 Die \msg{\isprotoccrep} wird als Antwort auf eine \msg{\isprotoccreq} gesendet und enthält die Daten
 der gelösten \gls{cchlg}.
+
+Diese Message wird vom Empfänger nur dann akzeptiert, wenn sie zuvor durch Senden einer
+\msg{\isprotoccreq} angefordert wurde.
 
 \isprotoccrepbytefield
 
@@ -120,17 +159,27 @@ Die \msg{\isprotocbn} wird als Antwort auf eine \msg{\isprotoccrep} gesendet und
 den Empfänger über die aktuelle \gls{connbase} der vom angegebenen \gls{addrslot} referenzierten
 Adresse.
 
+Diese Message stellt keine Anforderungen an die aktuelle \gls{connbase} und kann auch gesendet
+werden, ohne vorher angefordert worden zu sein.
+
 \isprotocbnbytefield
 
 
 \subsubsection{Network Join Notice}
 \label{dcl-isproto-njn}
 Die \msg{\isprotonjn} benachrichtigt den Empfänger darüber, dass der sendende \gls{service} mit der
-vom angegebenen \gls{addrslot} referenzierten Adresse dem vom angegebenen \gls{ntid} referenzierten
+vom angegebenen \gls{addrslot} referenzierten Adresse dem vom angegebenen \gls{netslot} referenzierten
 \gls{net} beigetreten ist. Sollte der sendende \gls{service} diesem \gls{net} zuvor noch mit keiner
-Adresse beigetreten sein, so wird der Empfänger mit dieser Nachricht außerdem darüber in Kenntnis
-gesetzt, dass ab jetzt Nachrichten zum Routing in diesem \gls{net} an den sendenden \gls{service}
-übermittelt werden können.
+Adresse beigetreten sein, so wird dieser \gls{netslot} mit dieser Message angelegt. Das von diesem
+\gls{netslot} referenzierte \gls{net} wird durch den angegebenen \gls{ntid} spezifiziert.
+Der Empfänger wird in diesem Fall mit dieser Nachricht außerdem darüber in Kenntnis gesetzt, dass
+ab jetzt Nachrichten zum Routing in diesem \gls{net} an den sendenden \gls{service} übermittelt
+werden können.
+Das Feld des \gls{ntid} bleibt in den folgenden \msg{\isprotonjn}, die sich auf den angegeben
+\gls{netslot} beziehen, leer.
+
+Diese Message wird vom Empfänger nur dann akzeptiert, wenn die \gls{connbase} des angegebenen
+\gls{addrslot} mindestens \const{trusted} entspricht.
 
 \isprotonjnbytefield
 
@@ -143,6 +192,9 @@ Adresse diesem \gls{net} beigetreten sein, so wird der Empfänger mit dieser Nac
 darüber in Kenntnis gesetzt, dass ab jetzt keine Nachrichten mehr zum Routing in diesem \gls{net}
 an den Sender übermittelt werden können.
 
+Diese Message wird vom Empfänger nur dann akzeptiert, wenn die \gls{connbase} des angegebenen
+\gls{addrslot} mindestens \const{trusted} entspricht.
+
 \isprotonlnbytefield
 
 
@@ -152,6 +204,9 @@ Die \msg{\isprotoireq} fordert den Empfänger auf, den sendenden \gls{service} i
 \glspl{net} zu integrieren. Konkret bedeut das, dafür zu sorgen, dass der sendende \gls{service}
 so mit anderen \glspl{service} verbunden wird, dass das Routing der Adressen des sendenden
 \gls{service} möglichst effizient funktionieren kann.
+
+Diese Message wird vom Empfänger nur dann akzeptiert, wenn der sendende \gls{service} zuvor mit
+mindestens einer Adresse mindestens einem \gls{net} beigetreten ist.
 
 \isprotoireqbytefield
 
@@ -163,6 +218,9 @@ aufzubauen und wird als Antwort auf eine frühere \msg{\isprotoireq} gesendet. S
 um neue Teilnehmer eines \glslink{net}{Netzwerks} mit ihren entsprechenden Nachbarn verbinden zu
 können.
 
+Diese Message wird vom Empfänger nur dann akzeptiert, wenn sie zuvor durch Senden einer
+\msg{\isprotoireq} angefordert wurde.
+
 \isprotoicreqbytefield
 
 
@@ -170,6 +228,10 @@ können.
 \label{dcl-isproto-np}
 Die \msg{\isprotonp} enthält ein \gls{netpkt}, das vom Empfänger in dem durch den angegebenen
 \gls{netslot} referenzierten \gls{net} weitergeleitet werden soll.
+
+Diese Message wird vom Empfänger nur dann akzeptiert, wenn der sendende \gls{service} zuvor mit
+mindestens einer Adresse dem durch den angegebenen \gls{netslot} referenzierten \gls{net}
+beigetreten ist.
 
 \isprotonpbytefield
 
@@ -180,6 +242,10 @@ Die \msg{\isprotoacsa} benachrichtigt den Empfänger darüber, dass Nachrichten 
 zwischen den beiden durch die angegebenen \glspl{addrslot} referenzierten Adressen auf dem
 angegebenen \gls{appchslot} entgegen genommen werden.
 
+Diese Message wird vom Empfänger nur dann akzeptiert, wenn die \gls{connbase} des angegebenen
+\gls{addrslot} auf dem sendenden \gls{service} mindestens \const{trusted} entspricht und der
+angegebene \gls{addrslot} auf dem Empfänger existiert.
+
 \isprotoacsabytefield
 
 
@@ -188,5 +254,7 @@ angegebenen \gls{appchslot} entgegen genommen werden.
 Die \msg{\isprotoacd} wird dazu benutzt, um Daten des durch den angegebenen \gls{appchslot} % TODO Application ChannelS?
 referenzierten \gls{appch} zu übertragen.
 
-\isprotoacdbytefield
+Diese Message wird vom Empfänger nur dann akzeptiert, wenn er den angegebenen \gls{appchslot}
+zuvor mit einer \msg{\isprotoacsa} angelegt hat.
 
+\isprotoacdbytefield

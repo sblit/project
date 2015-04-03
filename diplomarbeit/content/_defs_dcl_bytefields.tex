@@ -1,7 +1,65 @@
+
+\newcommand{\keycrsat}{RSA Key}
+
+\newcommand{\keycrsa}{\hyperref[dcl-keyc-rsa]{\keycrsat}}
+
+\newcommand{\keycbytefield}{}
+
+\newcommand{\keycrsabytefield}{}
+
+
+\newcommand{\bmcpconnectreqt}{Connect Request}
+\newcommand{\bmcpconnectrept}{Connect Reply}
+\newcommand{\bmcpopenchreqt}{Open Channel Request}
+\newcommand{\bmcpchblockstatreqt}{Channel Block Status Request}
+\newcommand{\bmcpchblockstatrept}{Channel Block Status Report}
+\newcommand{\bmcpkillt}{Kill}
+\newcommand{\bmcpthrottlet}{Throttle}
+\newcommand{\bmcpdisconnectt}{Disconnect}
+\newcommand{\bmcpackt}{Ack}
+\newcommand{\bmcpchprotoreqt}{Change Protocol Request}
+\newcommand{\bmcpcryptoinitt}{Crypto Init}
+
+\newcommand{\bmcpconnectreq}{\hyperref[dcl-bmcp-connectreq]{\bmcpconnectreqt}}
+\newcommand{\bmcpconnectrep}{\hyperref[dcl-bmcp-connectrep]{\bmcpconnectrept}}
+\newcommand{\bmcpopenchreq}{\hyperref[dcl-bmcp-openchreq]{\bmcpopenchreqt}}
+\newcommand{\bmcpchblockstatreq}{\hyperref[dcl-bmcp-chblockstatreq]{\bmcpchblockstatreqt}}
+\newcommand{\bmcpchblockstatrep}{\hyperref[dcl-bmcp-chblockstatrep]{\bmcpchblockstatrept}}
+\newcommand{\bmcpkill}{\hyperref[dcl-bmcp-kill]{\bmcpkillt}}
+\newcommand{\bmcpthrottle}{\hyperref[dcl-bmcp-throttle]{\bmcpthrottlet}}
+\newcommand{\bmcpdisconnect}{\hyperref[dcl-bmcp-disconnect]{\bmcpdisconnectt}}
+\newcommand{\bmcpack}{\hyperref[dcl-bmcp-ack]{\bmcpackt}}
+\newcommand{\bmcpchprotoreq}{\hyperref[dcl-bmcp-chprotoreq]{\bmcpchprotoreqt}}
+\newcommand{\bmcpcryptoinit}{\hyperref[dcl-bmcp-cryptoinit]{\bmcpcryptoinitt}}
+
+\newcommand{\bmcpbytefield}{}
+
+\newcommand{\bmcpconnectreqbytefield}{}
+\newcommand{\bmcpconnectrepbytefield}{}
+\newcommand{\bmcpopenchreqbytefield}{}
+\newcommand{\bmcpchblockstatreqbytefield}{}
+\newcommand{\bmcpchblockstatrepbytefield}{}
+\newcommand{\bmcpkillbytefield}{}
+\newcommand{\bmcpthrottlebytefield}{}
+\newcommand{\bmcpdisconnectbytefield}{}
+\newcommand{\bmcpackbytefield}{}
+\newcommand{\bmcpchprotoreqbytefield}{}
+\newcommand{\bmcpcryptoinitbytefield}{}
+
+
+\newcommand{\crispneighreqt}{Neighbor Request}
+
+\newcommand{\crispneighreq}{\hyperref[dcl-crisp-neighreq]{\crispneighreqt}}
+
+\newcommand{\crispbytefield}{}
+
+\newcommand{\crispneighreqbytefield}{}
+
+
 \newcommand{\isprotocbnt}{Connection Base Notice}
 \newcommand{\isprotonjnt}{Network Join Notice}
 \newcommand{\isprotoireqt}{Integration Request}
-\newcommand{\isprotoicreqt}{Integration Reply}
+\newcommand{\isprotoicreqt}{Integration Connect Request}
 \newcommand{\isprotoccrept}{Crypto Challenge Reply}
 \newcommand{\isprotoccreqt}{Crypto Challenge Request}
 \newcommand{\isprotollarept}{LLA Reply}
@@ -28,298 +86,77 @@
 \newcommand{\isprotonp}{\hyperref[dcl-isproto-np]{\isprotonpt}}
 \newcommand{\isprotoacsa}{\hyperref[dcl-isproto-acsa]{\isprotoacsat}}
 
-\newcommand{\isprotobytefield}{\begin{figure}[tbh]\begin{centering}\begin{bytefield}[bitwidth=3.0em]{8} \\ 
-\bitheader{0-7} \\ 
-\wordbox[lrt]{2}{Message Type \\ \flexnumfield} \\ 
-\skippedwords \\ 
-\wordbox[lr]{1}{}
- \\ 
-\wordbox[lrt]{2}{Message Data \\ $N$ Bytes} \\ 
-\skippedwords \\ 
-\wordbox[lrb]{1}{}
-\end{bytefield}\par\end{centering}
-\protect\caption{\gls*{isproto} -- Genereller Messageaufbau}
-\end{figure}}
+\newcommand{\isprotobytefield}{}
 
-\newcommand{\isprotocbnbytefield}{\begin{figure}[tbh]\begin{centering}\begin{bytefield}[bitwidth=3.0em]{8} \\ 
-\bitheader{0-7} \\ 
-\begin{rightwordgroup}{Message Type}
-\wordbox[lrt]{1}{\code{6}}
+\newcommand{\isprotocbnbytefield}{}
+\newcommand{\isprotonjnbytefield}{}
+\newcommand{\isprotoireqbytefield}{}
+\newcommand{\isprotoicreqbytefield}{}
+\newcommand{\isprotoccrepbytefield}{}
+\newcommand{\isprotoccreqbytefield}{}
+\newcommand{\isprotollarepbytefield}{}
+\newcommand{\isprotollareqbytefield}{}
+\newcommand{\isprotonlnbytefield}{}
+\newcommand{\isprotoacdbytefield}{}
+\newcommand{\isprototsbytefield}{}
+\newcommand{\isprotoversionbytefield}{}
+\newcommand{\isprotonpbytefield}{}
+\newcommand{\isprotoacsabytefield}{}
 
-\end{rightwordgroup}
- \\ 
-\wordbox[lrt]{2}{Address Slot \\ \flexnumfield} \\ 
-\skippedwords \\ 
-\wordbox[lr]{1}{}
- \\ 
-\wordbox[lrtb]{1}{Connection Base}
-\end{bytefield}\par\end{centering}
-\protect\caption{\gls*{isproto} -- \msg{\isprotocbnt}}
-\end{figure}}
-\newcommand{\isprotonjnbytefield}{\begin{figure}[tbh]\begin{centering}\begin{bytefield}[bitwidth=3.0em]{8} \\ 
-\bitheader{0-7} \\ 
-\begin{rightwordgroup}{Message Type}
-\wordbox[lrt]{1}{\code{7}}
 
-\end{rightwordgroup}
- \\ 
-\wordbox[lrt]{2}{Address Slot \\ \flexnumfield} \\ 
-\skippedwords \\ 
-\wordbox[lr]{1}{}
- \\ 
-\wordbox[lrt]{2}{Network Slot \\ \flexnumfield} \\ 
-\skippedwords \\ 
-\wordbox[lr]{1}{}
- \\ 
-\begin{rightwordgroup}{Network Type}
-\wordbox[lrt]{2}{Network Type Descriptor \\ ASCII String Data, $N$ Bytes} \\ 
-\skippedwords \\ 
-\wordbox[lr]{1}{}
- \\ 
-\wordbox[lrtb]{1}{String Delimiter (\code{0})}
+\newcommand{\asprotocryptoresponset}{Key Crypto Response}
+\newcommand{\asprotokeynumt}{Key Number Response}
+\newcommand{\asprotojoindefnetst}{Join Default Networks}
+\newcommand{\asprotoappchacceptt}{Application Channel Accept}
+\newcommand{\asprotoslotassignt}{Slot Assign}
+\newcommand{\asprotokeyenct}{Key Encrypt}
+\newcommand{\asprotoappchinreqt}{Application Channel Incoming Request}
+\newcommand{\asprotoappchdatat}{Application Channel Data}
+\newcommand{\asprotoappchconnectedt}{Application Channel Connected}
+\newcommand{\asprotokeyencblocksizereqt}{Key Encryption Block Size Request}
+\newcommand{\asprotokeydect}{Key Decrypt}
+\newcommand{\asprotoaddrpubkeyt}{Address Public Key}
+\newcommand{\asprotoappchoutreqt}{Application Channel Outgoing Request}
+\newcommand{\asprotodatat}{Data}
+\newcommand{\asprotogenkeyt}{Generate Key}
+\newcommand{\asprotojoinnett}{Join Network}
+\newcommand{\asprotorevisiont}{Revision}
 
-\end{rightwordgroup}
-\end{bytefield}\par\end{centering}
-\protect\caption{\gls*{isproto} -- \msg{\isprotonjnt}}
-\end{figure}}
-\newcommand{\isprotoireqbytefield}{\begin{figure}[tbh]\begin{centering}\begin{bytefield}[bitwidth=3.0em]{8} \\ 
-\bitheader{0-7} \\ 
-\begin{rightwordgroup}{Message Type}
-\wordbox[lrtb]{1}{\code{9}}
+\newcommand{\asprotocryptoresponse}{\hyperref[dcl-asproto-cryptoresponse]{\asprotocryptoresponset}}
+\newcommand{\asprotokeynum}{\hyperref[dcl-asproto-keynum]{\asprotokeynumt}}
+\newcommand{\asprotojoindefnets}{\hyperref[dcl-asproto-joindefnets]{\asprotojoindefnetst}}
+\newcommand{\asprotoappchaccept}{\hyperref[dcl-asproto-appchaccept]{\asprotoappchacceptt}}
+\newcommand{\asprotoslotassign}{\hyperref[dcl-asproto-slotassign]{\asprotoslotassignt}}
+\newcommand{\asprotokeyenc}{\hyperref[dcl-asproto-keyenc]{\asprotokeyenct}}
+\newcommand{\asprotoappchinreq}{\hyperref[dcl-asproto-appchinreq]{\asprotoappchinreqt}}
+\newcommand{\asprotoappchdata}{\hyperref[dcl-asproto-appchdata]{\asprotoappchdatat}}
+\newcommand{\asprotoappchconnected}{\hyperref[dcl-asproto-appchconnected]{\asprotoappchconnectedt}}
+\newcommand{\asprotokeyencblocksizereq}{\hyperref[dcl-asproto-keyencblocksizereq]{\asprotokeyencblocksizereqt}}
+\newcommand{\asprotokeydec}{\hyperref[dcl-asproto-keydec]{\asprotokeydect}}
+\newcommand{\asprotoaddrpubkey}{\hyperref[dcl-asproto-addrpubkey]{\asprotoaddrpubkeyt}}
+\newcommand{\asprotoappchoutreq}{\hyperref[dcl-asproto-appchoutreq]{\asprotoappchoutreqt}}
+\newcommand{\asprotodata}{\hyperref[dcl-asproto-data]{\asprotodatat}}
+\newcommand{\asprotogenkey}{\hyperref[dcl-asproto-genkey]{\asprotogenkeyt}}
+\newcommand{\asprotojoinnet}{\hyperref[dcl-asproto-joinnet]{\asprotojoinnett}}
+\newcommand{\asprotorevision}{\hyperref[dcl-asproto-revision]{\asprotorevisiont}}
 
-\end{rightwordgroup}
-\end{bytefield}\par\end{centering}
-\protect\caption{\gls*{isproto} -- \msg{\isprotoireqt}}
-\end{figure}}
-\newcommand{\isprotoicreqbytefield}{\begin{figure}[tbh]\begin{centering}\begin{bytefield}[bitwidth=3.0em]{8} \\ 
-\bitheader{0-7} \\ 
-\begin{rightwordgroup}{Message Type}
-\wordbox[lrt]{1}{\code{10}}
+\newcommand{\asprotobytefield}{}
 
-\end{rightwordgroup}
- \\ 
-\begin{rightwordgroup}{Remote Address}
-\wordbox[lrt]{2}{\acrshort{lla} Type \\ \flexnumfield} \\ 
-\skippedwords \\ 
-\wordbox[lr]{1}{}
- \\ 
-\wordbox[lrt]{2}{\acrshort{lla} Data \\ $N$ Bytes} \\ 
-\skippedwords \\ 
-\wordbox[lrb]{1}{}
+\newcommand{\asprotocryptoresponsebytefield}{}
+\newcommand{\asprotokeynumbytefield}{}
+\newcommand{\asprotojoindefnetsbytefield}{}
+\newcommand{\asprotoappchacceptbytefield}{}
+\newcommand{\asprotoslotassignbytefield}{}
+\newcommand{\asprotokeyencbytefield}{}
+\newcommand{\asprotoappchinreqbytefield}{}
+\newcommand{\asprotoappchdatabytefield}{}
+\newcommand{\asprotoappchconnectedbytefield}{}
+\newcommand{\asprotokeyencblocksizereqbytefield}{}
+\newcommand{\asprotokeydecbytefield}{}
+\newcommand{\asprotoaddrpubkeybytefield}{}
+\newcommand{\asprotoappchoutreqbytefield}{}
+\newcommand{\asprotodatabytefield}{}
+\newcommand{\asprotogenkeybytefield}{}
+\newcommand{\asprotojoinnetbytefield}{}
+\newcommand{\asprotorevisionbytefield}{}
 
-\end{rightwordgroup}
-\end{bytefield}\par\end{centering}
-\protect\caption{\gls*{isproto} -- \msg{\isprotoicreqt}}
-\end{figure}}
-\newcommand{\isprotoccrepbytefield}{\begin{figure}[tbh]\begin{centering}\begin{bytefield}[bitwidth=3.0em]{8} \\ 
-\bitheader{0-7} \\ 
-\begin{rightwordgroup}{Message Type}
-\wordbox[lrt]{1}{\code{5}}
-
-\end{rightwordgroup}
- \\ 
-\wordbox[lrt]{2}{Address Slot \\ \flexnumfield} \\ 
-\skippedwords \\ 
-\wordbox[lr]{1}{}
- \\ 
-\begin{rightwordgroup}{Signed Data}
-\wordbox[lrt]{2}{Data Length \\ \flexnumfield} \\ 
-\skippedwords \\ 
-\wordbox[lr]{1}{}
- \\ 
-\wordbox[lrt]{2}{Data, $N$ Bytes} \\ 
-\skippedwords \\ 
-\wordbox[lrb]{1}{}
-
-\end{rightwordgroup}
-\end{bytefield}\par\end{centering}
-\protect\caption{\gls*{isproto} -- \msg{\isprotoccrept}}
-\end{figure}}
-\newcommand{\isprotoccreqbytefield}{\begin{figure}[tbh]\begin{centering}\begin{bytefield}[bitwidth=3.0em]{8} \\ 
-\bitheader{0-7} \\ 
-\begin{rightwordgroup}{Message Type}
-\wordbox[lrt]{1}{\code{4}}
-
-\end{rightwordgroup}
- \\ 
-\wordbox[lrt]{2}{Address Slot \\ \flexnumfield} \\ 
-\skippedwords \\ 
-\wordbox[lr]{1}{}
- \\ 
-\begin{rightwordgroup}{Challenge Data}
-\wordbox[lrt]{2}{Data Length \\ \flexnumfield} \\ 
-\skippedwords \\ 
-\wordbox[lr]{1}{}
- \\ 
-\wordbox[lrt]{2}{Data, $N$ Bytes} \\ 
-\skippedwords \\ 
-\wordbox[lrb]{1}{}
-
-\end{rightwordgroup}
-\end{bytefield}\par\end{centering}
-\protect\caption{\gls*{isproto} -- \msg{\isprotoccreqt}}
-\end{figure}}
-\newcommand{\isprotollarepbytefield}{\begin{figure}[tbh]\begin{centering}\begin{bytefield}[bitwidth=3.0em]{8} \\ 
-\bitheader{0-7} \\ 
-\begin{rightwordgroup}{Message Type}
-\wordbox[lrt]{1}{\code{2}}
-
-\end{rightwordgroup}
- \\ 
-\wordbox[lrt]{2}{Element Count \\ \flexnumfield} \\ 
-\skippedwords \\ 
-\wordbox[lr]{1}{}
- \\ 
-\begin{rightwordgroup}{\acrshort{lla}}
-\wordbox[lrt]{2}{\acrshort{lla} Type \\ \flexnumfield} \\ 
-\skippedwords \\ 
-\wordbox[lr]{1}{}
- \\ 
-\wordbox[lrt]{2}{\acrshort{lla} Data \\ $N$ Bytes} \\ 
-\skippedwords \\ 
-\wordbox[lr]{1}{}
-
-\end{rightwordgroup}
- \\ 
-\begin{rightwordgroup}{\acrshort{lla}}
-\wordbox[lrt]{2}{$\cdots$} \\ 
-\skippedwords \\ 
-\wordbox[lrb]{1}{}
-
-\end{rightwordgroup}
-\end{bytefield}\par\end{centering}
-\protect\caption{\gls*{isproto} -- \msg{\isprotollarept}}
-\end{figure}}
-\newcommand{\isprotollareqbytefield}{\begin{figure}[tbh]\begin{centering}\begin{bytefield}[bitwidth=3.0em]{8} \\ 
-\bitheader{0-7} \\ 
-\begin{rightwordgroup}{Message Type}
-\wordbox[lrt]{1}{\code{1}}
-
-\end{rightwordgroup}
- \\ 
-\wordbox[lrt]{2}{Limit \\ \flexnumfield} \\ 
-\skippedwords \\ 
-\wordbox[lrb]{1}{}
-\end{bytefield}\par\end{centering}
-\protect\caption{\gls*{isproto} -- \msg{\isprotollareqt}}
-\end{figure}}
-\newcommand{\isprotonlnbytefield}{\begin{figure}[tbh]\begin{centering}\begin{bytefield}[bitwidth=3.0em]{8} \\ 
-\bitheader{0-7} \\ 
-\begin{rightwordgroup}{Message Type}
-\wordbox[lrt]{1}{\code{8}}
-
-\end{rightwordgroup}
- \\ 
-\wordbox[lrt]{2}{Address Slot \\ \flexnumfield} \\ 
-\skippedwords \\ 
-\wordbox[lr]{1}{}
- \\ 
-\wordbox[lrt]{2}{Network Slot \\ \flexnumfield} \\ 
-\skippedwords \\ 
-\wordbox[lrb]{1}{}
-\end{bytefield}\par\end{centering}
-\protect\caption{\gls*{isproto} -- \msg{\isprotonlnt}}
-\end{figure}}
-\newcommand{\isprotoacdbytefield}{\begin{figure}[tbh]\begin{centering}\begin{bytefield}[bitwidth=3.0em]{8} \\ 
-\bitheader{0-7} \\ 
-\begin{rightwordgroup}{Message Type}
-\wordbox[lrt]{1}{\code{15}}
-
-\end{rightwordgroup}
- \\ 
-\wordbox[lrt]{2}{Application Channel Slot \\ \flexnumfield} \\ 
-\skippedwords \\ 
-\wordbox[lr]{1}{}
- \\ 
-\wordbox[lrt]{2}{Application Channel Data Length \\ \flexnumfield} \\ 
-\skippedwords \\ 
-\wordbox[lr]{1}{}
- \\ 
-\wordbox[lrt]{2}{Application Channel Data \\ Data, $N$ Bytes} \\ 
-\skippedwords \\ 
-\wordbox[lrb]{1}{}
-\end{bytefield}\par\end{centering}
-\protect\caption{\gls*{isproto} -- \msg{\isprotoacdt}}
-\end{figure}}
-\newcommand{\isprototsbytefield}{\begin{figure}[tbh]\begin{centering}\begin{bytefield}[bitwidth=3.0em]{8} \\ 
-\bitheader{0-7} \\ 
-\begin{rightwordgroup}{Message Type}
-\wordbox[lrt]{1}{\code{3}}
-
-\end{rightwordgroup}
- \\ 
-\wordbox[lrt]{2}{Address Slot \\ \flexnumfield} \\ 
-\skippedwords \\ 
-\wordbox[lr]{1}{}
- \\ 
-\begin{rightwordgroup}{Address Key}
-\wordbox[lrt]{1}{Key Type}
- \\ 
-\wordbox[lrt]{2}{Key Data \\ $N$ Bytes} \\ 
-\skippedwords \\ 
-\wordbox[lrb]{1}{}
-
-\end{rightwordgroup}
-\end{bytefield}\par\end{centering}
-\protect\caption{\gls*{isproto} -- \msg{\isprototst}}
-\end{figure}}
-\newcommand{\isprotoversionbytefield}{\begin{figure}[tbh]\begin{centering}\begin{bytefield}[bitwidth=3.0em]{8} \\ 
-\bitheader{0-7} \\ 
-\begin{rightwordgroup}{Message Type}
-\wordbox[lrt]{1}{\code{0}}
-
-\end{rightwordgroup}
- \\ 
-\wordbox[lrt]{2}{Version \\ \flexnumfield} \\ 
-\skippedwords \\ 
-\wordbox[lrb]{1}{}
-\end{bytefield}\par\end{centering}
-\protect\caption{\gls*{isproto} -- \msg{\isprotoversiont}}
-\end{figure}}
-\newcommand{\isprotonpbytefield}{\begin{figure}[tbh]\begin{centering}\begin{bytefield}[bitwidth=3.0em]{8} \\ 
-\bitheader{0-7} \\ 
-\begin{rightwordgroup}{Message Type}
-\wordbox[lrt]{1}{\code{13}}
-
-\end{rightwordgroup}
- \\ 
-\wordbox[lrt]{2}{Network Slot \\ \flexnumfield} \\ 
-\skippedwords \\ 
-\wordbox[lr]{1}{}
- \\ 
-\begin{rightwordgroup}{Network Packet}
-\wordbox[lrt]{2}{\netpktfield} \\ 
-\skippedwords \\ 
-\wordbox[lrb]{1}{}
-
-\end{rightwordgroup}
-\end{bytefield}\par\end{centering}
-\protect\caption{\gls*{isproto} -- \msg{\isprotonpt}}
-\end{figure}}
-\newcommand{\isprotoacsabytefield}{\begin{figure}[tbh]\begin{centering}\begin{bytefield}[bitwidth=3.0em]{8} \\ 
-\bitheader{0-7} \\ 
-\begin{rightwordgroup}{Message Type}
-\wordbox[lrt]{1}{\code{14}}
-
-\end{rightwordgroup}
- \\ 
-\wordbox[lrt]{2}{Application Channel Slot \\ \flexnumfield} \\ 
-\skippedwords \\ 
-\wordbox[lr]{1}{}
- \\ 
-\wordbox[lrt]{2}{Sender Address Slot \\ \flexnumfield} \\ 
-\skippedwords \\ 
-\wordbox[lr]{1}{}
- \\ 
-\wordbox[lrt]{2}{Receiver Address Slot \\ \flexnumfield} \\ 
-\skippedwords \\ 
-\wordbox[lr]{1}{}
- \\ 
-\wordbox[lrt]{2}{Action Identifier \\ ASCII String Data, $N$ Bytes} \\ 
-\skippedwords \\ 
-\wordbox[lr]{1}{}
- \\ 
-\wordbox[lrtb]{1}{String Delimiter (\code{0})}
-\end{bytefield}\par\end{centering}
-\protect\caption{\gls*{isproto} -- \msg{\isprotoacsat}}
-\end{figure}}
