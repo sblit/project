@@ -9,9 +9,7 @@ Damit \sblit weiß, wann die Dateien von den Partnergeräten \referenz{Partnerge
 Wenn eine Datei neu erstellt, bearbeitet oder gelöscht wird, erkennt dies \sblit und leitet diese Informationen an den Synchronisationsprozess weiter. Außerdem ist das Erkennen einer Änderung im \sblit-Ordner wichtig, damit sie im \gls{logfile} protokolliert werden kann. Das \gls{logfile} wird sowohl für die Konflikterkennung \referenz{Konflikterkennung} als auch für die Reduktion der benötigten Bandbreite \referenz{Dateianfrage} genutzt.
 
 Um Änderungen zu erkennen, verwendet \sblit das sogenannte \gls{watchservice}. Das \gls{watchservice} wird bei Änderungen in dem Ordner, der vom Benutzer für die Synchronisation festgelegt wurde, benachrichtigt. Je nach dem, ob eine Datei angelegt, verändert oder gelöscht wurde, erfolgen unterschiedliche Arbeitsschritte. Beim Anlegen einer neuen Datei, wird ihr Pfad samt Hash in das \gls{logfile} geschrieben und eine Dateianfrage an die anderen eigenen Geräte geschickt. Wird eine Datei verändert, wird ein neuer Hash zu den bereits vorhandenen Hashes hinzugefügt. Außerdem wird eine Dateianfrage an die anderen eigenen Geräte gesendet. Wird eine Datei gelöscht, wird sie samt Hashes aus dem \gls{logfile} entfernt. Anschließend wird eine Löschanfrage an die eigenen Geräte versandt.\\ \\
-\javalisting
-\begin{minipage}{\linewidth}
-\begin{lstlisting}[caption={Initialisierung des \gls{watchservice}},captionpos=b]
+\listingstart{Initialisierung des \gls{watchservice}}
 WatchService watcher = filesDirectory.getFileSystem()
 		.newWatchService();
 filesDirectory.register(watcher,
@@ -25,7 +23,6 @@ Map<String, LinkedList<Data>> logs = getLogs();
 Map<String, LinkedList<Data>> synchronizedDevices = 
 		getSynchronizedDevices();
 \end{lstlisting}
-\end{minipage}
 \begin{description}
 	\descriptionitem{filesDirectory}
 	\code{filesDirectory} enthält den vom Benutzer festgelegten \sblit-Ordner.
@@ -43,16 +40,13 @@ Map<String, LinkedList<Data>> synchronizedDevices =
 Zunächst wird ein neues Objekt vom Typ \code{\gls{watchservice}} erstellt. Dieses überwacht den festgelegten \sblit-Ordner hinsichtlich neu erstellter, geänderter und gelöschter Dateien. Zur Registrierung des \gls{watchservice} im Dateisystem, werden in der \code{register}-Methode das \gls{watchservice}-Objekt und die Fälle, in denen das \gls{watchservice} benachrichtigt werden soll, festgelegt. In diesem Fall ist sind das neue Dateien (\code{ENTRY\_CREATE}), Dateiänderungen (\code{ENTRY\_MODIFY}) und gelöschte Dateien (\code{ENTRY\_DELETE}). Die \code{take}-Methode wartet auf Änderungen im festgelegten Ordner und übergibt sie dann an das \code{\gls{watchkey}}-Objekt. Die Anweisung \code{watchKey.pollEvents()} unterteilt den \gls{watchkey} in einzelne Dateiänderungen und formatiert diese für den weiteren Gebrauch. 
 
 Der Thread wird angehalten, da das Programm beim Empfangen einer Datei das Logfile bearbeitet. Dies passiert, damit \sblit weiß, dass die Datei nicht vom Nutzer verändert wurde. \\ \\
-\javalisting
-\begin{minipage}{\linewidth}
-\begin{lstlisting}[caption={Unterteilen in einzelne Dateien},captionpos=b]
+\listingstart{Unterteilen in einzelne Dateien}
 for (WatchEvent event : events) {
 	String path = event.context().toString();
 	File changedFile = new File(
 			Configuration.getSblitDirectory()
 					+ Configuration.slash + path);
 \end{lstlisting}
-\end{minipage}
 \begin{description}
 	\descriptionitem{event}
 	\code{event} enthält Informationen zur Erstellung, Änderung oder Bearbeitung einer Datei aus der Liste \code{events}. 
@@ -61,9 +55,7 @@ for (WatchEvent event : events) {
 	\descriptionitem{changedFile}
 	\code{changedFile} enthält die Datei, die gerade geändert wurde.
 \end{description}
-\javalisting
-\begin{minipage}{\linewidth}
-\begin{lstlisting}[caption={Erstellen einer Datei},captionpos=b]
+\listingstart{Erstellen einer Datei}
 if (event.kind() == StandardWatchEventKinds.ENTRY_CREATE 
 		&& logs.get(path) == null) {
 	byte[] fileContent = 
@@ -79,7 +71,6 @@ if (event.kind() == StandardWatchEventKinds.ENTRY_CREATE
 	filesToPush = refreshFilesArray(filesToPush, changedFile);
 }
 \end{lstlisting}
-\end{minipage}	
 \begin{description}
 	\descriptionitem{fileContent}
 	\code{fileContent} enthält den Inhalt der Datei, die neu erstellt wurde.
@@ -90,10 +81,8 @@ if (event.kind() == StandardWatchEventKinds.ENTRY_CREATE
 	\descriptionitem{devices}
 	\code{devices} enthält alle Geräte, auf denen die Datei aktuell ist. In diesem Fall ist das genau das Gerät, auf dem der Code ausgeführt wird, da diese Datei gerade erst erstellt wurde.
 \end{description}
-Wenn eine Datei erstellt wurde, wird sie zu allererst ausgelesen. Anschließend wird der Inhalt verhasht und dem Versionverlauf hinzugefügt. Außerdem wird das Gerät, auf dem der Code ausgeführt wird, zur Geräteliste \code{devices} hinzugefügt. Anschließend wird die Datei zur Liste der zu synchronisierenden Dateien hinzugefügt.\\ \\
-\javalisting
-\begin{minipage}{\linewidth}
-\begin{lstlisting}[caption={Löschen einer Datei},captionpos=b]
+Wenn eine Datei erstellt wurde, wird sie zu allererst ausgelesen. Anschließend wird der Inhalt verhasht und dem Versionverlauf hinzugefügt. Außerdem wird das Gerät, auf dem der Code ausgeführt wird, zur Geräteliste \code{devices} hinzugefügt. Schließlich wird die Datei zur Liste der zu synchronisierenden Dateien hinzugefügt.\\ \\
+\listingstart{Löschen einer Datei}
 else if (event.kind() == StandardWatchEventKinds
 		.ENTRY_DELETE) {
 	logs.remove(path);
@@ -102,11 +91,8 @@ else if (event.kind() == StandardWatchEventKinds
 			changedFile);
 }
 \end{lstlisting}
-\end{minipage}
-Beim Löschen einer Datei wird auch der zugehörige Versionsverlauf ebenfalls entfernt. Außerdem wird der Variable \code{filesToDelete} der Pfad hinzugefügt, um die anderen eigenen Geräte auch darüber zu informieren, dass eine Datei gelöscht wurde. \\ \\
-\javalisting
-\begin{minipage}{\linewidth}
-\begin{lstlisting}[caption={Bearbeiten einer Datei},captionpos=b]
+Beim Löschen einer Datei wird der zugehörige Versionsverlauf ebenfalls entfernt. Außerdem wird der Variable \code{filesToDelete} der Pfad der gelöschten Datei hinzugefügt, um die anderen eigenen Geräte auch darüber zu informieren, dass eine Datei gelöscht wurde. \\ \\
+\listingstart{Bearbeiten einer Datei}
 else if (event.kind() == StandardWatchEventKinds
 		.ENTRY_MODIFY) {
 	byte[] fileContent = readFile(event);
@@ -123,7 +109,6 @@ else if (event.kind() == StandardWatchEventKinds
 	}
 }
 \end{lstlisting}
-\end{minipage}
 \begin{description}
 \descriptionitem{fileContent}
 	\code{fileContent} enthält den Inhalt der Datei, die bearbeitet wurde.
@@ -132,33 +117,30 @@ else if (event.kind() == StandardWatchEventKinds
 	\descriptionitem{hashes}
 	\code{hashes} enthält den Versionsverlauf der Datei. 
 	\descriptionitem{devices}
-	\code{devices} enthält alle Geräte, auf denen die Datei aktuell ist. In diesem Fall ist das genau das Gerät, auf dem der Code ausgeführt wird, da diese Datei gerade bearbeitet wurde.
+	\code{devices} enthält alle Geräte, auf denen die Datei aktuell ist. In diesem Fall ist das genau jenes Gerät, auf dem der Code ausgeführt wird, da diese Datei gerade bearbeitet wurde.
 \end{description}
 Wurde die Datei bearbeitet, wird sie ausgelesen und anschließend verhasht. Nachdem der Versionsverlauf für die Datei in der Variable \code{hashes} gespeichert wurde, wird überprüft, ob der Versionsverlauf die Datei schon enthält. Ist dies der Fall, ist ein Fehler aufgetreten und die neue Version wird nicht synchronisiert. Falls der Versionsverlauf die aktuelle Version noch nicht enthält, wird der Hash der aktuellen Version im Versionsverlauf gespeichert. Anschließend wird eine neue Liste an Geräten erstellt, auf denen schon die neuste Version synchronisiert ist. In diesem Fall wird nur das eigene Gerät hinzugefügt, da die neuste Version bis jetzt nur auf diesem Gerät vorhanden ist. \\ \\
-\javalisting
-\begin{minipage}{\linewidth}
-\begin{lstlisting}[caption={Schreiben des \gls{logfile}s},captionpos=b]
+\listingstart{Schreiben des \gls{logfile}s}
 }
 logFile.createNewFile();
 write(files, synchronizedDevices);
 \end{lstlisting}
-\end{minipage}
 Das \gls{logfile} wird neu erstellt und die neuen Daten werden anschließend darin gespeichert.
 \subsection{Konflikte}\label{Konflikt}
 \subsubsection{Allgemein}
-Ein Konflikt ist ein Problem, dass bei Synchronisationsdiensten vorkommt. Dieser tritt auf, wenn eine Datei bearbeitet wird, bevor diese synchronisiert werden kann. 
+Ein Konflikt ist ein Problem, das bei Synchronisationsdiensten vorkommt. Dieser tritt auf, wenn eine Datei bearbeitet wird, bevor sie synchronisiert werden kann. 
 
 Dazu ein Beispiel: Susanne hat einen Laptop und einen Stand-Rechner, auf denen sie mithilfe von \sblit einen Ordner synchronisiert. Im Normalfall, also wenn kein Konflikt auftritt, bearbeitet Susanne eine Datei auf dem Laptop. Nach dem Speichern wird die Datei auf den Stand-Rechner übertragen und dort gespeichert. Die Datei ist nun auf beiden Geräten synchron.
 
-Angenommen, Susanne schaltet nun den Laptop aus. Später bearbeitet sie die Datei noch einmal auf dem Stand-Rechner. Da der Laptop ausgeschaltet ist, kann die Datei nicht synchronisiert werden. Auf dem Weg zur Arbeit fällt Susanne noch eine Verbesserungsmöglichkeit der Datei ein und sie bearbeitet die Datei auf dem Laptop ohne einer Verbindung zum Internet. In der Arbeit angekommen, packt Susanne wieder ihren Laptop aus und verbindet sich zum Internet. Die Datei kann jetzt nicht auf den neusten Stand gebracht werden, da ja zwei unterschiedliche Versionen existieren. Würde die Datei einfach vom Stand-Rechner auf den Laptop kopiert werden, gingen die Neuerungen am Laptop verloren, umgekehrt würde die Datei vom Laptop die Änderungen am Stand-Rechner überschreiben. Diesen Zustand zweier verschiedener Versionen ohne die jeweils anderen Änderungen nennt man einen Konflikt.
+Angenommen, Susanne schaltet nun den Laptop aus und bearbeitet anschließend die Datei noch einmal auf dem Stand-Rechner. Da der Laptop ausgeschaltet ist, kann die Datei nicht synchronisiert werden. Auf dem Weg zur Arbeit fällt Susanne noch eine Verbesserungsmöglichkeit der Datei ein und sie bearbeitet die Datei auf dem Laptop ohne einer Verbindung zum Internet. In der Arbeit angekommen, packt Susanne wieder ihren Laptop aus und verbindet sich zum Internet. Die Datei kann jetzt nicht auf den neusten Stand gebracht werden, da ja zwei unterschiedliche Versionen existieren. Würde die Datei einfach vom Stand-Rechner auf den Laptop kopiert werden, gingen die Neuerungen am Laptop verloren, umgekehrt würde die Datei vom Laptop die Änderungen am Stand-Rechner überschreiben. Diesen Zustand zweier verschiedener Versionen der gleichen Datei, ohne die Änderungen des jeweils anderen Gerätes schon berücksichtigt zu haben, nennt man einen Konflikt.
 %TODO eventuell noch ergänzen
 
 \subsubsection{Konflikterkennung}\label{Konflikterkennung}
-Um Konflikte zu erkennen, verwendet \sblit eine interne Versionierung der Dateien. Diese wird im Kapitel \linkt{Logfile} näher erklärt. Bei einer Dateianfrage \referenz{Dateianfrage} werden alle Hashes einer Datei mitgesendet. Diese werden nach dem Empfang der Anfrage mit den Hashes der Datei mit dem gleichen Namen und aller Konfliktdateien dieser Datei im lokalen \gls{logfile} verglichen. Stimmen die beiden aktullen Hashes aus Dateianfrage und der Datei mit dem gleichen Namen im \gls{logfile} überein, muss die Datei gar nicht übertragen werden, da sie schon auf dem neusten Stand ist. Das heißt natürlich auch, dass kein Konflikt auftritt. Stimmt der aktuelle Hash im lokalen \gls{logfile} mit einem in der Dateianfrage überein, tritt ebenfalls kein Konflikt auf, da der aktuelle lokale Hash dem Gerät, dass die Anfrage verschickt hat, schon bekannt ist. 
+Um Konflikte zu erkennen, verwendet \sblit eine interne Versionierung der Dateien. Diese wird im Kapitel \linkt{Logfile} näher erklärt. Bei einer Dateianfrage \referenz{Dateianfrage} werden alle Hashes einer Datei mitgesendet. Diese werden nach dem Empfang der Anfrage mit den Hashes der Datei mit dem gleichen Namen und aller Konfliktdateien dieser Datei im lokalen \gls{logfile} verglichen. Stimmen die beiden aktullen Hashes aus Dateianfrage und der Datei mit dem gleichen Namen im \gls{logfile} überein, muss die Datei gar nicht übertragen werden, da sie schon auf dem neusten Stand ist. Das heißt natürlich auch, dass kein Konflikt auftritt. Stimmt der aktuelle Hash im lokalen \gls{logfile} mit einem in der Dateianfrage überein, tritt ebenfalls kein Konflikt auf, da der aktuelle lokale Hash dem Gerät, das die Anfrage verschickt hat, schon bekannt ist. 
 
-Stimmt der Versionsverlauf aus dem \gls{filereq} mit dem einer Konfliktdatei überein, wurde eine Version synchronisiert, bevor ein drittes Gerät einen Konflikt bemerkt hat. In diesem Falle könnten mehrere Konfliktdateien mit nur zwei verschiedenen Inhalten erstellt werden. Passiert dies, werden die Namen der beiden Dateien vertauscht um das eben genannte Szenario zu verhindern.
+Stimmt der Versionsverlauf aus dem \gls{filereq} mit dem einer Konfliktdatei überein, wurde eine Version synchronisiert, bevor ein drittes Gerät einen Konflikt bemerkt hat. In diesem Falle könnten mehrere Konfliktdateien mit nur zwei verschiedenen Inhalten erstellt werden. Passiert dies, werden die Namen der beiden Dateien vertauscht, um das eben genannte Szenario zu verhindern.
 
-Ist der aktuelle Hash der lokalen Datei jedoch nicht in der Dateianfrage enthalten, wurde die lokale Datei bearbeitet, bevor diese auf den aktuellen Stand gebracht werden konnte. Anders gesagt: Ein Konflikt ist aufgetreten.
+Ist der aktuelle Hash der lokalen Datei jedoch nicht in der Dateianfrage enthalten, wurde die lokale Datei bearbeitet, bevor diese auf den aktuellsten Stand gebracht werden konnte. Anders gesagt: Ein Konflikt ist aufgetreten.
 
 \subsubsection{Konfliktlösung}
 Damit die Änderungen von einem Gerät nicht überschrieben werden, speichert \sblit beide Versionen. Da jedoch beide Dateien nicht den gleichen Namen haben können, benennt das Gerät, das den Konflikt erkennt, (im Folgenden Gerät A) die lokale Datei um. Anschließend schickt Gerät A eine Antwort an das Gerät, das die Dateianfrage geschickt hat,  (im Folgenden Gerät B) in der es die neue Version anfordert, als ob kein Konflikt aufgetreten wäre. Außerdem schickt Gerät A eine Dateianfrage mit der neuen Datei an Gerät B. Gerät B sendet nun die angeforderte Datei an Gerät A und akzeptiert die Konfliktdatei, da es eine Datei mit dem gleichen Namen noch nicht besitzt. 
@@ -167,9 +149,7 @@ Nach dem Empfang der Datei speichtert Gerät A diese unter dem ursprünglichen N
 
 \subsubsection{Umsetzung}
 Um Konflikte zu erkennen und zu lösen wird der folgende Code verwendet: \\ \\
-\javalisting
-\begin{minipage}{\linewidth}
-\begin{lstlisting}[caption={Erkennen eines Konflikts},captionpos=b]
+\listingstart{Erkennen eines Konflikts}
 private void handleConflict(LinkedList<Data> requestedHashes,
 			LinkedList<Data> ownHashes, String path)
 			throws IOException {
@@ -204,7 +184,7 @@ private void handleConflict(LinkedList<Data> requestedHashes,
 	}
 }
 \end{lstlisting}
-\end{minipage}
+
 \begin{description}
 	\descriptionitem{requestedHashes} Der Parameter gibt an, welche Hashes in der Dateianfrage geschickt wurden. Die Hashes haben den Datentyp Data, welcher in \gls{dcl} definiert wurden. Um eine unbestimmte Menge davon speichern zu können, werden diese in eine LinkedList geschrieben. Diese hat den Vorteil, dass die Elemente die Reihenfolge behalten, in der sie in die Liste geschrieben wurden.
 	
@@ -220,6 +200,7 @@ private void handleConflict(LinkedList<Data> requestedHashes,
 	
 	\descriptionitem{file} Die Variable file enthält die ursprüngliche Datei.
 \end{description}
+Enthält der empfangene Versionsverlauf den aktuellsten Hash im \gls{logfile}, 
 Mithilfe der \code{if}-Anweisung in Zeile sechs wird überprüft, ob der empfangene Versionsverlauf den letzten Hash, der im lokalen \gls{logfile} gespeichert ist, nicht enthält. Somit wird überprüft ob ein Konflikt aufgetreten ist. 
 
 In der \code{if}-Anweisung in Zeile 10 wird herausgefunden, ob die Datei eine Dateiendung besitzt. Dafür wird überprüft, ob der letzte Slash mehr als einen Platz vor dem Punkt ist, damit versteckte Dateien und Ordner unter Linux ausgeschlossen werden können. Diese werden nämlich mit einem Punkt vor dem Datei- oder Ordnernamen gekennzeichnet.
