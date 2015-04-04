@@ -7,9 +7,7 @@ Die Konfiguration enthält folgende Dateien:
 
 Die Adress-Bytes der Partnergeräte werden durch Beistriche getrennt in hexadezimaler Form gespeichert. \\ %TODO Formattierung
 Zum Schreiben der Datei wird folgender Code verwendet: \\  \\
-\javalisting
-\begin{minipage}{\linewidth}
-\begin{lstlisting}[caption={Schreiben der Gerätedatei freceivers.txt},captionpos=b]
+\listingstart{Schreiben der Gerätedatei freceivers.txt}
 private synchronized void updateDevices(File file,
 		Map<String, String> devices) throws IOException {
 	String temp = devices.toString();
@@ -18,10 +16,9 @@ private synchronized void updateDevices(File file,
 			StandardOpenOption.TRUNCATE_EXISTING);
 }
 \end{lstlisting}
-\end{minipage}
 \begin{description}
 	\descriptionitem{file}
-	Der Parameter \code{file} legt die Datei fest, die die Adressen der Partnergeräte enthält. Diese Parametrisierung ist deswegen notwendig, weil die Methode \code{updateDevices(file, devices)} auch für das Schrieben von receivers.txt \referenz{receivers} verwendet wird.
+	Der Parameter \code{file} legt die Datei fest, die die Adressen der Partnergeräte enthält. Diese Parametrisierung ist deswegen notwendig, weil die Methode \code{updateDevices(file, devices)} auch für das Schreiben von receivers.txt \referenz{receivers} verwendet wird.
 	\descriptionitem{devices}
 	Der Parameter \code{devices} enthält die Liste aller Geräte, auf denen die Daten gespeichert werden.
 	\descriptionitem{IOException}
@@ -36,14 +33,8 @@ Das \gls{logfile} \referenz{Logfile} \datei{logs.txt} enthält die Versionsverl�
 
 \code{Pfad1} bezeichnet den relativen Pfad vom \sblit-Ordner zur betrachteten \datei{Datei 1}. Die einzelnen Versionen (\code{Version1}, \code{Version2}) sind Hashwerte der \datei{Datei 1} zu verschiedenen Zeitpunkten, deren Bytes in hexadezimaler Form im \gls{logfile} gespeichert werden. Analog dazu werden auch die Adressen der Geräte, die bereits die aktuellste Version der \datei{Datei 1} enthalten, in hexadezimaler Form gespeichert. \code{Pfad2} ist der Pfad zu jener Datei, mit der \datei{Datei 1} in Konflikt steht. Dieser ist optional.\\
 Zum Schreiben des \gls{logfile}s, wird folgende Methode verwendet: \\ \\
-\javalisting
-\begin{minipage}{\linewidth}
-\begin{lstlisting}[caption={Schreiben des Logfiles \datei{logs.txt}},captionpos=b]
-private synchronized void write(
-		Map<String, LinkedList<Data>> versions,
-		Map<String, LinkedList<Data>> synchronizedDevices
-		Map<String, String> conflictOf)
-		throws IOException {
+\listingstart{Schreiben des Logfiles \datei{logs.txt}}
+private synchronized void write(Map<String, LinkedList<Data>> versions, Map<String, LinkedList<Data>> synchronizedDevices, Map<String, String> conflictOf) throws IOException {
 	String logs = "";
 	if (versions.size() > 0) {
 		for (String path : versions.keySet()) {
@@ -68,7 +59,6 @@ private synchronized void write(
 	Files.write(logFile.toPath(), logs.getBytes());
 }
 \end{lstlisting}
-\end{minipage}
 \begin{description}
 	\descriptionitem{versions}
 	\code{versions} enthält alle im \sblit-Ordner vorhandenen Dateien und deren Versionsverlauf.
