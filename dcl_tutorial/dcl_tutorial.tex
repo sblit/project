@@ -1,8 +1,15 @@
-\documentclass[a4paper,twocolumn]{article}
+\documentclass[a4paper,twoside,twocolumn,DIV=12,BCOR=1cm]{scrartcl}
 
 \usepackage{color}
 \usepackage{graphicx}
 \usepackage{listings}
+\usepackage{enumitem}
+
+% serif for headings
+\addtokomafont{disposition}{\rmfamily}
+
+% serif for description-lists
+\setlist[description]{font=\rmfamily}
 
 \title{DCL Integration Tutorial}
 \author{Martin Exner}
@@ -40,7 +47,7 @@
 \maketitle
 
 \begin{abstract}
-This article aims in providing a simple tutorial on how to use the
+This article aims at providing a simple tutorial on how to use the
 Decentralized Communication Layer with third party applications written
 in Java.
 \end{abstract}
