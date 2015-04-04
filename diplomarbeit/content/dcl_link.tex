@@ -1,0 +1,207 @@
+
+\label{dcl-link}
+
+\subsection{Einleitung}
+Um \gls{natt} möglichst problemlos durchführen zu können, erfolgt die
+Kommunikation zwischen \glspl{service} über das \gls{udp}.
+Da \gls{udp} selbst jedoch keine verlässliche Übertragung und keine
+Verschlüsselung bietet, werden die Datenströme zwischen \glspl{service} über
+\glspl{link} übertragen.
+Diese gewährleisten die verlässliche und geordnete Übertragung der Daten,
+außerdem wird der Übertragungskanal verschlüsselt.
+
+\subsection{Sicherheit}
+\Glspl{link} werden mit dem \gls{aes} im \gls{gcm} verschlüsselt.
+Das garantiert sowohl Vertraulichkeit, Authentizität als auch Integrität der
+verschlüsselten Daten.
+
+\subsection{Channels}
+\label{dcl-link-channels}
+Über einen \gls{link} können mehrere getrennte Datenströme gleichzeitig
+übertragen werden. Um diese voneinander abzugrenzen, werden sie in
+unterschiedlichen \glspl{channel} übertragen.
+
+Auch die zur Verwaltung des \glslink{channel}{Channels} notwendigen Nachrichten
+werden in einem \gls{channel}, dem \gls{mgmtch}, übertragen.
+
+Der Link selbst definiert deshalb nur eine einzige Message, die Daten, einen
+\gls{channelid} für die Zuweisung dieser Daten zu einem \gls{channel} und einen
+\gls{dataid} für die Angabe der Reihenfolge dieser Daten innerhalb des
+\glslink{channel}{Channels} überträgt.
+
+Die Messages zur Verwaltung des \glslink{link}{Links} definiert das verwendete
+\gls{mcp}.
+Für die Initialisierung des \glslink{link}{Links} werden die Messages des
+\gls{bmcp} verwendet.
+\gls{bmcp} definiert aber auch Messages für den späteren Wechsel des verwendeten
+\gls{mcp}.
+
+\subsection{Basic Management Channel Protocol}
+\label{dcl-link-bmcp}
+
+\subsubsection{Einleitung}
+Das \acrfull{bmcp} ist das standardmäßig verwendete \gls{mcp} für
+\glslink{link}{Links}.
+Es definiert Messages und Abläufe zum Aufbau der Verbindung, zum Öffnen von
+\glspl{channel}, zur erneuten Übertragung von verlorenen Nachrichten und zur
+\gls{fcnt}.
+
+\subsubsection{Initialisierung}
+Während der Initialisierung eines \glslink{link}{Links} wird entschieden, wie
+dieser \gls{link} verschlüsselt wird und wie diese Verschlüsselung initialisiert
+wird.
+Der Initiator des \glslink{link}{Links} sendet dazu in der \msg{\bmcpconnectreq}
+eine Liste an möglichen \glspl{cinitmethod}, aus der der Empfänger eine wählt
+und diese in der \msg{\bmcpconnectrep} bestätigt.
+Danach werden, je nach \gls{cinitmethod} unterschiedlich, eine Reihe an
+\msg{\bmcpcryptoinit} gesendet, bis die Verschlüsselung initialisiert ist.
+Zur Zeit existiert nur eine \gls{cinitmethod}: \gls{aes}/\gls{gcm} via
+\gls{rsa}.
+Bei dieser \gls{cinitmethod} werden, nach Austausch der öffentlichen
+\gls{rsa}-Schlüssel, zufällig generierte \gls{aes}-Schlüssel mit den
+öffentlichen \gls{rsa}-Schlüsseln verschlüsselt, übertragen und angewandt.
+
+Für eine spätere Implementierung ist eine zusätzliche \gls{cinitmethod} geplant,
+die die \gls{aes}-Schlüssel über das Diffie-Hellman-Merkle
+Schlüsselaustauschverfahren generiert.
+
+\subsubsection{Messageaufbau}
+Die Messages des \acrlong{bmcp} sind generell so aufgebaut, dass ein einzelnes
+Byte am Beginn der Message deren Typ angibt, anhand dessen die restliche
+Nachricht interpretiert wird.
+
+\bmcpbytefield
+
+\subsubsection{Messages}
+
+\subsubsection*{Connect Request}
+\label{dcl-bmcp-connectreq}
+Die \msg{\bmcpconnectreq} ist die Message zur Verbindungsanfrage und folglich
+die erste Message eines \glslink{link}{Links}, die übertragen wird.
+Die Message enthält eine Liste an \glspl{cimid} jener \glspl{cinitmethod}, die
+der Sender akzeptiert.
+Der Empfänger antwortet bei Annahme der Verbindung mit einer
+\msg{\bmcpconnectrep}, die einen der angeführten \glspl{cimid} enthält.
+
+\bmcpconnectreqbytefield
+
+
+\subsubsection*{Connect Reply}
+\label{dcl-bmcp-connectrep}
+Die \msg{\bmcpconnectrep} wird als Antwort auf eine vorhergehende
+\msg{\bmcpconnectreq} gesendet und enthält einen der darin angeführten
+\glspl{cimid}.
+Dieser bestimmt, wie der \gls{link} verschlüsselt wird und wie diese
+Verschlüsselung initialisiert wird.
+Zum weiteren Verbindungsaufbau folgt, je nach verwendeter \gls{cinitmethod},
+eine Reihe an \msgpl{\bmcpcryptoinit}.
+
+\bmcpconnectrepbytefield
+
+
+\subsubsection*{Open Channel Request}
+\label{dcl-bmcp-openchreq}
+Die \msg{\bmcpopenchreq} dient zur Anfrage über das Öffnen eines neuen
+\glslink{channel}{Channels}.
+Die Message enthält den \gls{channelid} des neuen \glslink{channel}{Channels}
+sowie den \gls{protoid} des Protokolls, über das auf dem neuen \gls{channel}
+kommuniziert werden soll.
+
+Nimmt der Empfänger die Anfrage an, wird eine \msg{\bmcpack} gesendet, die den
+\gls{dataid} dieser \msg{\bmcpopenchreq} enthält.
+
+\bmcpopenchreqbytefield
+
+
+\subsubsection*{Channel Block Status Request}
+\label{dcl-bmcp-chblockstatreq}
+Die \msg{\bmcpchblockstatreq} dient zur Abfrage der empfangenen \glspl{dataid}
+eines oder mehrerer \glslink{channel}{Channels}.
+Die Message enthält eine Liste der \glspl{channelid} der \glspl{channel}, die
+abgefragt werden sollen.
+
+Der Empfänger antwortet mit einer \msg{\bmcpchblockstatrep}, anhand der der
+Sender dieser \msg{\bmcpchblockstatreq} feststellen kann, welche Pakete nicht
+am Ziel angekommen sind und erneut übertragen werden müssen.
+
+\bmcpchblockstatreqbytefield
+
+
+\subsubsection*{Channel Block Status Report}
+\label{dcl-bmcp-chblockstatrep}
+Die \msg{\bmcpchblockstatrep} wird als Antwort auf eine
+\msg{\bmcpchblockstatreq} gesendet und enthält eine Liste an
+\glspl{chblockstatrep} für jeden der in der Anfrage angeführten \glspl{channel}.
+Der Empfänger kann anhand dieser \glspl{chblockstatrep} erkennen, welche Pakete
+nicht übertragen wurden und deshalb erneut gesendet werden müssen.
+
+Ein \gls{chblockstatrep} enthält den \gls{channelid} des
+\glslink{channel}{Channels} auf den er sich bezieht,
+den niedrigsten und den höchsten \gls{dataid}, die auf diesem \gls{channel}
+empfangen wurden, % TODO die empfangen wurden oder der empfangen wurde?
+die Anzahl an unterschiedlichen \glspl{dataid}, die insgesamt auf diesem
+\gls{channel} empfangen wurden
+und je eine Liste an nicht empfangenen, einzelnen \glspl{dataid} sowie an
+zusammenhängenden Blöcken aus nicht empfangenen \glspl{dataid} innerhalb des
+niedrigsten und höchsten \glslink{dataid}{Data Identifiers} des
+\glslink{channel}{Channels}.
+
+\bmcpchblockstatrepbytefield
+
+
+\subsubsection*{Kill}
+\label{dcl-bmcp-kill}
+Die \msg{\bmcpkill} ist die letzte Nachricht eines \glslink{link}{Links}, die
+übertragen wird und markiert das Ende der Verbindung.
+Die Message wird als Antwort auf eine \msg{\bmcpdisconnect} gesendet, kann aber
+bei unerwartetem Beenden des \glslink{link}{Links} durch einen
+Verbindungspartner auch alleinstehend gesendet werden.
+
+\bmcpkillbytefield
+
+
+\subsubsection*{Throttle}
+\label{dcl-bmcp-throttle}
+Die \msg{\bmcpthrottle} dient zur Limitierung der Sendeübertragungsrate des
+Empfängers und wird für die \gls{fcnt} des \glslink{link}{Links} genutzt.
+Die Message enthält die maximal zulässige Senderate in Bytes pro Sekunde.
+
+\bmcpthrottlebytefield
+
+
+\subsubsection*{Disconnect}
+\label{dcl-bmcp-disconnect}
+Die \msg{\bmcpdisconnect} dient zur Beendigung des \glslink{link}{Links}.
+Der Empfänger bestätigt die Auflösung der Verbindung durch Senden einer
+\msg{\bmcpkill}.
+
+\bmcpdisconnectbytefield
+
+
+\subsubsection*{Ack}
+\label{dcl-bmcp-ack}
+Die \msg{\bmcpack} dient zur Bestätigung empfangener Anfragen, wie
+beispielsweise einer \msg{\bmcpopenchreq}.
+Die Message enthält den \gls{dataid} der bestätigten Anfrage.
+
+\bmcpackbytefield
+
+
+\subsubsection*{Change Protocol Request}
+\label{dcl-bmcp-chprotoreq}
+Die \msg{\bmcpchprotoreq} dient zum Wechsel des verwendeten \gls{mcp}.
+Die Message enthält einen \gls{protoid} in Form eines Strings, der das neue
+\gls{mcp} angibt.
+Der Empfänger bestätigt den Wechsel des Protokolls mit einer \msg{\bmcpack},
+die den \gls{dataid} dieser \msg{\bmcpchprotoreq} enthält.
+
+\bmcpchprotoreqbytefield
+
+
+\subsubsection*{Crypto Init}
+\label{dcl-bmcp-cryptoinit}
+Die \msg{\bmcpcryptoinit} überträgt Daten zur Initialisierung der verwendeten
+Verschlüsselung des \glslink{link}{Links} und wird zu Beginn der Verbindung, je
+nach verwendeter \gls{cinitmethod} unterschiedlich oft, übertragen.
+
+\bmcpcryptoinitbytefield

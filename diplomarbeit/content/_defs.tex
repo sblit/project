@@ -1,7 +1,11 @@
 
 \newcommand{\kap}[1]{(\textbf{deprecated}) \link{#1}} % TODO remove
 
-\newcommand{\linkt}[1]{\ref{#1} \nameref{#1}, Seite \pageref{#1}}
+\newcommand{\labellinkt}[1]{\ref{#1} \nameref{#1}}
+\newcommand{\labellink}[1]{\hyperref[#1]{\labellinkt{#1}}}
+\newcommand{\pagelinkt}[1]{Seite \pageref{#1}}
+\newcommand{\pagelink}[1]{\hyperref[#1]{\pagelinkt{#1}}}
+\newcommand{\linkt}[1]{\labellinkt{#1}, \pagelinkt{#1}}
 \newcommand{\link}[1]{\hyperref[#1]{\linkt{#1}}}
 \newcommand{\siehet}[1]{siehe \linkt{#1}}
 \newcommand{\siehe}[1]{\hyperref[#1]{\siehet{#1}}}
@@ -28,6 +32,8 @@
 \newcommand{\msg}[1]{#1 Message}
 \newcommand{\msgpl}[1]{#1 Messages}
 
+\newcommand{\comp}[1]{#1 Component}
+
 \newcommand{\isprotomsgtype}{Message Type}
 \newcommand{\isprotomsgdata}{Message Data}
 
@@ -48,8 +54,9 @@
 \definecolor{javakeyword}{rgb}{0.5,0,0.35} % keywords
 \definecolor{javadoc}{rgb}{0.25,0.35,0.75} % javadoc
 
-\newcommand{\javalisting}{\lstset{language=Java, basicstyle=\ttfamily, keywordstyle=\color{javakeyword}\bfseries, stringstyle=\color{javastring}, commentstyle=\color{javacomment}, morecomment=[s][\color{javadoc}]{/**}{*/}, numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=5pt, tabsize=4, showspaces=false, showstringspaces=false, frame=single}}
-\newcommand{\messagestart}{\begin{figure}[p] \begin{centering} \begin{bytefield}[bitwidth=2em]{8} \\}
+\newcommand{\javalisting}{\lstset{language=Java, breaklines=true, basicstyle=\ttfamily, keywordstyle=\color{javakeyword}\bfseries, stringstyle=\color{javastring}, commentstyle=\color{javacomment}, morecomment=[s][\color{javadoc}]{/**}{*/}, numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=5pt, tabsize=4, showspaces=false, showstringspaces=false, frame=single}}
+
+\newcommand{\messagestart}{\begin{figure}[tbh] \begin{centering} \begin{bytefield}[bitwidth=3em]{8} \\}
 \newcommand{\messageend}[1]{\end{bytefield} \par\end{centering} \protect\caption{\gls*{#1}} \label{#1} \end{figure} }
 
 \newcommand{\listingstart}[1]{\javalisting \begin{lstlisting}[caption={#1},captionpos=b]}

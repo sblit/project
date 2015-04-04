@@ -45,6 +45,7 @@ Behörde oder zentrale Stelle auf ihre Echtheit überprüft werden können und s
 Ein Mechanismus zur Überprüfung solch einer Adresse wird im nächsten Abschnitt beschrieben.
 
 \subsection{Überprüfung von Adressen}
+\label{dcl-addr-proving}
 Dadurch, dass eine mit einem öffentlichen Schlüssel verschlüsselte Nachricht nicht mit wieder mit dem
 öffentlichen Schlüssel entschlüsselt werden kann, sondern ausschließlich mit dem dazugehörigen privaten
 Schlüssel, kann der Besitz des gesamten Schlüsselpaars bewiesen werden, ohne mehr als den öffentlichen
@@ -82,6 +83,7 @@ lediglich Nachteile und keinerlei Vorteile mit sich, da der dabei entstehende Ov
 eine wesentliche Reduktion der Übertragungseffizienz mit sich bringt.
 
 \subsubsection{Adressverkürzung}
+\label{dcl-addr-scaling}
 Die im \gls{dcl} verwendeten Adressen decken sich nicht mit den öffentlichen \gls{rsa}-Schlüsseln,
 sondern basieren lediglich darauf. Da ohne Weiterverarbeitung der Schlüssel zu lange Adressen entstünden,
 wird auf die Daten der öffentlichen Schlüssel ein \gls{hash} angewandt, welcher die Daten in einem ersten
@@ -91,49 +93,46 @@ Daten weiter verkürzt werden, um unnötig lange Adressen zu eliminieren.
 Nachfolgend ist jener Teil des Quellcodes von \gls{dcl} angeführt, welcher im \code{\gls{cnt}}
 zur Adressverkürzung angewandt wird.
 
+\label{dcl-addr-scaling-cnet}
 \javalisting
-\begin{minipage}{\linewidth}
 \begin{lstlisting}[caption={Adressverkürzung im \gls*{cnt} (Java)},captionpos=b]
 Data scaleAddress(Address address) {
-	
+
 	Data fullData = address.toData();
 	Data hashedData = hash.update(fullData).finish();
-	
-	if(byteLength == hashedData.length()) return hashedData;
-	
+
+	if(byteLength == hashedData.length()) {
+		return hashedData;
+	}
+
 	Data scaledData = new Data(byteLength);
-	
+
 	for(int i = 0; i < hashedData.length(); i++) {
 		int scaledIndex = i % scaledData.length();
-		scaledData.setByte(
-			scaledIndex,
-			(byte)( scaledData.getByte(scaledIndex)
-					^ hashedData.getByte(i))
-		);
+		scaledData.setByte(scaledIndex, (byte)(scaledData.getByte(scaledIndex) ^ hashedData.getByte(i)));
 	}
-	
+
 	return scaledData;
-	
+
 }
 \end{lstlisting}
-\end{minipage}
 
 \begin{description}
-	
+
 	\descriptionitem{\code{address}}
 		Das \javaarg \code{address} referenziert ein \code{\gls{Address}}-Objekt, welches den
 		als Grundlage für eine Adresse verwendeten öffentlichen Schlüssel enthält.
-	
+
 	\descriptionitem{\code{\gls{Data}}}
 		\glsdesc{Data}.
-	
+
 	\descriptionitem{\code{hash}}
 		Die \javainstvar \code{hash} referenziert ein \code{\gls{Hash}}-Objekt, welches den
 		im \gls{nt} angegebenen \gls{hash} implementiert.
-	
+
 	\descriptionitem{\code{byteLength}}
 		Die \javainstvar \code{byteLength} enthält die Ziellänge der Adressen, in bytes.
-	
+
 \end{description}
 
 Mit \code{address.toData()} wird der öffentliche Schlüssel der übergebenen Adresse zuerst in Binärdaten
@@ -143,5 +142,3 @@ direkt zurückgegeben.
 
 Anderenfalls wird der \gls{hashval} aus \code{hashedData} auf Binärdaten der Länge \code{byteLength},
 gespeichert in \code{scaledData}, abgebildet und diese zurückgegeben.
-
-

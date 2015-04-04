@@ -27,10 +27,10 @@ Gesamtanzahl an benötigten Bytes entspricht.
 \begin{table}[H]
 \begin{centering}
 \begin{tabular}{|c|l|c|r|}
-	\hline 
+	\hline
 	Erstes Byte & Wertbereich & Folgebytes & Effizienz\tabularnewline
-	\hline 
-	\hline 
+	\hline
+	\hline
 	\code{0XXXXXXX} & $0$ -- $127$ & $0$ & $87,50\%$\tabularnewline
 	\hline
 	\code{10XXXXXX} & $128$ -- $16511$ & $1$ & $87,57\%$\tabularnewline
@@ -58,43 +58,51 @@ Nachfolgend ist jener Teil des Quellcodes von \gls{dcl} angeführt, welcher zum 
 \gls{fnumc} angewandt wird.\\
 
 \javalisting
-\begin{minipage}{\linewidth}
 \begin{lstlisting}[caption={Lesen eines \gls*{fnumc} (Java)},captionpos=b]
 long readFlexNum() {
-	
+
 	byte iByte = read();
 	int additionalBytes = 8;
 	long num = 0;
 	long offset = 0;
-	
+
 	for(int i = 0; i < 8; i++) {
 		if((iByte & (0x80 >> i)) == 0) {
 			additionalBytes = i;
 			break;
 		}
 	}
-	
+
 	num |= (iByte & ((0x100 >> additionalBytes) - 1));
 	for(int i = 0; i < additionalBytes; i++) {
 		num <<= 8;
 		num |= (read() & 0xFF);
 		offset += (0x80L << 7*i);
 	}
-	
+
 	return num + offset;
-	
+
 }
 \end{lstlisting}
-\end{minipage}
-
-\subsection*{NetworkPacket}
-\label{dcl-packetcomponents-netpkt}
 
 %TODO
 
 \subsection*{KeyComponent}
 \label{dcl-packetcomponents-key}
 
-%TODO
+Der \gls{keyc} dient zur Übertragung kryptographischer Schlüsselinformationen.
 
+Dabei definiert der \gls{pktc} einen grundsätzlichen Aufbau, bei dem ein
+einzelnes Byte am Beginn des \gls{pktc} den Typ des Schlüssels angibt, anhand
+dessen die Daten eingelesen werden.
 
+\keycbytefield
+
+Derzeit kann der \gls{keyc} nur \gls{rsa}-Schlüssel übertragen.
+
+\subsubsection{RSA Key}
+\label{dcl-keyc-rsa}
+Der \comp{\keycrsa} überträgt den Modul und den Exponenten des
+\gls{rsa}-Schlüssels.
+
+\keycrsabytefield

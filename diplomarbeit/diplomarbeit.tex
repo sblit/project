@@ -43,11 +43,11 @@
 \usepackage{blindtext}
 
 %% geht nicht mit jeder Latex Variante, gibt aber ein schöneres Layout
-\usepackage{microtype} 
+\usepackage{microtype}
 
 %% Aufzählungen nicht so weit einrücken
 \usepackage{enumitem}
-%\setitemize{leftmargin=*} 
+%\setitemize{leftmargin=*}
 
 % Serifenschrift für Überschriften
 \addtokomafont{disposition}{\rmfamily}
@@ -104,7 +104,7 @@
 \setitemize{leftmargin=*}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%  Kopf und Fußzeilen -- links und rechts verschieden 
+%  Kopf und Fußzeilen -- links und rechts verschieden
 \newcommand{\kopfseitenummer}{{\bfseries \thepage}}
 \newcommand{\kopfkapl}{{\bfseries\leftmark}}
 \newcommand{\kopfkapr}{{\bfseries\rightmark}}
@@ -112,7 +112,7 @@
 \newcommand{\kopfHTL}{Höhere Technische Bundeslehranstalt Wien 3, \\Rennweg 	Abteilung für Informationstechnologie}
 \renewcommand{\chaptermark}[1]%
   {\thispagestyle{fancy}\markboth{\thechapter.\ #1}{}}%\thispagestyle{fancy}
-\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\headrulewidth}{0.2pt}
 %\lhead[\fancyplain{\kopfbild}{\kopfbild}]% li aussen
 %      {\fancyplain{\kopfHTL}{\kopfHTL}}% re innen
 %\rhead[\kopfHTL]% li innen
@@ -183,7 +183,7 @@ A-1030 Wien :: Tel +43 1 24215-10 :: Fax DW 18
 
 \begin{center}
 \vspace{5mm}
-Wien, \today 
+Wien, \today
 \par\end{center}
 
 \end{titlepage}%%%%%%%%%%%%%%%%%%%%% Ende Titelseite %%%%%%%%%%%%%%%%%%%%%%
@@ -210,12 +210,12 @@ Wien, \today
 % mit Kopfzeile
 \thispagestyle{fancy}
 
-Ich versichere, 
+Ich versichere,
 \begin{itemize}
 \item dass ich meinen Anteil an dieser Diplomarbeit selbstständig verfasst
-habe, 
+habe,
 \item dass ich keine anderen als die angegebenen Quellen und Hilfsmittel
-benutzt habe 
+benutzt habe
 \item und mich auch sonst keiner unerlaubten Hilfe bzw. Hilfsmittel bedient
 habe.
 \end{itemize}
@@ -239,7 +239,7 @@ BGBl. II Nr. 123/97.
 \vspace{10mm}
 
 
-Liste der betreuenden Lehrer: 
+Liste der betreuenden Lehrer:
 
 Prof. DI August Hörandl, \textit{Hauptbetreuer}
 
@@ -264,7 +264,7 @@ Prof. DI Herbert Sasshofer, \textit{Betreuer}
 %hier geht es los mit dem Text - auf einer rechten Seite
 \pagenumbering{arabic}
 \pagestyle{fancy}
-\thispagestyle{fancy} 
+\thispagestyle{fancy}
 
 
 
@@ -386,14 +386,14 @@ die Tabelle über mehrere Seiten so ist die Überschrift zu wiederholen.
 \begin{table}[h]
 \begin{centering}
 \begin{tabular}{|c|c|c|}
-\hline 
+\hline
 Überschrift & Wert & noch einer\tabularnewline
-\hline 
-\hline 
+\hline
+\hline
 1 & abc & Hallo\tabularnewline
-\hline 
+\hline
 2 & def & Latex\tabularnewline
-\hline 
+\hline
 \end{tabular}
 \par\end{centering}
 
@@ -424,7 +424,7 @@ Besonders bei Verweisen ist das sehr sinnvoll.
 \subsection{Sourcecode}
 
 Sourcecode sollte in einer Schrift mit fixer Breite sein. Falls man
-Verweise braucht sollte man die Listings auch nummerieren. 
+Verweise braucht sollte man die Listings auch nummerieren.
 
 % das kann auch ganz oben stehen
 % das braucht man nur einmal
@@ -433,18 +433,18 @@ Verweise braucht sollte man die Listings auch nummerieren.
 \lstset{language=C}
 
 % hier könnte man auch aus Dateien lesen
-\begin{lstlisting} 
+\begin{lstlisting}
 #include <stdio.h>
 
-int main() 
-{ 
-  printf("Hello world\n"); 
-} 
-\end{lstlisting} 
+int main()
+{
+  printf("Hello world\n");
+}
+\end{lstlisting}
 
 Die genaue Formatierung ist freigestellt: Einstellungen wie bunt bzw.
 fett, Markierung von Leerzeichen und Zeilennummerierung kann an den
-Bedarf der Diplomarbeit angepasst werden. 
+Bedarf der Diplomarbeit angepasst werden.
 
 Beispiel Java mit anderen Einstellungen -- nur als Beispiel, in der
 Diplomarbeit sollte man sich an eine einheitliches Format halten.
@@ -460,19 +460,19 @@ Achtung \LaTeX{}-User: Listing kann keine Umlaute, aber unter \cite{listingtipp}
 gibt es eine Lösung.
 
 \inputencoding{latin9}\begin{lstlisting}[caption={Java Beispiel},captionpos=b]
-import java.awt.*;  
+import java.awt.*;
 import java.awt.event.*;
 public class AL extends Frame
                  implements WindowListener, ActionListener {
   TextField text = new TextField(20);
-  Button b;    
+  Button b;
   private int numClicks = 0;
- 
+
   public static void main(String[] args) {
     AL myWindow = new AL("My first window");
     myWindow.setSize(350,100);
-    myWindow.setVisible(true);    
-  } 
+    myWindow.setVisible(true);
+  }
 }
 \end{lstlisting}
 \inputencoding{utf8}
@@ -484,11 +484,11 @@ Fachbegriffe in einer Fremdsprache oder Kommandos sollten einheitlich
 gekennzeichnet werden. Bei Latex verwendet man dazu ,,logisches Markup``,
 bei Word oder Open/Libre-office wird all diesen Wörtern wird eine
 Vorlage zugewiesen, das Aussehen wird dann an einer Stelle zentral
-festgelegt. 
+festgelegt.
 
 Als Beispiel soll \emph{Text to Speech}\index{Text to Speech: Umwandlung von Texten in Sprache}
 dienen. Solche Wörter sollte natürlich in ein Glossar aufgenommen
-werden. 
+werden.
 
 Oder der Befehl \strong{dir} für die Kommandozeile. Die Angabe von
 Dateinamen sollte auch einheitlich sein: entweder \emph{/etc/passwd}
@@ -526,7 +526,7 @@ Ein gute Übersicht bietet \cite{wiki:zitat}.
 \subsubsection{Quellenverzeichnis}
 
 Unter \LaTeX{} kann das Programm Bib\TeX{} zur Erstellung von Literaturangaben
-verwendet werden. 
+verwendet werden.
 \begin{itemize}
 \item Links auf Wikipedia sollten vermieden werden.
 \item Jeder Link sollte mit einem Abfragedatum versehen sein.
@@ -580,7 +580,7 @@ Gliederung durch Absätze.\nopagebreak
 
 \begin{itemize}
 \item Vielleicht bzw. sinnvollerweise lassen Sie den Text auch von einer
-,,außenstehenden Person`` lesen. 
+,,außenstehenden Person`` lesen.
 \end{itemize}
 \item Aufzählungen im Text statt Listen. Wie man hier sieht dürfen bei Listen
 auch mehrere Sätze stehen.
@@ -648,12 +648,12 @@ Man braucht eine \texttt{.bib} Datei mit den notwendigen Informationen:
   author={Kopka, Helmut and Rahtz, Sebastian},
   volume={2},
   year={1991},
-  publisher={Addison-Wesley} 
+  publisher={Addison-Wesley}
 }
 
 @online{latexKomp,
   author = {},
-  title ={LaTeX-Kompendium - Wikibooks, Sammlung freier Lehr-, 
+  title ={LaTeX-Kompendium - Wikibooks, Sammlung freier Lehr-,
 Sach- und Fachbücher},
   url = {http://de.wikibooks.org/wiki/LaTeX-Kompendium},
   lastchecked = {2014.09.14},
@@ -678,20 +678,20 @@ ist aber noch seltener wirklich sinnvoll.
 
 Schriftgrößen:
 \begin{itemize}
-\item {\tiny{}tiny} 
-\item {\scriptsize{}scriptsize} 
-\item {\footnotesize{}footnotesize} 
-\item {\small{}small} 
-\item normalsize 
-\item {\large{}large} 
-\item {\Large{}Large} 
-\item {\LARGE{}LARGE} 
-\item {\huge{}huge} 
+\item {\tiny{}tiny}
+\item {\scriptsize{}scriptsize}
+\item {\footnotesize{}footnotesize}
+\item {\small{}small}
+\item normalsize
+\item {\large{}large}
+\item {\Large{}Large}
+\item {\LARGE{}LARGE}
+\item {\huge{}huge}
 \item {\Huge{}Huge} \end{itemize}
 \begin{enumerate}
 \item Nummerierungen
-\item sind 
-\item auch 
+\item sind
+\item auch
 \item easy
 \end{enumerate}
 \textbf{bissl was fettes} \textit{italienisches} \uline{für unten
@@ -712,7 +712,7 @@ Dieses Kapitel wurde als \emph{diplomarbeit2.md} geschrieben und dann
 mit \emph{pandoc} in \TeX~umgewandelt.
 
 \begin{lstlisting}[language=bash]
-pandoc --listings -s diplomarbeit2.md -o diplomarbeit2.tex 
+pandoc --listings -s diplomarbeit2.md -o diplomarbeit2.tex
 \end{lstlisting}
 
 Wie man sieht ist das ganz einfach, sogar Listings sind möglich. Und nun
@@ -800,7 +800,7 @@ im \emph{pandoc} Manual gibt es nähere Infos:
 
 \chapter{Evaluation}
 
-% wer hat diese Kapitel geschrieben oder leer 
+% wer hat diese Kapitel geschrieben oder leer
 \renewcommand{\kapitelautor}{Autor: Blindtext}
 
 \Blindtext

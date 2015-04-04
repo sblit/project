@@ -1,4 +1,18 @@
 
+\newglossaryentry{gls_udp}{
+	name=User Datagram Protocol,
+	description={Verbindungsloses Übertragungsprotokoll aus der Internet protocol suite \cite{wikipedia:udp}}
+}
+
+\newacronym[see={[Glossar:]{gls_udp}}]{udp}{UDP}{User Datagram Protocol\glsadd{gls_udp}}
+
+\newglossaryentry{gls_tcp}{
+	name=Transmission Control Protocol,
+	description={Verbindungsorientiertes, verlässliches Übertragungsprotokoll aus der Internet protocol suite \cite{wikipedia:tcp}}
+}
+
+\newacronym[see={[Glossar:]{gls_tcp}}]{tcp}{TCP}{Transmission Control Protocol\glsadd{gls_tcp}}
+
 \newglossaryentry{cl}{
 	name=Kommunikationsschicht,
 	description={Eine Schicht im netzwerktechnischen Sinne, die zur Kommunikation verwendet wird},
@@ -30,6 +44,21 @@
 	see={[Siehe:]{aenc}}
 }
 
+\newglossaryentry{gls_aes}{
+	name=Advanced Encryption Standard,
+	description={Standard-Verschlüsselungsverfahren für \glspl{link}},
+	see={[Siehe:]{link}}
+}
+
+\newacronym[see={[Glossar:]{gls_aes}}]{aes}{AES}{Advanced Encryption Standard\glsadd{gls_aes}}
+
+\newglossaryentry{gls_gcm}{
+	name=Galois/Counter Mode,
+	description={Standard-Betriebsmodus für die Verschlüsselung von \glspl{link} mit \acrshort{aes}},
+}
+
+\newacronym[see={[Glossar:]{gls_gcm}}]{gcm}{GCM}{Galois/Counter Mode\glsadd{gls_gcm}}
+
 \newglossaryentry{hash}{
 	name=Hashalgorithmus,
 	plural=Hashalgorithmen,
@@ -51,6 +80,11 @@
 	name=SHA-1,
 	description={Im \gls{dcl} standardmäßig verwendeter \gls{hash}. SHA steht für Secure Hash Algorithm},
 	see={[Siehe:]{hash}}
+}
+
+\newglossaryentry{remotekey}{
+	name=Remote Key,
+	description={Schlüssel, der lokal nicht bekannt ist und zu dessen besitzender Anwendung eine Verbindung besteht, über die Verschlüsselungs- und Entschlüsselungsanfragen weitergeleitet werden. Siehe \link{dcl-asproto-remotekeys}}
 }
 
 \newglossaryentry{net}{
@@ -86,6 +120,11 @@
 	see={[Siehe:]{nt}}
 }
 
+\newglossaryentry{netint}{
+	name=Netzwerkintegration,
+	description={Das Aufbauen von Verbindungen mit anderen \glspl{service}, um optimal in das Routing eines \glslink{net}{Netzwerks} eingebunden zu sein}
+}
+
 \newglossaryentry{service}{
 	name=DCL-Service,
 	description={Ein Teilnehmer des \gls{dcl}. Kann mehrere Adressen in mehreren unterschiedlichen \glslink{net}{Netzwerken} hosten}, % TODO
@@ -99,9 +138,92 @@
 	see={[Siehe:]{Nexthops}}
 }
 
+\newglossaryentry{asendp}{
+	name=Network Endpoint,
+	description={Eine Kombination aus einer auf einer \gls{asconn} bekanntgegebenen Adresse und einem \gls{net}, dem die Anwendung mit dieser Adresse beigetreten ist}
+}
+
 \newglossaryentry{isproto}{
 	name=Interservice-Protokoll,
 	description={Das zur Kommunikation zwischen zwei direkt verbundenen \glspl{service} verwendete Protokoll}
+}
+
+\newglossaryentry{link}{
+	name=Link,
+	description={Verlässlicher und verschlüsselter Übertragungskanal basierend auf \acrshort{udp}. Basis für \glspl{isch}. Siehe \link{dcl-link}}
+}
+
+\newglossaryentry{channel}{
+	name=Channel,
+	description={Getrennter Datenkanal eines \glslink{link}{Links}. Siehe \link{dcl-link-channels}}
+}
+
+\newglossaryentry{mgmtch}{
+	name=Management Channel,
+	description={\Gls{channel} eines \glslink{link}{Links}, der zur Übertragung von Nachrichten zur Verwaltung des \glslink{link}{Links} genutzt wird},
+	see={[Siehe:]{channel}}
+}
+
+\newglossaryentry{channelid}{
+	name=Channel Identifier,
+	description={Zahl zur eindeutigen Identifizierung eines \glslink{channel}{Channels} auf einem \gls{link}}
+}
+
+\newglossaryentry{dataid}{
+	name=Data Identifier,
+	description={Fortlaufende Zahl zur eindeutigen Identifizierung eines über einen \gls{channel} eines \glslink{link}{Links} übertragenen Datenblocks und zur Angabe der Reihenfolge dieses Datenblocks im Datenstrom des \glslink{channel}{Channels}}
+}
+
+\newglossaryentry{chblockstatrep}{
+	name=Channel Block Status Report,
+	description={Statusinformation über die empfangenen \glspl{dataid} eines \glslink{channel}{Channels}, anhand derer fehlende Pakete erkannt und erneut übertragen werden können},
+	see={[Siehe:]{channel}}
+}
+
+\newglossaryentry{fcnt}{
+	name=Flusskontrolle,
+	description={Einschränkung der über einen Kommunikationskanal übertragenen Menge an Daten zur Vermeidung von Verstopfung}
+}
+
+\newglossaryentry{protoid}{
+	name=Protocol Identifier,
+	description={Eindeutige Kennung des Protokolls, über das auf einem \gls{channel} eines \glslink{link}{Links} kommuniziert wird}
+}
+
+\newglossaryentry{mcp}{
+	name=Management Channel Protocol,
+	description={Protokoll zur Verwaltung eines \glslink{link}{Links}},
+	see={[Siehe:]{gls_bmcp}}
+}
+
+\newglossaryentry{gls_bmcp}{
+	name=Basic Management Channel Protocol,
+	description={Standardmäßig verwendetes \gls{mcp} zur Verwaltung von \glspl{link}. Siehe \link{dcl-link-bmcp}}
+}
+
+\newacronym[see={[Glossar:]{gls_bmcp}}]{bmcp}{BMCP}{Basic Management Channel Protocol\glsadd{gls_bmcp}}
+
+\newglossaryentry{cinitmethod}{
+	name=Crypto Initialization Method,
+	description={Art der Verschlüsselung eines mit \acrshort{bmcp} verwalteten \glslink{link}{Links} und Methode zur Initialisierung dieser Verschlüsselung},
+	see={[Siehe:]{gls_bmcp}}
+}
+
+\newglossaryentry{cimid}{
+	name=Crypto Initialization Method Identifier,
+	description={Zahl zur eindeutigen Kennung einer \gls{cinitmethod}},
+	see={[Siehe:]{cinitmethod}}
+}
+
+\newglossaryentry{asproto}{
+	name=Application-to-Service-Protokoll,
+	description={Das zur Kommunikation zwischen einer Anwendung und einem \gls{service} verwendete Protokoll}
+}
+
+\newglossaryentry{asconn}{
+	name=Application-to-Service-Verbindung,
+	plural=Application-to-Service-Verbindungen,
+	description={Verbindung über \acrshort{tcp} zwischen einer Anwendung und einem \gls{service}, auf der mittels \gls{asproto} kommuniziert wird}
 }
 
 \newglossaryentry{appch}{
@@ -140,12 +262,17 @@
 
 \newglossaryentry{netpktc}{
 	name=NetworkPacket-Component,
-	description={Basis für \glspl{pktc} zur Übertragung von \gls{netpkt}. Siehe \link{dcl-packetcomponents-netpkt}}
+	description={Basis für \glspl{pktc} zur Übertragung von \glspl{netpkt}. Siehe \link{dcl-packetcomponents-netpkt}}
 }
 
 \newglossaryentry{keyc}{
 	name=Key-Component,
 	description={Basis für \glspl{pktc} zur Übertragung von Schlüsseldaten}
+}
+
+\newglossaryentry{actid}{
+	name=Action Identifier,
+	description={String, der in Anfragen übertragen wird und Auskunft über den Grund dieser Anfrage geben soll}
 }
 
 \newglossaryentry{addrslot}{
@@ -155,12 +282,17 @@
 
 \newglossaryentry{netslot}{
 	name=Network Slot,
-	description={Zahl zur Referenzierung von \glspl{net}, denen ein \gls{service} mit einer oder mehreren Adressen beigetreten ist}
+	description={Zahl zur Referenzierung von \glspl{net}, denen ein \gls{service} auf einem \gls{isch} mit einer oder mehreren Adressen beigetreten ist}
 }
 
 \newglossaryentry{appchslot}{
 	name=Application Channel Slot,
-	description={Zahl zur Referenzierung von \glspl{appch} auf einem \gls{isch}}
+	description={Zahl zur Referenzierung von \glspl{appch} auf \glspl{isch}}
+}
+
+\newglossaryentry{endpslot}{
+	name=Network Endpoint Slot,
+	description={Zahl zur Referenzierung von \glspl{asendp} auf \glspl{asconn}}
 }
 
 \newglossaryentry{isch}{
@@ -192,8 +324,7 @@
 
 \newglossaryentry{Nexthops}{
 	name=Nexthops,
-	description={Im Quellcode von \gls{dcl} definierte Klasse zur Speicherung von verbundenen \glslink{endp}{Endpunkten} in
-			der Form von \gls{ForwardDestination}-Objekten}
+	description={Im Quellcode von \gls{dcl} definierte Klasse zur Speicherung von verbundenen \glslink{endp}{Endpunkten} in der Form von \gls{ForwardDestination}-Objekten}
 }
 
 \newglossaryentry{ForwardDestination}{
@@ -210,3 +341,47 @@
 	see={[Siehe:]{isch}}
 }
 
+\newglossaryentry{natdev}{
+	name=NAT-Gerät,
+	plural=NAT-Geräte,
+	description={Gerät, das \acrlong{nat} durchführt}
+}
+
+\newglossaryentry{gls_nat}{
+	name=Network Address Translation,
+	description={Auf \glspl{natdev} durchgeführte Übersetzung von Netzwerkadressen. Siehe \link{dcl-natt}}
+}
+
+\newacronym[see={[Glossar:]{gls_nat}}]{nat}{NAT}{Network Address Translation\glsadd{gls_nat}}
+
+\newglossaryentry{natt}{
+	name=NAT-Traversal,
+	description={Umgehung von \gls{natdev}, um Peer-to-Peer-Verbindungen aufbauen zu können}
+}
+
+\newglossaryentry{nattpkt}{
+	name=NAT-Traversal-Paket,
+	plural=NAT-Traversal-Pakete,
+	description={Paket, das im Zuge von \gls{natt} gesendet wird},
+	see={[Siehe:]{natt}}
+}
+
+\newglossaryentry{nathp}{
+	name=NAT Hole Punching,
+	description={Verfahren zum \gls{natt}, das in der Implementierung des \gls{service} angewandt wird},
+	see={[Siehe:]{natt}}
+}
+
+\newglossaryentry{ignoredata}{
+	name=Ignore Data,
+	plural=Ignore Data,
+	description={Daten, die als Präfix für \glspl{nattpkt} verwendet werden können, die vom Empfänger ignoriert werden sollen},
+	see={[Siehe:]{nattpkt}}
+}
+
+\newglossaryentry{gls_crisp}{
+	name=Common Routed Interservice Protocol,
+	description={Protokoll, das \gls{net}-übergreifend zur verbindungslosen Kommunikation zwischen \glspl{service} verwendet wird. Siehe \link{dcl-crisp}}
+}
+
+\newacronym[see={[Glossar:]{gls_crisp}}]{crisp}{CRISP}{Common Routed Interservice Protocol\glsadd{gls_crisp}}

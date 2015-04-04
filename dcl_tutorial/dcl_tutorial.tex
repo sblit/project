@@ -16,7 +16,8 @@
 \definecolor{javadoc}{rgb}{0.25,0.35,0.75} % javadoc
 
 \newcommand{\javalisting}{
-    \lstset{language=Java, basicstyle=\footnotesize\ttfamily,
+    \lstset{language=Java, breaklines=true,
+    basicstyle=\footnotesize\ttfamily,
     keywordstyle=\color{javakeyword}\bfseries,
     stringstyle=\color{javastring},
     commentstyle=\color{javacomment},
@@ -26,7 +27,8 @@
 }
 
 \newcommand{\shortjavalisting}{
-    \lstset{language=Java, basicstyle=\small\ttfamily,
+    \lstset{language=Java, breaklines=true,
+    basicstyle=\small\ttfamily,
     keywordstyle=\color{javakeyword}\bfseries,
     stringstyle=\color{javastring},
     commentstyle=\color{javacomment},
@@ -67,19 +69,19 @@ the number of hops required for routing messages, but does not influence routing
 as much.
 
 \section*{Communication}
-There are two ways application instances can communicate over the DCL. The first
-is via unconnected packets, which are routed through a specific DCL network and
-may or may not arrive at their destination. The second method is via encrypted
-and connected application channels, which provide reliable transmission of data.
-For both initiating application channels and sending unreliable packets over the
-circle network, the public key of the remote node is required as destination
-address.
+There are two ways application instances can communicate using the DCL.
+The first is via unreliably transmitted packets, which are routed through a
+specific DCL network and may or may not arrive at their destination.
+The second method is via encrypted and connected application channels, which
+provide reliable transmission of data. For both the initiation of application
+channels and the transmission of unreliable packets over the circle network, the
+public key of the remote node is required as destination address.
 
 \section*{Overview}
 For integration of DCL communication features in third party applications,
 DCL provides a Java library that manages the TCP connection to the DCL
 service, including creating and accepting application channels and sending and
-receiving unconnected messages.
+receiving unreliably transmitted messages.
 
 The \code{org.dclayer} package contains all required classes.
 
@@ -93,8 +95,7 @@ number the DCL service is listening on.
 \shortjavalisting
 \begin{minipage}{\linewidth}
 \begin{lstlisting}
-Service service
-        = new Service(port);
+Service service = new Service(port);
 \end{lstlisting}
 \end{minipage}
 
@@ -106,18 +107,34 @@ application to be connected to the service. This works best by utilizing an
 \shortjavalisting
 \begin{minipage}{\linewidth}
 \begin{lstlisting}
-ApplicationInstanceBuilder builder
-  = service.applicationInstance();
+ApplicationInstanceBuilder builder = service.applicationInstance();
 \end{lstlisting}
 \end{minipage}
 
-This fluent interface can be used to set the address keypair to use for the
-application, to join DCL networks and to connect the application to the service.
+This fluent interface can be used to set the keypair to use as the application's
+address, to join DCL networks and to connect the application to the service.
 The code below will use the \code{KeyPair} object referenced by
 \code{addrKeyPair} as this application's address, join the default DCL networks,
 register the object referenced by \code{listener} as the
-\code{NetworkEndpointActionListener} for the default networks and connect the
-application to the DCL service.
+\code{NetworkEndpointActionListener} for the default network endpoints and
+connect the application to the DCL service.
+
+%TODO explain NetworkEndpoints
+%TODO here?
+A network endpoint is a pair existing of an address and a DCL network that
+address has joined. Unreliably transmitted packets are sent over a DCL network
+and between two addresses -- thus between two network endpoints on the same
+network.
+The DCL application to service protocol utilizes network endpoint slots,
+which are essentially numbers referring to network endpoints, to specify
+the origin of a message sent from the application and the destination of a
+message sent to the application.
+The DCL application library uses \code{NetworkEndpointSlot} objects to define
+those network endpoint slots and to refer to the address and network of a
+network endpoint. The \code{NetworkEndpointSlot} object is required in every
+library method that requires the address and network that should be used to be
+specified and is passed in every callback method defined in the
+\code{NetworkEndpointActionListener} interface.
 
 \shortjavalisting
 \begin{minipage}{\linewidth}
@@ -134,47 +151,115 @@ The call to \code{connect()} will block until the TCP connection to the service
 is established and the application-to-service protocol is initiated. If an error
 occurs, a \code{ConnectionException} will be thrown.
 Otherwise, \code{connect()} will return a new \code{ApplicationInstance} object,
-which can be used to send unconnected packets and to initiate application
-channels.
+which can be used to send unreliably transmitted packets and to initiate
+application channels.
 
 \subsection*{Callbacks}
 \subsubsection*{NetworkEndpointActionListener}
 The \code{NetworkEndpointActionListener} interface defines methods for receiving
-callbacks upon joining of DCL networks, receipt of unconnected packets and
-incoming application channel requests.
+callbacks upon joining of DCL networks (\code{onJoin()}), receipt of unreliably
+transmitted packets (\code{onReceive()}) and incoming application channel
+requests (\code{onApplicationChannelRequest()}).
 
-\subsection*{Unconnected packets}
+\subsubsection*{ApplicationChannelActionListener}
+The \code{ApplicationChannelActionListener} interface defines methods for
+receiving callbacks upon successful connection
+(\code{onApplicationChannelConnected()}) and disconnection
+(\code{onApplicationchannelDisconnected()}) of an application channel.
+
+\subsection*{Unreliably transmitted packets}
 \subsubsection*{Sending}
-In order to send unconnected packets, the \code{send()} method of an
+In order to send unreliably transmitted packets, the \code{send()} method of an
 \code{ApplicationInstance} object needs to be called.
+The \code{send()} method takes 3 arguments: a \code{NetworkEndpointSlot} object
+decribing the address and network to use, a \code{Data} object containing the
+destination address and another \code{Data} object containing the payload to
+transmit, respectively.
 
 \subsubsection*{Receiving}
+Upon receipt of an unreliably transmitted packet, the \code{onReceive()} method
+of the \code{NetworkEndpointActionListener} assigned to the address and network
+the packet was received on is called and passed 3 arguments:
+the \code{NetworkEndpointSlot} object corresponding to the address and network
+the packet was received on, a \code{Data} object containing the source address
+and another \code{Data} object containing the payload received, respectively.
+
+Note that the source address might be empty, indicating the the origin chose not
+to include its own address in the message.
 
 \subsection*{Application channels}
-\subsubsection*{Accepting}
 \subsubsection*{Initiating}
+To request an application channel to a specific address, the
+\code{requestApplicationChannel()} method of an \code{ApplicationInstance}
+object needs to be called and passed 4 arguments: a \code{NetworkEndpointSlot}
+object to use as the source of this application channel, a \code{String} used as
+an action identifier which the remote will receive in its
+\code{onApplicationChannelRequest} callback, a \code{Key} object containing the
+public key used as address by the remote that the application channel should be
+connected to and an \code{ApplicationChannelActionListener} object that will
+receive callbacks regarding the application channel.
 
+\subsubsection*{Accepting}
+When an application channel is requested, the
+\code{onApplicationChannelRequest()} of the \code{NetworkEndpointActionListener}
+object assigned to the network endpoint the application channel request was
+received on is called and passed 4 arguments: the \code{NetworkEndpointSlot}
+object corresponding to the network endpoint the request was received on, a
+\code{Key} object containing the public key used as address by the remote that
+requested the application channel, a \code{String} object containing the action
+identifier as specified by the remote and an \code{LLA} object containg the
+lower-level address (i.e., the IP address and port) of the remote requesting the
+application channel.
 
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+To accept the application channel request, return an
+\code{ApplicationChannelActionListener} object that will receive callbacks
+regarding the application channel.
 
-Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+To ignore the request, simply return \code{null}.
 
-Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.
+\subsubsection*{Usage}
+As soon as the application channel is successfully connected, the
+\code{onApplicationChannelConnected()} method of the
+\code{ApplicationChannelActionListener} that was either passed when calling the
+\code{requestApplicationChannel()} method or returned from the
+\code{onApplicationChannelRequest()} callback method will be called. The
+\code{onApplicationChannelConnected()} callback will be passed an
+\code{ApplicationChannel} object that refers to the established application
+channel.
 
-Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
+The \code{ApplicationChannel} object has the following methods that can be
+utilized:
 
-Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.
+\begin{description}
 
-At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. sanctus sea sed takimata ut vero voluptua. est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.
+    \item[{\code{getOutputStream()}}] \hfill \\
+        Returns a \code{BufferedOutputStream} object
+        that can be used to write data which will be securely sent through the
+        interservice connection of the local and the remote service and then
+        made available for the remote to read from its \code{InputStream}
+        object.
 
-Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus.
+        Call \code{flush()} on the \code{BufferedOutputStream} object to make
+        sure the data written is sent.
 
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+    \item[{\code{getInputStream()}}] \hfill \\
+        Returns an \code{InputStream} object that can be used to read the data
+        which the remote wrote into its \code{BufferedOutputStream} object
+        obtained via \code{getOutputStream()}.
 
-Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+    \item[{\code{getRemotePublicKey()}}] \hfill \\
+        Returns a \code{Key} object containing the public key used as address
+        by the remote.
 
-Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.
+    \item[{\code{getActionIdentifier()}}] \hfill \\
+        Returns a \code{String} object containing the action identifier that was
+        passed to the \code{requestApplicationChannel()} method by the end that
+        initiated the application channel.
 
-Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo
+    \item[{\code{wasInitiatedLocally()}}] \hfill \\
+        Returns \code{true} if this application channel was initiated by this
+        end, \code{false} otherwise.
+
+\end{description}
 
 \end{document}

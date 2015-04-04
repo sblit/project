@@ -1,0 +1,137 @@
+
+\label{dcl-natt}
+
+\subsection{Einleitung}
+Unter \gls{nat} versteht man das Übersetzen von Netzwerkadressen.
+\Gls{nat} kommt bei praktisch allen Routern privater Internetanschlüsse zum
+Einsatz und ermöglicht es dort, mehrere Hosts über eine einzige öffentliche
+IP-Adresse an das Internet anzubinden.
+
+Realisiert wird das durch Übersetzen der privaten Quell-IP-Adressen zur
+öffentlichen IP-Adresse bei Paketen die das lokale Netzwerk verlassen und
+Rückübersetzen der öffentlichen Ziel-IP-Adresse zu den privaten IP-Adressen
+bei Paketen die aus dem Internet in das lokale Netzwerk eintreten.
+
+Bei ankommenden Paketen wird dabei anhand des Ziel-Ports entschieden, an welche
+lokale IP-Adresse das Paket weitergeleitet wird.
+Um es mehreren lokalen Hosts zu ermöglichen, vom gleichen Port aus Pakete zu
+senden, werden die Quell-Ports von Paketen die das lokale Netzwerk verlassen
+gegebenenfalls, zusätzlich zur Quell-IP-Adresse, ebenfalls übersetzt.
+Beim Eintritt von Antwortpaketen in das lokale Netzwerk werden die Ziel-Ports
+entsprechend Rückübersetzt. Man spricht dann von der sogenannten Port Address
+Translation, die eine Unterkategorie der \acrlong{nat} bildet.
+
+Im \gls{natdev} werden die aktuellen Übersetzungen in einer Datenstruktur
+gespeichert, die lokale IP-Adressen und Ports auf globale IP-Adressen und Ports
+abbildet.
+Dabei werden Datenreihen in folgenden Format gespeichert:
+
+\begin{equation*}
+    (\text{ lokale IP-Adresse}, \text{ lokaler Port}, \text{ globale IP-Adresse}, \text{ globaler Port })
+\end{equation*}
+
+Verlässt beispielsweise ein Paket das lokale Netzwerk, das von der lokalen
+IP-Adresse \code{10.0.0.1} und vom Port \code{28785} aus gesendet wurde,
+könnte die dafür von einem \gls{natdev} mit der öffentlichen IP-Adresse
+\code{93.184.216.34} angelegte Datenreihe wie folgt aussehen:
+
+\begin{equation*}
+    (\texttt{ 10.0.0.1}, \texttt{ 28785}, \texttt{ 93.184.216.34}, \texttt{ 28785 })
+\end{equation*}
+
+An dieser Stelle sei angemerkt, dass der Quellport des Pakets in diesem Beispiel
+nicht übersetzt wird.
+Ist der Host mit der IP-Adresse \code{10.0.0.1} der einzige im lokalen Netzwerk,
+der von Port \code{28785} aus sendet, muss eine Übersetzung des Ports auch nicht
+zwingend stattfinden.
+Nimmt man jedoch an, dass sich ein zweiter Host im lokalen Netzwerk befindet,
+der beispielsweise die IP-Adresse \code{10.0.0.2} besitzt und ebenfalls von Port
+\code{28785} aus sendet, so würde eine weitere Datenreihe angelegt, die wie
+folgt aussieht:
+
+\begin{equation*}
+    (\texttt{ 10.0.0.2}, \texttt{ 28785}, \texttt{ 93.184.216.34}, \texttt{ 28786 })
+\end{equation*}
+
+Für Pakete des Hosts mit der IP-Adresse \code{10.0.0.2}, die das lokale Netzwerk
+verlassen, wird also nicht nur die Quell-IP-Adresse übersetzt, sondern auch der
+Quellport von \code{28785} auf \code{28786}. Dieser Schritt ist notwendig, da
+sonst bei Paketen, die aus dem Internet in das lokale Netzwerk eintreten, nicht
+unterschieden werden kann, ob diese an den Host mit der IP-Adresse
+\code{10.0.0.1} oder an den Host mit der IP-Adresse \code{10.0.0.2}
+weitergeleitet werden sollen. Die Übersetzung des Quellports ermöglicht es,
+das lokale Ziel von Antwortpaketen anhand deren Zielport zu bestimmen.
+
+%TODO erwähnen, dass öffentliche IP+Port bei unterschiedlichen Zielen gleich
+%bleibt?
+
+\subsection{Probleme für Peer-to-Peer-Verbindungen}
+Verbindungen zwischen zwei über \glspl{natdev} angebundenen Hosts werden durch
+\acrlong{nat} erschwert, da die Pakete zur Initialisierung der Verbindung
+aufgrund fehlender Übersetzungsinformationen in den
+\glslink{natdev}{NAT-Geräten} nicht an den Zielhost weitergeleitet werden
+können.
+
+Um trotzdem Peer-to-Peer-Verbindungen zwischen solchen Hosts aufbauen zu können,
+müssen Verfahren zum \gls{natt} angewandt werden.
+Hierfür existieren unterschiedliche Protokolle zur Einrichtung einer
+Portweiterleitung auf dem lokalen \gls{natdev}, welche eine Verbindung von Außen
+ermöglicht.
+
+Die derzeitige Implementierung des \gls{service} wendet das sogenannte
+\gls{nathp} an, für das kein spezielles Netzwerkprotokoll notwendig ist.
+
+\subsection{NAT Hole Punching}
+Für \gls{nathp} wird für eine neue Verbindung ein Kommunikationskanal zwischen
+den Verbindungspartnern benötigt, der schon vor Aufbau der Verbindung existieren
+muss.
+Diesen Kommunikationskanal kann ein dritter Host bereitstellen, zu dem beide
+Verbindungspartner bereits verbunden sind, oder, wie im Fall von \gls{dcl},
+ein \glslink{net}{DCL-Netzwerk}, über das beide Kommunikationspartner bereits
+kommunizieren können.
+In beiden Fällen muss bereits eine Verbindung zu einem Host außerhalb des
+lokalen Netzwerks bestehen.
+
+Einer der beiden Hosts, die direkt miteinander verbunden werden sollen,
+ermittelt seine öffentliche IP-Adresse und seinen öffentlichen Port mithilfe
+eines Hosts, zu dem bereits eine Verbindung besteht.
+Diese Information wird über den bestehenden Kommunikationskanal an den Host
+übermittelt, zu dem eine Verbindung aufgebaut werden soll.
+Dieser sendet an die eben erhaltene Adresse ein Paket, das das lokale Netzwerk
+zwar verlässt, am \gls{natdev} des Ziels jedoch verworfen wird.
+Der Grund dafür liegt darin, dass das Ziel, an das es im lokalen Netzwerk der
+Empfängerseite weitergeleitet werden soll, vom dortigen \gls{natdev} nicht
+bestimmt werden kann, da kein passender Eintrag in der Datenstruktur der
+Übersetzungen existiert.
+Das \gls{natdev} auf der Senderseite dieses Pakets erstellt jedoch trotzdem
+einen Übersetzungseintrag in seiner Datenstruktur, um Antwortpakete weiterleiten
+zu können.
+
+Gleichzeitig ermittelt dieser Host über einen anderen Host, zu dem bereits eine
+Verbindung besteht, ebenfalls seine öffentlichen Adresse.
+Diese sendet er zusätzlich zu dem soeben in der Übertragung gescheiterten Paket
+über den bestehenden Kommunikationskanal an den ersten Verbindungspartner.
+
+Dieser sendet, sobald er die öffentliche Adresse des Gegenübers empfangen hat,
+ein normales Paket zur Verbindungsinitialisierung an dieses Gegenüber.
+Dieses Paket verlässt das lokale Netzwerk, das lokale \gls{natdev} speichert
+einen Übersetzungseintrag in seiner Datenstruktur und das Paket erreicht das
+entfernte \gls{natdev}.
+Dort wird jener Übersetzungseintrag gefunden, der durch das in der Übertragung
+bewusst gescheiterte Paket angelegt wurde.
+Das Paket wird anhand dieses Eintrags an den richtigen Host weitergeleitet und
+die Hosts können ab diesem Zeitpunkt normal miteinander kommunizieren.
+
+\subsection{Einschränkungen}
+Um \gls{nathp} durchführen zu können, muss jedenfalls bereits mindestens eine
+Verbindung zu einem Host außerhalb des lokalen Netzwerks existieren.
+Die erste Verbindung, die ein über ein \gls{natdev} angebundenes Gerät aufbaut,
+muss deshalb jedenfalls zu einem Host erfolgen, der selbst nicht über ein
+\gls{natdev} angebunden ist und somit Verbindungen problemlos annehmen kann.
+Im Fall von \gls{dcl} sind das \glspl{service}, die auf Hosts laufen, die dieses
+Kriterium erfüllen und zusätzlich über eine statische IP-Adresse verfügen.
+In der Praxis handelt es sich bei diesen Hosts um Server.
+Um einen möglichst problemlosen Einstieg in den \gls{dcl} gewährleisten zu
+können, ist es nötig, auf eine der Anzahl an Teilnehmern im \gls{dcl}
+entsprechend große Menge an \glspl{service} zurückgreifen zu können, die auf
+solchen Hosts laufen.
