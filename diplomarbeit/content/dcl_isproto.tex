@@ -1,8 +1,9 @@
 
 \subsection{Einleitung}
 Das \gls{isproto} wird zur Kommunikation zwischen zwei direkt miteinander verbundenen \glspl{service}
-verwendet. Es dient zur Übertragung von Nachrichten und von in \glspl{appch} gesendeten Nutzdaten,
-zur Bekanntgabe von \glslink{endp}{Endpunkten} samt Adressen und beigetretenen
+verwendet.
+Es dient zur Übertragung von zwischen Anwendungen gesendeten Nachrichten, zur
+Bekanntgabe von \glslink{endp}{Endpunkten} samt Adressen und beigetretenen
 \glslink{net}{Netzwerken}, sowie zum Einstieg in \glspl{net} des \gls{dcl}.
 
 Die Messages des \glslink{isproto}{Interservice-Protokolls} werden über den
@@ -25,9 +26,10 @@ Eine Adresse kann gleichzeitig in mehreren verschiedenen \glslink{net}{Netzwerke
 ganzen \gls{ntid} übertragen und parsen zu müssen, wird jedes \gls{net}, dem ein \gls{service} mit einer
 oder mehreren Adressen beitritt einem \gls{netslot} zugeordnet.
 
-Werden \glspl{netpkt} übertragen, so wird auch das \gls{net} in dem diese geroutet werden in der
-\msg{\isprotonp} in Form des entsprechenden \gls{netslot} angeführt, um beim Empfänger die Zuordnung
-zu ermöglichen.
+Werden Nachrichten zur Kommunikation zwischen Anwendungen, sogenannte
+\glspl{netpkt}, über den \gls{isch} übertragen, so wird auch das \gls{net}, in
+dem diese geroutet werden, in Form des entsprechenden \gls{netslot} angeführt,
+um beim Empfänger die Zuordnung zu ermöglichen.
 
 \subsection{Connection Base}
 Die \gls{connbase} gibt an, welche Messages von einem \gls{service} auf einem \gls{addrslot} eines
@@ -35,9 +37,11 @@ Die \gls{connbase} gibt an, welche Messages von einem \gls{service} auf einem \g
 \const{stranger} (\code{0}) und \const{trusted} (\code{1}).
 Ein neuer \gls{addrslot} wird immer mit der \gls{connbase} \const{stranger} initialisiert, unter
 welcher keine mit dem Routing in Verbindung stehenden Messages akzeptiert werden.
-Erst ab der \gls{connbase} \const{trusted} werden die \msg{\isprotonjn}, die \msg{\isprotonln},
-die \msg{\isprotonp}, die \msg{\isprotoireq}, die \msg{\isprotoacsa} und die \msg{\isprotoacd}
-akzeptiert.
+Erst ab der \gls{connbase} \const{trusted} werden Messages akzeptiert, die auf
+das Routing Einfluss nehmen.
+Konkret handelt es sich dabei um die \msg{\isprotonjn}, die \msg{\isprotonln},
+die \msg{\isprotonp}, die \msg{\isprotoireq}, die \msg{\isprotoacsa} und die
+\msg{\isprotoacd}.
 
 Als Voraussetzung für die \gls{connbase} \const{trusted} gilt der Beweis der Adresse dieses
 \glslink{addrslot}{Address Slots}. Ein \gls{service} kann den Wechsel auf die \gls{connbase}
@@ -69,8 +73,8 @@ Das erfordert ebenfalls wiederum die Übertragung einer \msg{\isprotonjn}, für 
 
 Damit die Aufforderung zum Weiterleiten von in einem \gls{appch} übertragenen Daten akzeptiert
 werden kann, muss der in der \msg{\isprotoacd} angeführte \gls{appchslot} existieren. Dafür
-muss dieser zuvor mit einer \msg{\isprotoacsa} angelegt worden sein, wofür die \gls{connbase}
-\const{trusted} notwendig ist.
+muss dieser zuvor mit einer \msg{\isprotoacsa} angelegt worden sein, wofür
+ebenfalls die \gls{connbase} \const{trusted} notwendig ist.
 
 \subsection{Initialisierung}
 Die Kommunikation über das \gls{isproto} wird mit der Aushandlung einer Protokollversion begonnen.
@@ -178,7 +182,7 @@ Adresse beigetreten sein, so wird dieser \gls{netslot} mit dieser Message angele
 Der Empfänger wird in diesem Fall mit dieser Nachricht außerdem darüber in Kenntnis gesetzt, dass
 ab jetzt Nachrichten zum Routing in diesem \gls{net} an den sendenden \gls{service} übermittelt
 werden können.
-Das Feld des \gls{ntid} bleibt in den folgenden \msg{\isprotonjn}, die sich auf den angegeben
+Das Feld des \gls{ntid} bleibt in den folgenden \msgpl{\isprotonjn}, die sich auf den angegeben
 \gls{netslot} beziehen, leer.
 
 Diese Message wird vom Empfänger nur dann akzeptiert, wenn die \gls{connbase} des angegebenen
@@ -189,7 +193,7 @@ Diese Message wird vom Empfänger nur dann akzeptiert, wenn die \gls{connbase} d
 \subsubsection{Network Leave Notice}
 \label{dcl-isproto-nln}
 Die \msg{\isprotonln} benachrichtigt den Empfänger darüber, dass der sendende \gls{service} mit der
-vom angegebenen \gls{addrslot} referenzierten Adresse aus dem vom angegebenen \gls{ntid}
+vom angegebenen \gls{addrslot} referenzierten Adresse aus dem vom angegebenen \gls{netslot}
 referenzierten \gls{net} austritt. Sollte der sendende \gls{service} aktuell mit keiner anderen
 Adresse diesem \gls{net} beigetreten sein, so wird der Empfänger mit dieser Nachricht außerdem
 darüber in Kenntnis gesetzt, dass ab jetzt keine Nachrichten mehr zum Routing in diesem \gls{net}
@@ -244,6 +248,9 @@ beigetreten ist.
 Die \msg{\isprotoacsa} benachrichtigt den Empfänger darüber, dass Nachrichten eines \gls{appch} % TODO Application ChannelS?
 zwischen den beiden durch die angegebenen \glspl{addrslot} referenzierten Adressen auf dem
 angegebenen \gls{appchslot} entgegen genommen werden.
+
+\Glspl{appch} sind verlässliche Kommunikationkanäle zwischen zwei Anwendungen.
+Siehe dazu \link{dcl-appch}.
 
 Diese Message wird vom Empfänger nur dann akzeptiert, wenn die \gls{connbase} des angegebenen
 \gls{addrslot} auf dem sendenden \gls{service} mindestens \const{trusted} entspricht und der

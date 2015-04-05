@@ -5,7 +5,7 @@
 \label{dcl-packetcomponents-flexnum}
 Ein \gls{fnumc} ist ein \gls{pktc} zur Übertragung einer bis zu 64 Bits langen Ganzzahl.
 Die Besonderheit liegt darin, dass der \gls{fnumc} zwar Zahlen bis zu $2^{64}-1$ übertragen kann,
-für Zahlen von $0$ bis $2^{7}-1$, welche bereits mit 7 Bits darstellbar sind, aber trotzdem nur ein
+für Zahlen von $0$ bis $2^{7}-1$, welche bereits mit 7 Bits darstellbar sind, trotzdem nur ein
 Byte zur Übertragung benötigt.
 
 Das funktioniert durch Kodierung der Anzahl der folgenden Bytes im ersten Byte. Hierbei zeigt die
@@ -20,9 +20,9 @@ Nachfolgend ist eine Tabelle angeführt, die einen Überblick über die mit eine
 darstellbaren Wertbereiche, das Bitpräfix im Initialisierungsbyte, die Anzahl der folgenden Bytes
 sowie die Effizienz der Speichernutzung gibt.
 
-Die Effizienz berechnet sich durch $\dfrac{log_2(n_{max})}{N_{bytes} \cdot 8}$, wobei $n_{max}$ der
-mit der jeweiligen Anzahl an Folgebits maximal darstellbare Wert ist und $N_{bytes}$ der
-Gesamtanzahl an benötigten Bytes entspricht.
+Die Effizienz berechnet sich durch $\dfrac{log_2(n_{max})}{N_{bytes} \cdot 8}$,
+wobei $N_{bytes}$ der Gesamtanzahl an benötigten Bytes entspricht und $n_{max}$
+der mit der jeweiligen Gesamtanzahl an Bytes maximal darstellbare Wert ist.
 
 \begin{table}[H]
 \begin{centering}
