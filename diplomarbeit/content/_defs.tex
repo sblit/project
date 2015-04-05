@@ -3,11 +3,11 @@
 
 \newcommand{\labellinkt}[1]{\ref{#1} \nameref{#1}}
 \newcommand{\labellink}[1]{\hyperref[#1]{\labellinkt{#1}}}
-\newcommand{\pagelinkt}[1]{Seite \pageref{#1}}
+\newcommand{\pagelinkt}[1]{Seite~\pageref{#1}}
 \newcommand{\pagelink}[1]{\hyperref[#1]{\pagelinkt{#1}}}
 \newcommand{\linkt}[1]{\labellinkt{#1}, \pagelinkt{#1}}
 \newcommand{\link}[1]{\hyperref[#1]{\linkt{#1}}}
-\newcommand{\siehet}[1]{siehe \linkt{#1}}
+\newcommand{\siehet}[1]{siehe~\linkt{#1}}
 \newcommand{\siehe}[1]{\hyperref[#1]{\siehet{#1}}}
 \newcommand{\referenz}[1]{\hyperref[#1]{(\siehet{#1})}}
 \newcommand{\abbildung}[1]{(siehe Abbildung \linkt{#1})}
