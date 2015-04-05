@@ -45,6 +45,18 @@
 
 \newcommand{\const}[1]{\code{#1}}
 
+% shamelessly stolen from http://tex.stackexchange.com/a/35943 and modified
+\newcommand{\namesigdate}[2][8cm]{
+    \begin{tabular}{@{}p{#1}@{}}
+        \\
+        \\
+        \\
+        \\
+        \hrule \\
+        \small{#2}
+    \end{tabular}
+}
+
 \input{content/_defs_dcl_bytefields.tex}
 
 % listings
