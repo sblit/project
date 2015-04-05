@@ -5,7 +5,7 @@ nötig, die Teilnehmer dieser Gruppen als solche erkennen zu können.
 Das erfordert wiederum die permanente und eindeutige Adressierung dieser Teilnehmer.
 Da sich die öffentlichen IP-Adressen der meisten privaten Internetanschlüsse und somit des Großteils der
 Zielgruppe von \sblit periodisch ändern, eignen sich diese jedoch nicht als Adressen im \gls{dcl}. Es
-wird also ein anderes Adresskonzept benötigt, mit dem ohne höhere Behörde allen Teilnehmern eindeutige
+wird also ein anderes Adresskonzept benötigt, mit dem ohne zentrale Stelle allen Teilnehmern eindeutige
 Adressen zugewiesen werden können, die auf ihre Echtheit überprüfbar sind.
 
 Es ist nicht ausreichend, die Teilnehmer ihre Adressen willkürlich selbst bestimmen zu lassen und eine
@@ -33,7 +33,7 @@ Gleichzeitig kann aus einem Schlüssel eines Schlüsselpaars der dazugehörige a
 Schlüsselpaars nicht in absehbarer Zeit berechnet werden.
 
 Dadurch wird es möglich, ein Adressierungssystem umzusetzen, das die Anforderungen im Bezug auf
-Überprüfbarkeit der Adressen erfüllt. Dazu wird eine Adresse angenommen, die sich aus einem der
+Überprüfbarkeit der Adressen erfüllt. Dazu wird eine Adresse angenommen, die sich von einem der
 beiden Schlüssel aus dem Schlüsselpaar ableitet. Dieser Schlüssel wird bewusst veröffentlicht,
 während der andere Schlüssel aus dem Schlüsselpaar geheim gehalten wird.
 Der Schlüssel aus dem Schlüsselpaar, der veröffentlicht wird, wird auch \emph{Öffentlicher Schlüssel}
@@ -45,6 +45,7 @@ Behörde oder zentrale Stelle auf ihre Echtheit überprüft werden können und s
 Ein Mechanismus zur Überprüfung solch einer Adresse wird im nächsten Abschnitt beschrieben.
 
 \subsection{Überprüfung von Adressen}
+\label{dcl-addr-proving}
 Dadurch, dass eine mit einem öffentlichen Schlüssel verschlüsselte Nachricht nicht mit wieder mit dem
 öffentlichen Schlüssel entschlüsselt werden kann, sondern ausschließlich mit dem dazugehörigen privaten
 Schlüssel, kann der Besitz des gesamten Schlüsselpaars bewiesen werden, ohne mehr als den öffentlichen
@@ -75,13 +76,26 @@ werden kann, dass eine Kollision praktisch nicht auftritt. \cite{crypto.stackexc
 \subsubsection{\gls*{rsa}-Schlüssellänge}
 Die für die Adressen im \gls{dcl} verwendeten öffentlichen \gls{rsa}-Schlüssel haben eine Länge von \addrkeybits
 Bits, was \addrkeybytes Bytes entspricht.
-IPv4 und IPv6-Adressen haben mit jeweils 32 Bits (4 Bytes) bzw. 128 Bits (16 Bytes) vergleichsweise kurze
+IPv4- und IPv6-Adressen haben mit jeweils 32 Bits (4 Bytes) bzw. 128 Bits (16 Bytes) vergleichsweise kurze
 Adressen. Trotzdem ist eine Adressierung mit 128 Bits mehr als ausreichend und wesentlich längere
 Adressen, wie sie beispielsweise bei direkter Verwendung von RSA-Schlüsseln entstehen, bringen
-lediglich Nachteile und keinerlei Vorteile mit sich, da der dabei entstehende Overhead bei Nachrichten
-eine wesentliche Reduktion der Übertragungseffizienz mit sich bringt.
+lediglich Nachteile und keinerlei Vorteile mit sich, da der dadurch entstehende
+Overhead bei der Übertragung von Nachrichten eine wesentliche Reduktion der
+Effizienz mit sich bringt.
+
+Gleichzeitig ist die Schlüssellänge mit \addrkeybits Bits aber bereits im
+unteren Bereich dessen angesiedelt, was zur Zeit noch als sicher eingestuft
+wird. \cite{keylength:bsi}
+Die Verwendung kürzerer \gls{rsa}-Schlüssel würde die Sicherheit der Adressen
+im \gls{dcl} und der über den \gls{dcl} laufenden Kommunikation negativ
+beeinflussen.
+
+Der folgende Abschnitt beschreibt, wie im \gls{cnet} des \gls{dcl} die
+öffentlichen \gls{rsa}-Schlüssel so verarbeitet werden, dass die resultierenden
+Adressen die Effizienz der Kommunikation nicht mindern.
 
 \subsubsection{Adressverkürzung}
+\label{dcl-addr-scaling}
 Die im \gls{dcl} verwendeten Adressen decken sich nicht mit den öffentlichen \gls{rsa}-Schlüsseln,
 sondern basieren lediglich darauf. Da ohne Weiterverarbeitung der Schlüssel zu lange Adressen entstünden,
 wird auf die Daten der öffentlichen Schlüssel ein \gls{hash} angewandt, welcher die Daten in einem ersten
@@ -91,49 +105,46 @@ Daten weiter verkürzt werden, um unnötig lange Adressen zu eliminieren.
 Nachfolgend ist jener Teil des Quellcodes von \gls{dcl} angeführt, welcher im \code{\gls{cnt}}
 zur Adressverkürzung angewandt wird.
 
+\label{dcl-addr-scaling-cnet}
 \javalisting
-\begin{minipage}{\linewidth}
 \begin{lstlisting}[caption={Adressverkürzung im \gls*{cnt} (Java)},captionpos=b]
 Data scaleAddress(Address address) {
-	
+
 	Data fullData = address.toData();
 	Data hashedData = hash.update(fullData).finish();
-	
-	if(byteLength == hashedData.length()) return hashedData;
-	
+
+	if(byteLength == hashedData.length()) {
+		return hashedData;
+	}
+
 	Data scaledData = new Data(byteLength);
-	
+
 	for(int i = 0; i < hashedData.length(); i++) {
 		int scaledIndex = i % scaledData.length();
-		scaledData.setByte(
-			scaledIndex,
-			(byte)( scaledData.getByte(scaledIndex)
-					^ hashedData.getByte(i))
-		);
+		scaledData.setByte(scaledIndex, (byte)(scaledData.getByte(scaledIndex) ^ hashedData.getByte(i)));
 	}
-	
+
 	return scaledData;
-	
+
 }
 \end{lstlisting}
-\end{minipage}
 
 \begin{description}
-	
+
 	\descriptionitem{\code{address}}
 		Das \javaarg \code{address} referenziert ein \code{\gls{Address}}-Objekt, welches den
 		als Grundlage für eine Adresse verwendeten öffentlichen Schlüssel enthält.
-	
+
 	\descriptionitem{\code{\gls{Data}}}
 		\glsdesc{Data}.
-	
+
 	\descriptionitem{\code{hash}}
 		Die \javainstvar \code{hash} referenziert ein \code{\gls{Hash}}-Objekt, welches den
 		im \gls{nt} angegebenen \gls{hash} implementiert.
-	
+
 	\descriptionitem{\code{byteLength}}
-		Die \javainstvar \code{byteLength} enthält die Ziellänge der Adressen, in bytes.
-	
+		Die \javainstvar \code{byteLength} enthält die Ziellänge der Adressen, in Bytes.
+
 \end{description}
 
 Mit \code{address.toData()} wird der öffentliche Schlüssel der übergebenen Adresse zuerst in Binärdaten
@@ -143,5 +154,3 @@ direkt zurückgegeben.
 
 Anderenfalls wird der \gls{hashval} aus \code{hashedData} auf Binärdaten der Länge \code{byteLength},
 gespeichert in \code{scaledData}, abgebildet und diese zurückgegeben.
-
-

@@ -5,7 +5,7 @@
 \label{dcl-packetcomponents-flexnum}
 Ein \gls{fnumc} ist ein \gls{pktc} zur Übertragung einer bis zu 64 Bits langen Ganzzahl.
 Die Besonderheit liegt darin, dass der \gls{fnumc} zwar Zahlen bis zu $2^{64}-1$ übertragen kann,
-für Zahlen von $0$ bis $2^{7}-1$, welche bereits mit 7 Bits darstellbar sind, aber trotzdem nur ein
+für Zahlen von $0$ bis $2^{7}-1$, welche bereits mit 7 Bits darstellbar sind, trotzdem nur ein
 Byte zur Übertragung benötigt.
 
 Das funktioniert durch Kodierung der Anzahl der folgenden Bytes im ersten Byte. Hierbei zeigt die
@@ -20,17 +20,17 @@ Nachfolgend ist eine Tabelle angeführt, die einen Überblick über die mit eine
 darstellbaren Wertbereiche, das Bitpräfix im Initialisierungsbyte, die Anzahl der folgenden Bytes
 sowie die Effizienz der Speichernutzung gibt.
 
-Die Effizienz berechnet sich durch $\dfrac{log_2(n_{max})}{N_{bytes} \cdot 8}$, wobei $n_{max}$ der
-mit der jeweiligen Anzahl an Folgebits maximal darstellbare Wert ist und $N_{bytes}$ der
-Gesamtanzahl an benötigten Bytes entspricht.
+Die Effizienz berechnet sich durch $\dfrac{log_2(n_{max})}{N_{bytes} \cdot 8}$,
+wobei $N_{bytes}$ der Gesamtanzahl an benötigten Bytes entspricht und $n_{max}$
+der mit der jeweiligen Gesamtanzahl an Bytes maximal darstellbare Wert ist.
 
 \begin{table}[H]
 \begin{centering}
 \begin{tabular}{|c|l|c|r|}
-	\hline 
+	\hline
 	Erstes Byte & Wertbereich & Folgebytes & Effizienz\tabularnewline
-	\hline 
-	\hline 
+	\hline
+	\hline
 	\code{0XXXXXXX} & $0$ -- $127$ & $0$ & $87,50\%$\tabularnewline
 	\hline
 	\code{10XXXXXX} & $128$ -- $16511$ & $1$ & $87,57\%$\tabularnewline
@@ -58,43 +58,51 @@ Nachfolgend ist jener Teil des Quellcodes von \gls{dcl} angeführt, welcher zum 
 \gls{fnumc} angewandt wird.\\
 
 \javalisting
-\begin{minipage}{\linewidth}
 \begin{lstlisting}[caption={Lesen eines \gls*{fnumc} (Java)},captionpos=b]
 long readFlexNum() {
-	
+
 	byte iByte = read();
 	int additionalBytes = 8;
 	long num = 0;
 	long offset = 0;
-	
+
 	for(int i = 0; i < 8; i++) {
 		if((iByte & (0x80 >> i)) == 0) {
 			additionalBytes = i;
 			break;
 		}
 	}
-	
+
 	num |= (iByte & ((0x100 >> additionalBytes) - 1));
 	for(int i = 0; i < additionalBytes; i++) {
 		num <<= 8;
 		num |= (read() & 0xFF);
 		offset += (0x80L << 7*i);
 	}
-	
+
 	return num + offset;
-	
+
 }
 \end{lstlisting}
-\end{minipage}
-
-\subsection*{NetworkPacket}
-\label{dcl-packetcomponents-netpkt}
 
 %TODO
 
 \subsection*{KeyComponent}
 \label{dcl-packetcomponents-key}
 
-%TODO
+Der \gls{keyc} dient zur Übertragung kryptographischer Schlüsselinformationen.
 
+Dabei definiert der \gls{pktc} einen grundsätzlichen Aufbau, bei dem ein
+einzelnes Byte am Beginn des \gls{pktc} den Typ des Schlüssels angibt, anhand
+dessen die Daten eingelesen werden.
 
+\keycbytefield
+
+Derzeit kann der \gls{keyc} nur \gls{rsa}-Schlüssel übertragen.
+
+\subsubsection{RSA Key}
+\label{dcl-keyc-rsa}
+Der \comp{\keycrsa} überträgt den Modul und den Exponenten des
+\gls{rsa}-Schlüssels.
+
+\keycrsabytefield

@@ -1,0 +1,134 @@
+\label{dcl-appch}
+\subsection{Einleitung}
+Um Anwendungen, deren Kommunikation über den \gls{dcl} geleitet werden soll,
+nicht nur das Senden von verbindungslosen Paketen zu ermöglichen, sondern auch
+die Übertragung von Daten durch verschlüsselte, performante und verlässliche
+Verbindungen, gibt es im \gls{dcl} sogenannte \glspl{appch}.
+Zur Zeit sind das direkte Kanäle zwischen jenen zwei \glspl{service}, die mit
+den Anwendungen, zwischen denen der \gls{appch} besteht, via \glspl{asconn}
+verbunden sind.
+Eine Implementierung eines zweiten Typs von \glspl{appch}, bei dem die
+\glspl{service}, die die Anwendungen an den \gls{dcl} anbinden, nicht direkt
+miteinander verbunden sind, ist für die Zukunft nicht ausgeschlossen.
+
+\subsection{Sicherheit}
+Die durch einen \gls{appch} übertragenen Daten werden im \gls{isch} mit der
+\msg{\isprotoacd} (\link{dcl-isproto-acd}) zwischen den \glspl{service}
+übermittelt.
+Der \gls{link}, über den der \gls{isch} übertragen wird, ist dabei
+verschlüsselt.
+Die Daten des \gls{appch} werden nicht weiter verschlüsselt.
+Da \glspl{appch} aber immer zwischen genau zwei \glspl{service} übertragen
+werden, ist neben der Verschlüsselung des \glslink{link}{Links} auch keine
+weitere Verschlüsselung notwendig.
+%Die durch einen \gls{appch} übertragenen Daten werden durch den sogenannten
+%\gls{isch} übertragen.
+%Der \gls{isch} wird wiederum durch den \gls{link} zwischen zwei \glspl{service}
+%übertragen, bei dem es sich um eine direkte, verschlüsselte Verbindung handelt.
+%Die Daten des \gls{appch} werden nicht weiter verschlüsselt.
+%Da \glspl{appch} in der derzeitigen Implementierung aber immer zwischen genau
+%zwei \glspl{service} übertragen werden, ist neben der Verschlüsselung des
+%\glslink{link}{Links} auch keine weitere Verschlüsselung notwendig.
+
+Selbstverständlich kann aber auf der Seite der Anwendung eine zusätzliche
+Verschlüsselungsschicht umgesetzt werden, sodass ausschließlich die
+verschlüsselten Daten über den \gls{appch} übertragen werden.
+
+\subsection{Aufbau}
+Für einen \gls{appch} müssen die beiden \glspl{service}, die die Anwendungen an
+den \gls{dcl} anbinden, direkt miteinander verbunden sein und über einen
+\gls{isch} miteinander kommunizieren.
+Beim Aufbau eines \gls{appch} gibt es deshalb zwei Fälle zu unterscheiden:
+der Fall, in dem die \glspl{service} bereits miteinander verbunden sind und der
+Fall, in dem die \glspl{service} noch nicht direkt miteinander verbunden sind.
+
+Im zweiten Fall müssen die \glspl{service} zusätzlich zu den Aktionen, die
+schon im ersten Fall notwendig sind, noch miteinander verbunden werden, wofür
+der Austausch ihrer \glspl{lla} und evtl. die Durchführung von \gls{natt}
+notwenig sind.
+
+Um diese Fälle in der Umsetzung nicht weiter behandeln zu müssen, werden die
+Anfragen für \glspl{appch} über das \acrfull{crisp} verschickt, welches unter
+\labellink{dcl-crisp} auf \pagelink{dcl-crisp} beschrieben wird.
+
+Der \gls{service}, der die Anwendung an den \gls{dcl} anbindet, die den
+\gls{appch} angefragt hat, sendet zum Aufbau eine \acrshort{crisp}
+\msg{\crispneighreq} (siehe \figurelinkp{dcl-crisp-neighreq-bytefield}) über das
+\gls{net}, das die Anwendung in der \msg{\asprotoappchoutreq} über die
+\gls{asconn} angegeben hat.
+Der \gls{actid} aus der über die \gls{asconn} gestellten Anfrage der Anwendung
+erhält das Präfix \code{org.dclayer.applicationchannel/} und wird in die
+\msg{\crispneighreq} kopiert.
+Außerdem wird die \gls{lla} des lokalen \gls{service} in die Message übernommen,
+das Response-Flag auf \code{false} gesetzt und die \gls{ignoredata} eingefügt.
+Die \msg{\crispneighreq} wird über das \gls{net} an die Adresse gesendet, die
+die Anwendung als Zieladresse des \gls{appch} angegeben hat.
+
+Der entfernte \gls{service}, der die \msg{\crispneighreq} empfängt, leitet die
+Anfrage per \msg{\asprotoappchinreq} über die \gls{asconn} an die Anwendung
+weiter.
+Nimmt die Anwendung den \gls{appch} an, sendet diese als Antwort auf die
+\msg{\asprotoappchinreq} eine \msg{\asprotoappchaccept} an den \gls{service}.
+Dieser antwortet danach wiederum dem ersten \gls{service} mit einer
+\acrshort{crisp} \msg{\crispneighreq}, in der das Response-Flag auf \code{true}
+gesetzt wird, wodurch das Feld für die \gls{ignoredata} wegfällt.
+In die Message wird die \gls{lla} dieses \gls{service} eingetragen und der
+\gls{actid} aus der vorhergehenden \msg{\crispneighreq} kopiert.
+Sofern die beiden \glspl{service} nicht bereits miteinander verbunden sind,
+sendet der \gls{service} neben der \msg{\crispneighreq} gleichzeitig auch ein
+\gls{nattpkt} an die \gls{lla} des ersten \gls{service}, das aus der
+\gls{ignoredata} der zuvor empfangenen Message besteht, um ein möglicherweise
+notwendiges \gls{natt} durchzuführen.
+Sollte kein \gls{natdev} die Durchführung von \gls{natt} erfordern und dieses
+\gls{nattpkt} deshalb den anderen \gls{service} erreichen, so wird das Paket
+dort ignoriert, da es aus der zuvor übermittelten \gls{ignoredata} besteht.
+Für nähere Informationen zu \gls{nat} und \gls{natt} siehe \link{dcl-natt}.
+
+Anschließend sendet der erste \gls{service} eine normale Verbindungsanfrage an
+die in der eben empfangenen \msg{\crispneighreq} angeführte \gls{lla}, sofern
+die beiden \glspl{service} nicht bereits verbunden sind.
+Die Anfrage erreicht aufgrund des zuvor durchgeführten
+\glslink{natt}{NAT-Traversals} jedenfalls ihr Ziel und die Verbindung wird
+aufgebaut.
+
+Sobald die Verbindung aufgebaut ist und der \gls{isch} bereit ist,
+benachrichtigen die \glspl{service} die Anwendungen durch Senden einer
+\msg{\asprotoappchconnected} über die \gls{asconn} darüber, dass der \gls{appch}
+verbunden wurde und Daten darüber übertragen werden können.
+
+\subsection{CRISP}
+\label{dcl-crisp}
+Das \acrfull{crisp} ist ein Protokoll, das zur verbindungslosen Kommunikation
+zwischen \glspl{service} dient.
+Die Messages des Protokolls werden innerhalb des \gls{dcl} durch \glspl{net}
+geroutet.
+\acrshort{crisp} kann dabei unabhängig vom verwendeten \gls{net} genutzt werden.
+
+Prinzipiell enthalten \acrshort{crisp}-Messages einen \gls{fnumc}, der die
+Revisionsnummer des Protokolls angibt und einen weitere \gls{fnumc}, der den
+Typ der Message angibt und anhand dessen der Rest der Message interpretiert
+wird.
+
+\crispbytefield
+
+\label{dcl-crisp-neighreq}
+Derzeit ist nur eine \acrshort{crisp}-Message definiert: die
+\msg{\crispneighreq}.
+
+Die \msg{\crispneighreq} dient zur Anforderung einer direkten Verbindung
+zwischen zwei \glspl{service}, die derzeit nur verbindungslos über ein \gls{net}
+kommunizieren können. Der primäre Verwendungszweck liegt derzeit im Aufbau von
+\glspl{appch}, die Message kann aber auch zur \gls{netint} verwendet werden.
+
+In der \msg{\crispneighreq} wird ein \gls{actid} übertragen, der den Grund für
+die Verbindungsanfrage enthält.
+Außerdem enthält die Message die \gls{lla} des Senders, ein Response-Flag,
+das angibt, ob es sich bei der Nachricht um eine Anfrage oder um eine Antwort
+handelt und \gls{ignoredata}, die für \glspl{nattpkt} verwendet werden können.
+
+\crispneighreqbytefield
+
+
+%TODO Action Identifiers
+%TODO Ignore Data
+%TODO CRISP?

@@ -1,0 +1,289 @@
+
+\subsection{Einleitung}
+Das \gls{asproto} wird zur Kommunikation zwischen \glspl{service} und über DCL
+kommunizierenden Anwendungen verwendet. Es dient zur Bekanntgabe von
+öffentlichen Schlüsseln, die als Adresse verwendet werden, zum Beitritt zu
+\glslink{net}{Netzwerken}, zum Senden von verbindungslosen Paketen, zur
+Verbindung von \glspl{appch} und zur Übertragung von über \glspl{appch}
+gesendeten Nutzdaten.
+
+\Glspl{appch} sind verlässliche Kommunikationkanäle zwischen zwei Anwendungen.
+Siehe dazu \link{dcl-appch}.
+
+Dieses Unterkapitel beschreibt das \gls{asproto} in Revision 0.
+
+\subsection{Sicherheit}
+Das \gls{asproto} ist zur Kommunikation zwischen einem \gls{service} und einer
+Anwendung, die auf der selben Maschine wie der \gls{service} läuft, vorgesehen.
+Die Sicherheitsvorkehrungen des Protokolls sind für den Einsatz auf
+Verbindungen basierend auf dem \acrfull{tcp}, die nur über das
+Loopback-Interface des lokalen Rechners und nicht über ein Netzwerk übertragen
+werden, angepasst.
+Über das \gls{asproto} werden unter anderem Anweisungen zum Verschlüsseln von
+Daten gegeben.
+Bei solch einer Anweisung kommt es zuerst zur Klartextübertragung dieser Daten
+und kurze Zeit später zur erneuten Übertragung dieser Daten in verschlüsselter
+Form.
+Die Möglichkeit, eine \gls{asconn} abzuhören, würde ein sehr großes
+Sicherheitsrisiko darstellen, da das \gls{asproto} keinerlei Verschlüsselung
+der \gls{asconn} vorsieht.
+Die \gls{asconn} sollte deshalb immer nur auf dem Localhost erfolgen und niemals
+über ein Netzwerk.
+
+\subsection{Network Endpoint Slots}
+Nach dem derzeitigem Entwicklungsstand des \gls{asproto} kann eine Anwendung
+auf einer \gls{asconn} zwar nur eine Adresse bekanntgeben, mit dieser Adresse
+kann jedoch mehreren \glspl{net} beigetreten werden.
+Eine Kombination aus der bekanntgegebenen Adresse und einem \gls{net}, dem die
+Anwendung mit dieser Adresse beigetreten ist, ergibt einen \gls{asendp}.
+\glspl{asendp} innerhalb von \glspl{asconn} entsprechen den
+\glslink{endp}{Endpunkten} innerhalb von \glspl{isch}.
+Um sich in Messages einfach auf diese \glspl{asendp} beziehen zu können, werden
+im \gls{asproto} \glspl{endpslot} verwendet. Dabei handelt es sich im
+Wesentlichen um Zahlen, die jeweils auf genau einen \gls{asendp}, also eine
+Kombination aus Adresse und \gls{net}, verweisen.
+
+\subsection{Remote Keys}
+\label{dcl-asproto-remotekeys}
+Um zu verhindern, dass der private Schlüssel des Schlüsselpaars, dessen
+öffentlicher Schlüssel als Adresse verwendet wird, zum \gls{service} übertragen
+werden muss und trotzdem die zum Adressbeweis nötigen kryptographischen
+Operationen ausführen zu können, kommen in der Implementierung des \gls{dcl}
+sogenannte \glspl{remotekey} zur Anwendung.
+
+Dabei führt der \gls{service} die kryptographischen Operationen, die
+beispielsweise für \glspl{cchlg} zum Beweis der Echtheit der Adresse notwendig
+sind, nicht selbst aus, sondern leitet diese an die Anwendung weiter.
+
+Konkret sendet der \gls{service} dazu \msgpl{\asprotokeyenc} zum Verschlüsseln
+von unverschlüsselten Daten und \msgpl{\asprotokeydec} zum Entschlüsseln von
+verschlüsselten Daten an die Anwendung. Diese Antwortet nach Ausführung der
+Operation mit jeweils einer \msg{\asprotocryptoresponse}, die die
+verschlüsselten bzw. die entschlüsselten Daten enthält.
+
+In der Implementierung des \gls{service} werden \glspl{remotekey} dabei als
+normale \code{Key}-Objekte dargestellt, die bei Aufruf der \code{encrypt()}- und
+\code{decrypt()}-Methoden die Anfragen samt Daten an die Anwendung weiterleiten
+und die Kommunikation in einem separaten Thread abwickeln.
+Der Methodenaufruf blockt dabei so lange, bis die Anfrage von der Anwendung
+bearbeitet wurde.
+
+\subsection{Initialisierung}
+Die Kommunikation über das \gls{asproto} wird mit der Aushandlung der zu
+verwendenden Revision des Protokolls begonnen.
+Dazu werden, beginnend mit der Anwendung, so lange \msgpl{\asprotorevision}
+abwechselnd zwischen \gls{service} und Anwendung gesendet, bis die letzten
+zwei übertragenen \msgpl{\asprotorevision} die selben Revisionsnummern
+enthalten.
+
+\subsection{Messageaufbau}
+Eine Message im \gls{asproto} ist generell so aufgebaut, dass ein einzelnes Byte
+am Anfang der Message den Typ angibt, anhand dessen die restliche Nachricht
+interpretiert wird.
+
+\asprotobytefield
+
+\subsection{Messages}
+
+\subsubsection{Revision}
+\label{dcl-asproto-revision}
+Die \msg{\asprotorevision} enthält eine Versionsnummer in Form eines
+FlexNum-Components und wird benutzt, um am Beginn der Verbindung die verwendete
+Revision des \gls{asproto} auszuhandeln.
+
+\asprotorevisionbytefield
+
+
+\subsubsection{Generate Key}
+\label{dcl-asproto-genkey}
+Die \msg{\asprotogenkey} kann von der Anwendung benutzt werden, wenn keine fixe
+Adresse notwendig ist und der \gls{service} die Generierung einer temporären
+Adresse übernehmen soll. Die Übertragung von Messages für kryptographische
+Funktionen wie der \msg{\asprotokeyenc}, der \msg{\asprotokeydec} oder der
+\msg{\asprotocryptoresponse} fällt dadurch weg.
+Die \msg{\asprotogenkey} ersetzt außerdem die \msg{\asprotoaddrpubkey}.
+
+\asprotogenkeybytefield
+
+
+\subsubsection{Join Network}
+\label{dcl-asproto-joinnet}
+Die \msg{\asprotojoinnet} wird von der Anwendung benutzt, um mit der Adresse
+einem bestimmten Netzwerk beizutreten.
+Nach erfolgreichem Beitritt antwortet der \gls{service} mit einer
+\msg{\asprotoslotassign}, die den \gls{endpslot} für die Adresse und dieses
+\gls{net} angibt.
+
+\asprotojoinnetbytefield
+
+
+\subsubsection{Slot Assign}
+\label{dcl-asproto-slotassign}
+Die \msg{\asprotoslotassign} wird vom \gls{service} als Antwort auf eine
+\msg{\asprotojoinnet} bzw. \msg{\asprotojoindefnets} gesendet und beinhaltet
+den \gls{endpslot} des neu angelegten \gls{asendp}, dessen \gls{nt} und die
+Daten, die innerhalb dieses \glslink{net}{Netzwerks} als skalierte Adresse zum
+Routing verwendet werden. Letztere würden im Fall des \gls{cnet} also den Daten
+entsprechen, die durch das unter \labellink{dcl-addr-scaling-cnet} auf
+\pagelink{dcl-addr-scaling-cnet} angeführte Codebeispiel generiert werden.
+
+\asprotoslotassignbytefield
+
+
+\subsubsection{Data}
+\label{dcl-asproto-data}
+Die \msg{\asprotodata} wird sowohl von \gls{service} als auch Anwendung benutzt,
+um verbindungslose Pakete zu übertragen.
+Die Message enthält den \gls{endpslot}, von dem aus die Nachricht gesendet wird
+bzw. an den das Paket adressiert ist, je nach Senderichtung der Message die
+skalierte Ziel- oder Quelladresse des verbindungslosen Pakets und die Nutzdaten
+des Pakets.
+Die Adresse entspricht beim Senden der \msg{\asprotodata} von der Anwendung zum
+\gls{service} der Zieladresse, beim Senden vom \gls{service} zur Anwendung der
+Quelladresse des Pakets.
+
+\asprotodatabytefield
+
+
+\subsubsection{Address Public Key}
+\label{dcl-asproto-addrpubkey}
+Die \msg{\asprotoaddrpubkey} wird von der Anwendung benutzt, um den öffentlichen
+Schlüssel bekanntzugeben, der als Adresse verwendet werden soll.
+Alternativ kann durch Senden einer \msg{\asprotogenkey} auch der \gls{service}
+aufgefordert werden, für die Anwendung ein neues, temporäres Schlüsselpaar für
+die Verwendung als Adresse zu generieren.
+
+\asprotoaddrpubkeybytefield
+
+
+\subsubsection{Join Default Networks}
+\label{dcl-asproto-joindefnets}
+Die \msg{\asprotojoindefnets} kann von der Anwendung gesendet werden, wenn
+an das \gls{net} keine besonderen Anforderungen gestellt werden und dem
+gängigsten \gls{net} bzw. den gängigsten \glslink{net}{Netzwerken} beigetreten
+werden soll.
+Nach erfolgreichem Beitritt antwortet der \gls{service} mit einer oder mehreren
+\msgpl{\asprotoslotassign}, die die \glspl{endpslot} für die Adresse und die
+\glspl{net} angeben.
+
+\asprotojoindefnetsbytefield
+
+
+\subsubsection{Key Encrypt}
+\label{dcl-asproto-keyenc}
+Die \msg{\asprotokeyenc} wird vom \gls{service} benutzt, um die Anwendung
+aufzufordern, die enthaltenen Daten mit dem privaten Schlüssel zu verschlüsseln,
+der aus dem selben Schlüsselpaar stammt wie der als Adresse verwendete und mit
+der \msg{\asprotoaddrpubkey} bekanntgegebene öffentliche Schlüssel.
+Die Anwendung übermittelt die verschlüsselten Daten durch Senden einer
+\msg{\asprotocryptoresponse}.
+
+\asprotokeyencbytefield
+
+
+\subsubsection{Key Decrypt}
+\label{dcl-asproto-keydec}
+Die \msg{\asprotokeyenc} wird vom \gls{service} benutzt, um die Anwendung
+aufzufordern, die enthaltenen Daten mit dem privaten Schlüssel zu entschlüsseln,
+der aus dem selben Schlüsselpaar stammt wie der als Adresse verwendete und mit
+der \msg{\asprotoaddrpubkey} bekanntgegebene öffentliche Schlüssel.
+Die Anwendung übermittelt die entschlüsselten Daten durch Senden einer
+\msg{\asprotocryptoresponse}.
+
+\asprotokeydecbytefield
+
+
+\subsubsection{Key Crypto Response}
+\label{dcl-asproto-cryptoresponse}
+Die \msg{\asprotocryptoresponse} wird von der Anwendung benutzt, um die
+verschlüsselten Daten einer vorhergehenden \msg{\asprotokeyenc} bzw. die
+entschlüsselten Daten einer vorhergehenden \msg{\asprotokeydec} zurück an den
+\gls{service} zu übermitteln.
+
+\asprotocryptoresponsebytefield
+
+
+\subsubsection{Application Channel Outgoing Request}
+\label{dcl-asproto-appchoutreq}
+Die \msg{\asprotoappchoutreq} wird von der Anwendung benutzt, um einen
+\gls{appch}, also eine verlässliche Verbindung zu einer entfernten Anwendung,
+anzufordern.
+Die Message überträgt den \gls{endpslot}, von dem aus der \gls{appch} angefragt
+werden soll, den \gls{appchslot}, dem der neue \gls{appch} zugewiesen werden
+soll, den \gls{actid} des neuen \gls{appch} und den öffentlichen Schlüssel,
+der vom Ziel als Adresse benutzt wird.
+
+Für \glspl{appch}, siehe \link{dcl-appch}.
+
+\asprotoappchoutreqbytefield
+
+
+\subsubsection{Application Channel Incoming Request}
+\label{dcl-asproto-appchinreq}
+Die \msg{\asprotoappchinreq} wird vom \gls{service} benutzt, um die Anwendung
+über eine eingehende Anfrage über einen neuen \gls{appch} zu benachrichtigen.
+Die Message überträgt den \gls{endpslot}, an den die Anfrage gerichtet ist,
+den \gls{actid} des neuen \gls{appch}, den öffentlichen Schlüssel, den die
+Quelle der Anfrage als Adresse verwendet, die \gls{lla} des \gls{service}, von
+dem die Anfrage gesendet wurde und die \gls{ignoredata}, die als Präfix für
+\glspl{nattpkt} verwendet werden sollen.
+
+\asprotoappchinreqbytefield
+
+
+\subsubsection{Application Channel Accept}
+\label{dcl-asproto-appchaccept}
+Die \msg{\asprotoappchaccept} wird von der Anwendung benutzt, um eine eingehende
+Anfrage über einen neuen \gls{appch} zu bestätigen.
+Die Message überträgt den \gls{appchslot}, dem der neue \gls{appch} zugewiesen
+werden soll. Außerdem überträgt die Message eine Kopie der Daten der ihr
+vorhergehenden \msg{\asprotoappchinreq}, also den \gls{endpslot}, an den die
+ursprüngliche Anfrage gerichtet war, den \gls{actid} des neuen \gls{appch},
+den öffentlichen Schlüssel, den die Quelle der ursprünglichen Anfrage als
+Adresse verwendet, die \gls{lla} des \gls{service}, von dem die Anfrage gesendet
+wurde und die \gls{ignoredata}, die als Präfix für \glspl{nattpkt} verwendet
+werden sollen.
+
+\asprotoappchacceptbytefield
+
+
+\subsubsection{Application Channel Connected}
+\label{dcl-asproto-appchconnected}
+Die \msg{\asprotoappchconnected} wird vom \gls{service} benutzt, um die
+Anwendung darüber in Kenntnis zu setzen, dass der vom angegebenen
+\gls{appchslot} referenzierte \gls{appch} erfolgreich verbunden wurde und
+mittels \msg{\asprotoappchdata} Daten darüber übertragen werden können.
+
+\asprotoappchconnectedbytefield
+
+
+\subsubsection{Application Channel Data}
+\label{dcl-asproto-appchdata}
+Die \msg{\asprotoappchdata} wird von sowohl Anwendung als auch \gls{service}
+benutzt, um Daten aus dem vom angegebenen \gls{appchslot} referenzierten
+\gls{appch} zu übertragen.
+
+\asprotoappchdatabytefield
+
+
+\subsubsection{Key Encryption Block Size Request}
+\label{dcl-asproto-keyencblocksizereq}
+Die \msg{\asprotokeyencblocksizereq} wird vom \gls{service} benutzt, um von der
+Anwendung die maximal zulässige Datenmenge abzufragen, die mit dem als Adresse
+angegebenen öffentlichen Schlüssel in einem Zug verschlüsselt werden kann.
+Die Anwendung antwortet unmittelbar darauf mit einer \msg{\asprotokeynum}, die
+diese Datenmenge in Bytes enthält.
+
+\asprotokeyencblocksizereqbytefield
+
+
+\subsubsection{Key Number Response}
+\label{dcl-asproto-keynum}
+Die \msg{\asprotokeynum} wird von der Anwendung benutzt, um auf Anfragen
+bezüglich Zahlenwerte des als Adresse verwendeten öffentlichen Schlüssel zu
+antworten.
+Der Zahlenwert wird in Form eines \gls{fnumc} übertragen.
+Derzeit ist die einzige Anfrage, die eine Antwort durch eine
+\msg{\asprotokeynum} erfordert, die \msg{\asprotokeyencblocksizereq}.
+
+\asprotokeynumbytefield
