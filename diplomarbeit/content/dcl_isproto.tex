@@ -39,7 +39,7 @@ Erst ab der \gls{connbase} \const{trusted} werden die \msg{\isprotonjn}, die \ms
 die \msg{\isprotonp}, die \msg{\isprotoireq}, die \msg{\isprotoacsa} und die \msg{\isprotoacd}
 akzeptiert.
 
-Als Voraussetzung für die \gls{connbase} \const{trusted} gilt der Beweise der Adresse dieses
+Als Voraussetzung für die \gls{connbase} \const{trusted} gilt der Beweis der Adresse dieses
 \glslink{addrslot}{Address Slots}. Ein \gls{service} kann den Wechsel auf die \gls{connbase}
 \const{trusted} für einen existenten \gls{addrslot} anfordern, indem er eine \msg{\isprotots}
 an sein Gegenüber sendet.
@@ -79,8 +79,11 @@ so lange \msgpl{\isprotoversion} abwechselnd zwischen den \glspl{service} gesend
 zwei übertragenen \msgpl{\isprotoversion} die selben Versionsnummern enthalten.
 
 \subsection{Messageaufbau}
-Eine Message im \gls{isproto} ist generell so aufgebaut, dass ein FlexNum-Component am Anfang der
+Eine Message im \gls{isproto} ist generell so aufgebaut, dass ein \gls{fnumc} am Anfang der
 Message den Typ angibt, anhand dessen die restliche Nachricht interpretiert wird.
+
+\Glspl{fnumc} werden unter \labellink{dcl-packetcomponents-flexnum} auf
+\pagelink{dcl-packetcomponents-flexnum} beschrieben.
 
 \isprotobytefield
 
