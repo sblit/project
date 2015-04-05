@@ -21,13 +21,17 @@ verschlüsselten Daten.
 übertragen werden. Um diese voneinander abzugrenzen, werden sie in
 unterschiedlichen \glspl{channel} übertragen.
 
-Auch die zur Verwaltung des \glslink{channel}{Channels} notwendigen Nachrichten
+Auch die zur Verwaltung des \glslink{link}{Links} notwendigen Nachrichten
 werden in einem \gls{channel}, dem \gls{mgmtch}, übertragen.
 
 Der Link selbst definiert deshalb nur eine einzige Message, die Daten, einen
 \gls{channelid} für die Zuweisung dieser Daten zu einem \gls{channel} und einen
 \gls{dataid} für die Angabe der Reihenfolge dieser Daten innerhalb des
 \glslink{channel}{Channels} überträgt.
+Siehe dazu \figurelink{dcl-link-bytefield}.
+Für \gls{fnumc}, siehe \link{dcl-packetcomponents-flexnum}.
+
+\linkbytefield
 
 Die Messages zur Verwaltung des \glslink{link}{Links} definiert das verwendete
 \gls{mcp}.
@@ -54,7 +58,7 @@ Der Initiator des \glslink{link}{Links} sendet dazu in der \msg{\bmcpconnectreq}
 eine Liste an möglichen \glspl{cinitmethod}, aus der der Empfänger eine wählt
 und diese in der \msg{\bmcpconnectrep} bestätigt.
 Danach werden, je nach \gls{cinitmethod} unterschiedlich, eine Reihe an
-\msg{\bmcpcryptoinit} gesendet, bis die Verschlüsselung initialisiert ist.
+\msgpl{\bmcpcryptoinit} gesendet, bis die Verschlüsselung initialisiert ist.
 Zur Zeit existiert nur eine \gls{cinitmethod}: \gls{aes}/\gls{gcm} via
 \gls{rsa}.
 Bei dieser \gls{cinitmethod} werden, nach Austausch der öffentlichen
@@ -99,18 +103,53 @@ eine Reihe an \msgpl{\bmcpcryptoinit}.
 \bmcpconnectrepbytefield
 
 
-\subsubsection*{Open Channel Request}
-\label{dcl-bmcp-openchreq}
-Die \msg{\bmcpopenchreq} dient zur Anfrage über das Öffnen eines neuen
-\glslink{channel}{Channels}.
-Die Message enthält den \gls{channelid} des neuen \glslink{channel}{Channels}
-sowie den \gls{protoid} des Protokolls, über das auf dem neuen \gls{channel}
-kommuniziert werden soll.
+\subsubsection*{Disconnect}
+\label{dcl-bmcp-disconnect}
+Die \msg{\bmcpdisconnect} dient zur Beendigung des \glslink{link}{Links}.
+Der Empfänger bestätigt die Auflösung der Verbindung durch Senden einer
+\msg{\bmcpkill}.
 
-Nimmt der Empfänger die Anfrage an, wird eine \msg{\bmcpack} gesendet, die den
-\gls{dataid} dieser \msg{\bmcpopenchreq} enthält.
+\bmcpdisconnectbytefield
 
-\bmcpopenchreqbytefield
+
+\subsubsection*{Kill}
+\label{dcl-bmcp-kill}
+Die \msg{\bmcpkill} ist die letzte Nachricht eines \glslink{link}{Links}, die
+übertragen wird und markiert das Ende der Verbindung.
+Die Message wird als Antwort auf eine \msg{\bmcpdisconnect} gesendet, kann aber
+bei unerwartetem Beenden des \glslink{link}{Links} durch einen
+Verbindungspartner auch alleinstehend gesendet werden.
+
+\bmcpkillbytefield
+
+
+\subsubsection*{Crypto Init}
+\label{dcl-bmcp-cryptoinit}
+Die \msg{\bmcpcryptoinit} überträgt Daten zur Initialisierung der verwendeten
+Verschlüsselung des \glslink{link}{Links} und wird zu Beginn der Verbindung, je
+nach verwendeter \gls{cinitmethod} unterschiedlich oft, übertragen.
+
+\bmcpcryptoinitbytefield
+
+
+\subsubsection*{Ack}
+\label{dcl-bmcp-ack}
+Die \msg{\bmcpack} dient zur Bestätigung empfangener Anfragen, wie
+beispielsweise einer \msg{\bmcpopenchreq}.
+Die Message enthält den \gls{dataid} der bestätigten Anfrage.
+
+\bmcpackbytefield
+
+
+\subsubsection*{Change Protocol Request}
+\label{dcl-bmcp-chprotoreq}
+Die \msg{\bmcpchprotoreq} dient zum Wechsel des verwendeten \gls{mcp}.
+Die Message enthält einen \gls{protoid} in Form eines Strings, der das neue
+\gls{mcp} angibt.
+Der Empfänger bestätigt den Wechsel des Protokolls mit einer \msg{\bmcpack},
+die den \gls{dataid} dieser \msg{\bmcpchprotoreq} enthält.
+
+\bmcpchprotoreqbytefield
 
 
 \subsubsection*{Channel Block Status Request}
@@ -149,15 +188,18 @@ niedrigsten und höchsten \glslink{dataid}{Data Identifiers} des
 \bmcpchblockstatrepbytefield
 
 
-\subsubsection*{Kill}
-\label{dcl-bmcp-kill}
-Die \msg{\bmcpkill} ist die letzte Nachricht eines \glslink{link}{Links}, die
-übertragen wird und markiert das Ende der Verbindung.
-Die Message wird als Antwort auf eine \msg{\bmcpdisconnect} gesendet, kann aber
-bei unerwartetem Beenden des \glslink{link}{Links} durch einen
-Verbindungspartner auch alleinstehend gesendet werden.
+\subsubsection*{Open Channel Request}
+\label{dcl-bmcp-openchreq}
+Die \msg{\bmcpopenchreq} dient zur Anfrage über das Öffnen eines neuen
+\glslink{channel}{Channels}.
+Die Message enthält den \gls{channelid} des neuen \glslink{channel}{Channels}
+sowie den \gls{protoid} des Protokolls, über das auf dem neuen \gls{channel}
+kommuniziert werden soll.
 
-\bmcpkillbytefield
+Nimmt der Empfänger die Anfrage an, wird eine \msg{\bmcpack} gesendet, die den
+\gls{dataid} dieser \msg{\bmcpopenchreq} enthält.
+
+\bmcpopenchreqbytefield
 
 
 \subsubsection*{Throttle}
@@ -167,41 +209,3 @@ Empfängers und wird für die \gls{fcnt} des \glslink{link}{Links} genutzt.
 Die Message enthält die maximal zulässige Senderate in Bytes pro Sekunde.
 
 \bmcpthrottlebytefield
-
-
-\subsubsection*{Disconnect}
-\label{dcl-bmcp-disconnect}
-Die \msg{\bmcpdisconnect} dient zur Beendigung des \glslink{link}{Links}.
-Der Empfänger bestätigt die Auflösung der Verbindung durch Senden einer
-\msg{\bmcpkill}.
-
-\bmcpdisconnectbytefield
-
-
-\subsubsection*{Ack}
-\label{dcl-bmcp-ack}
-Die \msg{\bmcpack} dient zur Bestätigung empfangener Anfragen, wie
-beispielsweise einer \msg{\bmcpopenchreq}.
-Die Message enthält den \gls{dataid} der bestätigten Anfrage.
-
-\bmcpackbytefield
-
-
-\subsubsection*{Change Protocol Request}
-\label{dcl-bmcp-chprotoreq}
-Die \msg{\bmcpchprotoreq} dient zum Wechsel des verwendeten \gls{mcp}.
-Die Message enthält einen \gls{protoid} in Form eines Strings, der das neue
-\gls{mcp} angibt.
-Der Empfänger bestätigt den Wechsel des Protokolls mit einer \msg{\bmcpack},
-die den \gls{dataid} dieser \msg{\bmcpchprotoreq} enthält.
-
-\bmcpchprotoreqbytefield
-
-
-\subsubsection*{Crypto Init}
-\label{dcl-bmcp-cryptoinit}
-Die \msg{\bmcpcryptoinit} überträgt Daten zur Initialisierung der verwendeten
-Verschlüsselung des \glslink{link}{Links} und wird zu Beginn der Verbindung, je
-nach verwendeter \gls{cinitmethod} unterschiedlich oft, übertragen.
-
-\bmcpcryptoinitbytefield

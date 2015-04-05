@@ -1,3 +1,4 @@
+# coding=utf-8
 
 import sys
 
@@ -51,7 +52,7 @@ def cc(c = {}, add = {}, cpy = []):
 
 ###
 
-def bf(wordsize, content, title):
+def bf(wordsize, content, title, label):
 	if EMPTY: return ""
 	return "\\begin{figure}"\
 		 + "\\begin{centering}"\
@@ -61,8 +62,9 @@ def bf(wordsize, content, title):
 		 + " \\\\ \n"\
 		 + content\
 		 + "\\end{bytefield}"\
-		 + "\\par\\end{centering}\n"\
-		 + "\\protect\\caption{"+title+"}\n"\
+		 + "\\par\\end{centering}"\
+		 + "\\protect\\caption{"+title+"}"\
+		 + "\\label{"+label+"}"\
 		 + "\\end{figure}"
 
 def con(*text):
@@ -75,7 +77,7 @@ def gen(part, proto, info, makegeneral = True):
 
 	msgs = info["messages"]
 	latexname = info["latexname"]
-	gentext = info["gentext"] if info.has_key("gentext") else "Genereller Messageaufbau"
+	gentext = info["gentext"] if info.has_key("gentext") else (latexname + " -- Genereller Messageaufbau")
 	typecmd = info["type"] if info.has_key("type") else "\\msg"
 
 	for msg in msgs:
@@ -88,10 +90,10 @@ def gen(part, proto, info, makegeneral = True):
 
 	s += "\n"
 	if makegeneral:
-		s += "\\newcommand{\\"+proto+"bytefield}{"+bf(8, eval(proto)(), latexname + " -- " + gentext)+"}\n"
+		s += "\\newcommand{\\"+proto+"bytefield}{"+bf(8, eval(proto)(), gentext, part+"-"+proto+"-bytefield")+"}\n"
 
 	for msg in msgs:
-		s += "\n\\newcommand{\\"+proto+msg+"bytefield}{"+bf(8, eval(proto+msg)(), latexname + " -- " + typecmd + "{\\"+proto+msg+"t}")+"}"
+		s += "\n\\newcommand{\\"+proto+msg+"bytefield}{"+bf(8, eval(proto+msg)(), latexname + " -- " + typecmd + "{\\"+proto+msg+"t}", part+"-"+proto+"-"+msg+"-bytefield")+"}"
 
 	return s
 
@@ -302,7 +304,7 @@ def asprotoslotassign():
 	return con(_asinit(3), netendpslot(), rwg(cc(), "", nettype(cc({}, {"border": T|B|L|R})), "Network Type"), varlen(cc({}, {"border": T|B|L|R, "desc": "Address Data \\\\ $N$ Bytes"})))
 
 def asprotodata():
-	return con(_asinit(4), netendpslot(), data(cc({}, {"desc": "Source Address Data", "border": T|B|L|R})), data(cc({}, {"desc": "Message Data", "border": T|B|L|R})))
+	return con(_asinit(4), netendpslot(), data(cc({}, {"desc": "Address Data", "border": T|B|L|R})), data(cc({}, {"desc": "Message Data", "border": T|B|L|R})))
 
 def asprotoaddrpubkey():
 	return con(_asinit(5), key({"desc": "Address Public Key", "border": T|B|L|R}))
@@ -391,6 +393,11 @@ def bmcpthrottle():
 
 ###
 
+def link():
+	return con(dataid(), channelid(), data({"desc": "Channel Data", "border": T|B|L|R}))
+
+###
+
 def _keycinit(i, c = {}):
 	return rwg(cc(), "", byte(cc(c, {"val": str(i)}, ["border"])), "Key Type")
 
@@ -466,10 +473,15 @@ PROTOCOLS = {
 			"throttle": "Throttle"
 		}
 	},
+	"link": {
+		"latexname": "\\gls*{link}",
+		"gentext": "\\gls*{link} Packet",
+		"messages": {}
+	},
 	"keyc": {
 		"latexname": "\\gls*{keyc}",
 		"type": "\\comp",
-		"gentext": "Genereller Componentaufbau",
+		"gentext": "\\gls*{keyc} -- Genereller Componentaufbau",
 		"messages": {
 			"rsa": "RSA Key"
 		}

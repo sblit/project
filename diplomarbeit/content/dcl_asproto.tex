@@ -7,6 +7,9 @@ kommunizierenden Anwendungen verwendet. Es dient zur Bekanntgabe von
 Verbindung von \glspl{appch} und zur Übertragung von über \glspl{appch}
 gesendeten Nutzdaten.
 
+\Glspl{appch} sind verlässliche Kommunikationkanäle zwischen zwei Anwendungen.
+Siehe dazu \link{dcl-appch}.
+
 Dieses Unterkapitel beschreibt das \gls{asproto} in Revision 0.
 
 \subsection{Sicherheit}
@@ -42,10 +45,11 @@ Kombination aus Adresse und \gls{net}, verweisen.
 
 \subsection{Remote Keys}
 \label{dcl-asproto-remotekeys}
-Um zu verhindern, dass der private Schlüssel des Schlüsselpaars, das als Adresse
-verwendet wird, zum \gls{service} übertragen werden muss und trotzdem die zum
-Adressbeweis nötigen kryptographischen Operationen ausführen zu können, kommen
-in der Implementierung des \gls{dcl} sogenannte \glspl{remotekey} zur Anwendung.
+Um zu verhindern, dass der private Schlüssel des Schlüsselpaars, dessen
+öffentlicher Schlüssel als Adresse verwendet wird, zum \gls{service} übertragen
+werden muss und trotzdem die zum Adressbeweis nötigen kryptographischen
+Operationen ausführen zu können, kommen in der Implementierung des \gls{dcl}
+sogenannte \glspl{remotekey} zur Anwendung.
 
 Dabei führt der \gls{service} die kryptographischen Operationen, die
 beispielsweise für \glspl{cchlg} zum Beweis der Echtheit der Adresse notwendig
@@ -131,8 +135,12 @@ entsprechen, die durch das unter \labellink{dcl-addr-scaling-cnet} auf
 Die \msg{\asprotodata} wird sowohl von \gls{service} als auch Anwendung benutzt,
 um verbindungslose Pakete zu übertragen.
 Die Message enthält den \gls{endpslot}, von dem aus die Nachricht gesendet wird
-bzw. an den das Paket adressiert ist, die skalierte Quelladresse des
-verbindungslosen Pakets und die Nutzdaten des Pakets.
+bzw. an den das Paket adressiert ist, je nach Senderichtung der Message die
+skalierte Ziel- oder Quelladresse des verbindungslosen Pakets und die Nutzdaten
+des Pakets.
+Die Adresse entspricht beim Senden der \msg{\asprotodata} von der Anwendung zum
+\gls{service} der Zieladresse, beim Senden vom \gls{service} zur Anwendung der
+Quelladresse des Pakets.
 
 \asprotodatabytefield
 
@@ -142,8 +150,8 @@ verbindungslosen Pakets und die Nutzdaten des Pakets.
 Die \msg{\asprotoaddrpubkey} wird von der Anwendung benutzt, um den öffentlichen
 Schlüssel bekanntzugeben, der als Adresse verwendet werden soll.
 Alternativ kann durch Senden einer \msg{\asprotogenkey} auch der \gls{service}
-aufgefordert werden, für die Anwendung einen neues, temporäres Schlüsselpaar
-für die Verwendung als Adresse zu generieren.
+aufgefordert werden, für die Anwendung ein neues, temporäres Schlüsselpaar für
+die Verwendung als Adresse zu generieren.
 
 \asprotoaddrpubkeybytefield
 
@@ -152,10 +160,11 @@ für die Verwendung als Adresse zu generieren.
 \label{dcl-asproto-joindefnets}
 Die \msg{\asprotojoindefnets} kann von der Anwendung gesendet werden, wenn
 an das \gls{net} keine besonderen Anforderungen gestellt werden und dem
-gängigsten \gls{net} bzw. den gängigsten \glspl{net} beigetreten werden soll.
+gängigsten \gls{net} bzw. den gängigsten \glslink{net}{Netzwerken} beigetreten
+werden soll.
 Nach erfolgreichem Beitritt antwortet der \gls{service} mit einer oder mehreren
 \msgpl{\asprotoslotassign}, die die \glspl{endpslot} für die Adresse und die
-\glspl{net} angibt.
+\glspl{net} angeben.
 
 \asprotojoindefnetsbytefield
 
@@ -197,10 +206,14 @@ entschlüsselten Daten einer vorhergehenden \msg{\asprotokeydec} zurück an den
 \subsubsection{Application Channel Outgoing Request}
 \label{dcl-asproto-appchoutreq}
 Die \msg{\asprotoappchoutreq} wird von der Anwendung benutzt, um einen
-\gls{appch} anzufordern. Die Message überträgt den \gls{endpslot}, von dem aus
-der \gls{appch} angefragt werden soll, den \gls{appchslot}, dem der neue
-\gls{appch} zugewiesen werden soll, den \gls{actid} des neuen \gls{appch} und
-der öffentliche Schlüssel, der vom Ziel als Adresse benutzt wird.
+\gls{appch}, also eine verlässliche Verbindung zu einer entfernten Anwendung,
+anzufordern.
+Die Message überträgt den \gls{endpslot}, von dem aus der \gls{appch} angefragt
+werden soll, den \gls{appchslot}, dem der neue \gls{appch} zugewiesen werden
+soll, den \gls{actid} des neuen \gls{appch} und den öffentlichen Schlüssel,
+der vom Ziel als Adresse benutzt wird.
+
+Für \glspl{appch}, siehe \link{dcl-appch}.
 
 \asprotoappchoutreqbytefield
 
@@ -247,7 +260,7 @@ mittels \msg{\asprotoappchdata} Daten darüber übertragen werden können.
 \subsubsection{Application Channel Data}
 \label{dcl-asproto-appchdata}
 Die \msg{\asprotoappchdata} wird von sowohl Anwendung als auch \gls{service}
-bentutz, um Daten aus dem vom angegebenen \gls{appchslot} referenzierten
+benutzt, um Daten aus dem vom angegebenen \gls{appchslot} referenzierten
 \gls{appch} zu übertragen.
 
 \asprotoappchdatabytefield

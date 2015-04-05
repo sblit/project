@@ -2,7 +2,7 @@
 \subsection{Notwendigkeit}
 Da es bereits ab einer geringen Anzahl an Teilnehmern im \gls{p2pnet} nicht mehr praktikabel ist,
 ein vollständig vermaschtes Netz zu führen, weil die Anzahl an dafür notwendigen Verbindungen die
-Kapazitäten der Teilnehmer überschreitet, ist es nötig, einen Routingmechanismus in das Netzwerk
+Kapazitäten der Teilnehmer überschreitet, ist es nötig, einen Routingmechanismus für das Netzwerk
 zu implementieren. Damit können Nachrichten im \gls{p2pnet} von jedem Teilnehmer zu jedem beliebigen
 anderen Teilnehmer gesendet werden, ohne dass die beiden kommunizierenden Teilnehmer direkt
 miteinander verbunden sein müssen.
@@ -104,7 +104,7 @@ Nexthops lookup(Data scaledDestinationAddress, Address originAddress, Object ori
 	}
 
 	return nexthops.getLast();
-	
+
 }
 \end{lstlisting}
 
@@ -140,7 +140,7 @@ Nexthops lookup(Data scaledDestinationAddress, Address originAddress, Object ori
 		sich am lokalen \gls{service} befinden.
 
 	\descriptionitem{\code{remoteServiceRoutes}}
-		Die \javainstvar \code{localEndpointRoutes} referenziert ein Objekt, das zu Schlüsseln
+		Die \javainstvar \code{remoteServiceRoutes} referenziert ein Objekt, das zu Schlüsseln
 		in Form von \code{\gls{Data}}-Objekten Werte in Form von \code{\gls{Nexthops}}-Objekten
 		speichert. Dieses wird benutzt, um zu Adressen die entsprechenden
 		\code{\gls{Nexthops}}-Objekte finden zu können, an die Nachrichten weitergeleitet werden

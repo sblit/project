@@ -1,4 +1,4 @@
-
+\label{dcl-appch}
 \subsection{Einleitung}
 Um Anwendungen, deren Kommunikation über den \gls{dcl} geleitet werden soll,
 nicht nur das Senden von verbindungslosen Paketen zu ermöglichen, sondern auch
@@ -21,9 +21,21 @@ Die Daten des \gls{appch} werden nicht weiter verschlüsselt.
 Da \glspl{appch} aber immer zwischen genau zwei \glspl{service} übertragen
 werden, ist neben der Verschlüsselung des \glslink{link}{Links} auch keine
 weitere Verschlüsselung notwendig.
+%Die durch einen \gls{appch} übertragenen Daten werden durch den sogenannten
+%\gls{isch} übertragen.
+%Der \gls{isch} wird wiederum durch den \gls{link} zwischen zwei \glspl{service}
+%übertragen, bei dem es sich um eine direkte, verschlüsselte Verbindung handelt.
+%Die Daten des \gls{appch} werden nicht weiter verschlüsselt.
+%Da \glspl{appch} in der derzeitigen Implementierung aber immer zwischen genau
+%zwei \glspl{service} übertragen werden, ist neben der Verschlüsselung des
+%\glslink{link}{Links} auch keine weitere Verschlüsselung notwendig.
+
+Selbstverständlich kann aber auf der Seite der Anwendung eine zusätzliche
+Verschlüsselungsschicht umgesetzt werden, sodass ausschließlich die
+verschlüsselten Daten über den \gls{appch} übertragen werden.
 
 \subsection{Aufbau}
-Für eine \gls{appch} müssen die beiden \glspl{service}, die die Anwendungen an
+Für einen \gls{appch} müssen die beiden \glspl{service}, die die Anwendungen an
 den \gls{dcl} anbinden, direkt miteinander verbunden sein und über einen
 \gls{isch} miteinander kommunizieren.
 Beim Aufbau eines \gls{appch} gibt es deshalb zwei Fälle zu unterscheiden:
@@ -41,8 +53,9 @@ Anfragen für \glspl{appch} über das \acrfull{crisp} verschickt, welches unter
 
 Der \gls{service}, der die Anwendung an den \gls{dcl} anbindet, die den
 \gls{appch} angefragt hat, sendet zum Aufbau eine \acrshort{crisp}
-\msg{\crispneighreq} über das \gls{net}, das die Anwendung in der
-\msg{\asprotoappchoutreq} über die \gls{asconn} angegeben hat.
+\msg{\crispneighreq} (siehe \figurelinkp{dcl-crisp-neighreq-bytefield}) über das
+\gls{net}, das die Anwendung in der \msg{\asprotoappchoutreq} über die
+\gls{asconn} angegeben hat.
 Der \gls{actid} aus der über die \gls{asconn} gestellten Anfrage der Anwendung
 erhält das Präfix \code{org.dclayer.applicationchannel/} und wird in die
 \msg{\crispneighreq} kopiert.
@@ -75,7 +88,8 @@ Anschließend sendet der erste \gls{service} eine normale Verbindungsanfrage an
 die in der eben empfangenen \msg{\crispneighreq} angeführte \gls{lla}, sofern
 die beiden \glspl{service} nicht bereits verbunden sind.
 Die Anfrage erreicht aufgrund des zuvor durchgeführten
-\glslink{natt}{NAT-Traversals} ihr Ziel und die Verbindung wird aufgebaut.
+\glslink{natt}{NAT-Traversals} jedenfalls ihr Ziel und die Verbindung wird
+aufgebaut.
 
 Sobald die Verbindung aufgebaut ist und der \gls{isch} bereit ist,
 benachrichtigen die \glspl{service} die Anwendungen durch Senden einer
