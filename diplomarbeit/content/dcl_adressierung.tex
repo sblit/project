@@ -5,7 +5,7 @@ nötig, die Teilnehmer dieser Gruppen als solche erkennen zu können.
 Das erfordert wiederum die permanente und eindeutige Adressierung dieser Teilnehmer.
 Da sich die öffentlichen IP-Adressen der meisten privaten Internetanschlüsse und somit des Großteils der
 Zielgruppe von \sblit periodisch ändern, eignen sich diese jedoch nicht als Adressen im \gls{dcl}. Es
-wird also ein anderes Adresskonzept benötigt, mit dem ohne höhere Behörde allen Teilnehmern eindeutige
+wird also ein anderes Adresskonzept benötigt, mit dem ohne zentrale Stelle allen Teilnehmern eindeutige
 Adressen zugewiesen werden können, die auf ihre Echtheit überprüfbar sind.
 
 Es ist nicht ausreichend, die Teilnehmer ihre Adressen willkürlich selbst bestimmen zu lassen und eine
@@ -76,11 +76,23 @@ werden kann, dass eine Kollision praktisch nicht auftritt. \cite{crypto.stackexc
 \subsubsection{\gls*{rsa}-Schlüssellänge}
 Die für die Adressen im \gls{dcl} verwendeten öffentlichen \gls{rsa}-Schlüssel haben eine Länge von \addrkeybits
 Bits, was \addrkeybytes Bytes entspricht.
-IPv4 und IPv6-Adressen haben mit jeweils 32 Bits (4 Bytes) bzw. 128 Bits (16 Bytes) vergleichsweise kurze
+IPv4- und IPv6-Adressen haben mit jeweils 32 Bits (4 Bytes) bzw. 128 Bits (16 Bytes) vergleichsweise kurze
 Adressen. Trotzdem ist eine Adressierung mit 128 Bits mehr als ausreichend und wesentlich längere
 Adressen, wie sie beispielsweise bei direkter Verwendung von RSA-Schlüsseln entstehen, bringen
-lediglich Nachteile und keinerlei Vorteile mit sich, da der dabei entstehende Overhead bei Nachrichten
-eine wesentliche Reduktion der Übertragungseffizienz mit sich bringt.
+lediglich Nachteile und keinerlei Vorteile mit sich, da der dadurch entstehende
+Overhead bei der Übertragung von Nachrichten eine wesentliche Reduktion der
+Effizienz mit sich bringt.
+
+Gleichzeitig ist die Schlüssellänge mit \addrkeybits Bits aber bereits im
+unteren Bereich dessen angesiedelt, was zur Zeit noch als sicher eingestuft
+wird.
+Die Verwendung kürzerer \gls{rsa}-Schlüssel würde die Sicherheit der Adressen
+im \gls{dcl} und der über den \gls{dcl} laufenden Kommunikation negativ
+beeinflussen.
+
+Der folgende Abschnitt beschreibt, wie im \gls{cnet} des \gls{dcl} die
+öffentlichen \gls{rsa}-Schlüssel so verarbeitet werden, dass die resultierenden
+Adressen die Effizienz der Kommunikation nicht mindern.
 
 \subsubsection{Adressverkürzung}
 \label{dcl-addr-scaling}
