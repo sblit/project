@@ -2,18 +2,25 @@
 Mit dem Konfigurieren von \sblit werden benutzerspezifische Anforderungen berücksichtigt und ein reibungsloser Betrieb sichergestellt. Die Konfiguration wird unter Windows im Appdata-Verzeichnis im Ordner \datei{SBLIT} und auf Unix-basierten Systemen im Home-Verzeichnis im Ordner \datei{.SBLIT} gespeichert. Dieses Verzeichnis sollte jedoch nicht direkt editiert werden. Sämtliche Einstellungen erfolgen über das Einstellungsmenü, das über den System-Tray erreicht werden kann.
 
 Die Konfiguration enthält folgende Dateien:
-\subsection{Gerätedatei freceivers.txt}
+\begin{itemize}
+	\item \nameref{freceiverstxt}
+	\item \nameref{logstxt}
+	\item \nameref{receiverstxt}
+	\item \nameref{rktxt}
+	\item \nameref{sblitDirectorytxt}
+	\item \nameref{symmetricKeytxt}
+	\item \nameref{uktxt}
+\end{itemize}
+\subsection{freceivers.txt} \label{freceiverstxt}
 \datei{freceivers.txt} enthält eine Liste der Partnergeräte. Darin wird festgehalten, ob die eigenen Dateien auf Partnergeräten \referenz{Partnergerät} gespeichert werden. Eine detaillierte Beschreibung findet sich im Kapitel \linkt{Partnerschaften}.
 
 Die Adress-Bytes der Partnergeräte werden durch Beistriche getrennt in hexadezimaler Form gespeichert. \\ %TODO Formattierung
 Zum Schreiben der Datei wird folgender Code verwendet: \\  \\
 \listingstart{Schreiben der Gerätedatei freceivers.txt}
-private synchronized void updateDevices(File file,
-		Map<String, String> devices) throws IOException {
+private synchronized void updateDevices(File file, Map<String, String> devices) throws IOException {
 	String temp = devices.toString();
 	temp = temp.substring(1, temp.length() - 1);
-	Files.write(file.toPath(), temp.getBytes(),
-			StandardOpenOption.TRUNCATE_EXISTING);
+	Files.write(file.toPath(), temp.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
 }
 \end{lstlisting}
 \begin{description}
@@ -28,7 +35,7 @@ private synchronized void updateDevices(File file,
 \end{description}
 In den Zeilen 3 und 4 werden die Adressen der Partnergeräte in das Speicherformat übertragen. In Zeile 4 werden die durch die \code{.toString()}-Methode  eingefügten geschwungenen Klammern wieder entfernt. In Zeile 5 wird die im \code{file}-Parameter angegebene Datei mit den neuen Adressen aktualisiert. \code{StandardOpenOption.TRUNCATE\_EXISTING} bedeutet, dass die Datei \datei{freceivers.txt} überschrieben wird, falls diese schon vorhanden ist.
 
-\subsection{\gls{logfile} logs.txt}
+\subsection{logs.txt} \label{logstxt}
 Das \gls{logfile} \referenz{Logfile} \datei{logs.txt} enthält die Versionsverläufe aller Dateien im \sblit-Ordner und dessen Unterordnern im Format: \\ \code{Pfad1=Version1,Version2;Adresse1,Adresse2;Pfad2} 
 
 \code{Pfad1} bezeichnet den relativen Pfad vom \sblit-Ordner zur betrachteten \datei{Datei 1}. Die einzelnen Versionen (\code{Version1}, \code{Version2}) sind Hashwerte der \datei{Datei 1} zu verschiedenen Zeitpunkten, deren Bytes in hexadezimaler Form im \gls{logfile} gespeichert werden. Analog dazu werden auch die Adressen der Geräte, die bereits die aktuellste Version der \datei{Datei 1} enthalten, in hexadezimaler Form gespeichert. \code{Pfad2} ist der Pfad zu jener Datei, mit der \datei{Datei 1} in Konflikt steht. Dieser ist optional.\\
@@ -37,26 +44,37 @@ Zum Schreiben des \gls{logfile}s, wird folgende Methode verwendet: \\ \\
 private synchronized void write(Map<String, LinkedList<Data>> versions, Map<String, LinkedList<Data>> synchronizedDevices, Map<String, String> conflictOf) throws IOException {
 	String logs = "";
 	if (versions.size() > 0) {
+		StringBuilder builder = new StringBuilder();
 		for (String path : versions.keySet()) {
-			logs += "\n" + path + "=";
-			String temp = "";
-			for (Data data : versions.get(path)) {
-				temp += "," + data.toString();
-			}
-			logs += temp.substring(1) + ";";
-			temp = "";
-			for (Data data : synchronizedDevices
-					.get(path)) {
-				temp += "," + data.toString();
-			}
-			logs += temp.substring(1);
-			if(conflictOf.get(path) != null) {
-				temp += ";" + conflictOf.get(path);
+			if (new File(path).isFile()) {
+				builder.append("\n");
+				builder.append(path);
+				builder.append("=");
+				StringBuilder temp = new StringBuilder();
+				for (Data data : versions.get(path)) {
+					temp.append(",");
+					temp.append(data.toString());
+				}
+				temp.append(";");
+				//substring(1) wird verwendet, damit der erste Beistrich entfernt wird.
+				builder.append(temp.substring(1));
+				temp = new StringBuilder();
+				for (Data data : synchronizedDevices.get(path)) {
+					temp.append(",");
+					temp.append(data.toString());
+				}
+				if(conflictOf.get(path) != null) {
+					temp.append(";");
+					temp.append(conflictOf.get(path));
+				}
+				//substring(1) wird verwendet, damit der erste Beistrich entfernt wird.
+				builder.append(temp.substring(1));
 			}
 		}
-		logs = logs.substring(1);
+		//substring(1) wird verwendet, damit der erste Zeilenumbruch entfernt wird.
+		s = builder.substring(1);
 	}
-	Files.write(logFile.toPath(), logs.getBytes());
+	Files.write(logFile.toPath(), s.getBytes());
 }
 \end{lstlisting}
 \begin{description}
@@ -71,17 +89,17 @@ private synchronized void write(Map<String, LinkedList<Data>> versions, Map<Stri
 \end{description}
 Die Methode \code{write} überprüft zunächst, ob Dateien in der Versionsliste \code{version} vorhanden sind. Anschließend werden die Dateien in ein Format gebracht, in dem sie gemeinsam mit dem Datei- und Versionsverlauf in die Datei geschrieben werden können. Falls eine Datei die Konfliktdatei einer anderen ist, wird diese ebenfalls in die Datei geschrieben.
 
-\subsection{Gerätedatei receivers.txt} \label{receivers}
+\subsection{receivers.txt} \label{receiverstxt}
 \datei{receivers.txt} enthält eine Liste der Geräte, auf denen der \sblit-Ordner synchronisiert werden soll. Zu diesen Geräten wird optional ein Name gespeichert, um es dem Benutzer zu erleichtern, den Überblick über die Geräte zu bewahren. Diese werden in der Form \code{Adresse=Name} gespeichert, wobei die Adresse wieder eine hexadezimale Darstellung der Bytes ist und der Name vom Nutzer beliebig vergeben werden kann.
 
-\subsection{rk.txt}
+\subsection{rk.txt} \label{rktxt}
 \datei{rk.txt} enthält den Private-Key des Gerätes. Dieser dient dazu, den Besitz Adresse zu beweisen und ist unbedingt geheim zu halten, da sonst fremde Geräte Identitätsklau begehen könnten. Der Private-Key wird in hexadezimaler Form in der Datei gespeichert. Die Datei ist außerdem versteckt.
 
-\subsection{sblitDirectory.txt}
+\subsection{sblitDirectory.txt} \label{sblitDirectorytxt}
 \datei{sblitDirectory.txt} enthält den Pfad zum \sblit-Ordner. Darin wird ein \code{String} gespeichert, der den Dateipfad enthält. 
 
-\subsection{symmetricKey.txt} \label{symmetricKey}
+\subsection{symmetricKey.txt} \label{symmetricKeytxt}
 In \datei{symmetricKey.txt} wird der symmetrische Schlüssel festgehalten. Dieser dient zum Entschlüsseln der Daten, die auf den Partnergeräten gespeichert werden. Der symmetrische Schlüssel wird, wie alle binären Daten, in hexadezimaler Form in der Datei gespeichert. Zusätzlich ist diese Datei versteckt.
 
-\subsection{uk.txt}
-\datei{uk.txt} enthält den Public-Key des Gerätes, der gleichzeitig die Geräteadresse ist. Beim Verbinden mit \gls{dcl} wird diese Adresse bekanntgegeben. Der Schlüssel werden in Hexadezimalzahlen umgewandelt und in der Datei gespeichert.
+\subsection{uk.txt} {uktxt}
+\datei{uk.txt} enthält den Public-Key des Gerätes, der gleichzeitig die Geräteadresse ist. Beim Verbinden mit \gls{dcl} wird diese Adresse bekanntgegeben. Der Schlüssel wird in hexadezimaler Form in der Datei gespeichert.

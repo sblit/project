@@ -12,7 +12,6 @@ Bevor ein fremdes Gerät eine Verbindung aufbaut, muss auf jeden Fall seine Iden
 \end{itemize}
 
 \subsubsection{\gls{authreq}}
-Sobald zwei Geräte (Gerät A, Gerät B) Daten austauschen wollen, müssen sie die Identität des jeweiligen Kommunikationspartners überprüfen. Dies erfolgt über \gls{authreq}s. Dabei schickt Gerät B zufällige Daten an Gerät A mit der Aufforderung, diese zu verschlüsseln \abbildung{authreq}. 
 \messagestart
 	\bitheader{0-7} \\
 	
@@ -25,11 +24,11 @@ Sobald zwei Geräte (Gerät A, Gerät B) Daten austauschen wollen, müssen sie d
 	\end{rightwordgroup}
 	
 \messageend{authreq}
+Sobald zwei Geräte (Gerät A, Gerät B) Daten austauschen wollen, müssen sie die Identität des jeweiligen Kommunikationspartners überprüfen. Dies erfolgt über \gls{authreq}s. Dabei schickt Gerät B zufällige Daten an Gerät A mit der Aufforderung, diese zu verschlüsseln \abbildung{authreq}. 
 %TODO Umformulieren
-Die Gesamtlänge der Daten, die mit RSA-2048 verschlüsselt werden, darf maximal 128 Byte betragen. Um zu verhindern, dass Gerät B bestimmte Daten mit dem Private-Key von Gerät A verschlüsseln lässt, werden 64 von den maximal 128 Byte reserviert. Diese 64 Byte nutzt Gerät A, um zufällige Daten hinzuzufügen.
+Die Gesamtlänge der Daten, die mit RSA-2048 verschlüsselt werden, darf maximal 128 Byte betragen. Um zu verhindern, dass Gerät B bestimmte Daten mit dem Private-Key von Gerät A verschlüsseln lässt, werden 64 von den maximal 128 Byte reserviert. Diese 64 Byte nutzt Gerät A, um zufällige Daten hinzuzufügen, damit sich Gerät B nicht gewünschte Werte verschlüsseln lassen kann.
 
 \subsubsection{\gls{authres}}
-Bevor die Daten wieder zurückgeschickt werden, müssen diese von Gerät A verschlüsselt werden. Dies geschieht mit dem Private-Key des Gerätes A. Dabei wird vorher noch ein zufälliger Wert an die empfangenen Daten angefügt.
 \messagestart
 	\bitheader{0-7} \\
 	
@@ -42,7 +41,8 @@ Bevor die Daten wieder zurückgeschickt werden, müssen diese von Gerät A versc
 	\end{rightwordgroup}
 	
 \messageend{authres}
-Wird dieses Paket nun von Gerät B empfangen, kann der Inhalt mit dem Public-Key des Gerätes A, also dessen Adresse, entschlüsselt werden. Von den erhaltenen Daten werden die ersten 64 Byte mit den ursprünglich gesendeten 64 Byte verglichen. Stimmen die beiden Werte überein, kann das Gerät seine Authentizität beweisen. Stimmen diese jedoch nicht überein, handelt es sich um einen Betrüger, der offensichtlich den richtigen Private-Key zur von ihm angegebenen Adresse nicht kennt \abbildung{authres}.
+Bevor die Daten wieder zurückgeschickt werden, müssen diese von Gerät A verschlüsselt werden. Dies geschieht mit dem Private-Key des Gerätes A. Dabei wird vorher noch ein zufälliger Wert an die empfangenen Daten angefügt.
+Wird dieses Paket nun von Gerät B empfangen, kann der Inhalt mit dem Public-Key des Gerätes A, also dessen Adresse, entschlüsselt werden. Von den erhaltenen Daten werden die ersten 64 Byte mit den ursprünglich gesendeten 64 Byte verglichen. Stimmen die beiden Werte überein, konnte damit das Gerät seine Authentizität beweisen. Stimmen diese jedoch nicht überein, handelt es sich um einen Betrüger, der offensichtlich den richtigen Private-Key zur von ihm angegebenen Adresse nicht kennt \abbildung{authres}.
 		
 \subsection{Nachrichten an eigene Geräte}
 \subsubsection{Allgemein}
@@ -56,7 +56,6 @@ Wird dieses Paket nun von Gerät B empfangen, kann der Inhalt mit dem Public-Key
 \end{itemize}
 
 \subsubsection{\gls{filereq}} \label{Dateianfrage}
-Bevor Gerät A eine Datei an Gerät B sendet, muss es zunächst eine Dateianfrage an Gerät B senden. Dies hat 2 Gründe: Einerseits muss eruiert werden, ob die Datei bereits auf Gerät B vorhanden ist und andererseits soll ein möglicher Konflikt \referenz{Konflikt} ausgeschlossen werden \abbildung{filereq}.
 \messagestart
 	\bitheader{0-7} \\
 	
@@ -73,6 +72,7 @@ Bevor Gerät A eine Datei an Gerät B sendet, muss es zunächst eine Dateianfrag
 		\wordbox[blr]{1}{}
 	\end{rightwordgroup}
 \messageend{filereq}
+Bevor Gerät A eine Datei an Gerät B sendet, muss es zunächst eine Dateianfrage an Gerät B senden. Dies hat 2 Gründe: Einerseits muss eruiert werden, ob die Datei bereits auf Gerät B vorhanden ist und andererseits soll ein möglicher Konflikt \referenz{Konflikt} ausgeschlossen werden \abbildung{filereq}.
 
 \begin{description} 
 	\descriptionitem{Dateipfad}
@@ -115,7 +115,6 @@ Nach Empfang der Dateianfrage wird zunächst geprüft, ob die Datei vorhanden un
 Nach Empfang der Antwort wird zunächst überprüft, ob der Hashwert der Datei mit dem erhaltenen Pfad übereinstimmt. Stimmt der Hashwert in der Anfrage nicht mit dem aktuellen Hashwert überein, wird die Antwort verworfen. Dies kann beispielsweise passieren, wenn in der Zwischenzeit eine neuere Version der Datei erzeugt wurde. Stimmt dieser jedoch überein, kann die Datei nun im nächsten Schritt verschickt werden.
 		
 \subsubsection{\gls{filemsg}}
-Die \gls{filemsg} dient zur Übertragung der Datei \abbildung{filemsg}.
 \messagestart
 	\bitheader{0-7} \\
 	
@@ -139,7 +138,7 @@ Die \gls{filemsg} dient zur Übertragung der Datei \abbildung{filemsg}.
 	\end{rightwordgroup}
 	
 \messageend{filemsg}
-
+Die \gls{filemsg} dient zur Übertragung der Datei \abbildung{filemsg}.
 \begin{description}
 	\descriptionitem{Dateiinhalt}
 		Der Dateiinhalt wird als binäres \code{Data}-Objekt verschickt.
@@ -169,7 +168,6 @@ Die \gls{filemsg} dient zur Übertragung der Datei \abbildung{filemsg}.
 Eine \gls{filedel} beinhaltet den Pfad zur zu löschenden Datei. Nach Empfang der \gls{filedel} wird die Datei gelöscht \abbildung{filedel}.
 
 \subsubsection{\gls{refdev}}
-Die \gls{refdev} dient zur Aktualisierung von Gerätelisten \abbildung{refdev}.
 \messagestart
 	\bitheader{0-7} \\
 	
@@ -185,6 +183,7 @@ Die \gls{refdev} dient zur Aktualisierung von Gerätelisten \abbildung{refdev}.
 	\end{rightwordgroup} 
 	
 \messageend{refdev}
+Die \gls{refdev} dient zur Aktualisierung von Gerätelisten \abbildung{refdev}.
 \begin{description}
 	\descriptionitem{File-Flag}
 	Das File-Flag gibt darüber Auskunft, ob es sich um die Datei für Partnergeräte oder die Datei für die eigenen Geräte handelt.
@@ -202,7 +201,6 @@ Die \gls{refdev} dient zur Aktualisierung von Gerätelisten \abbildung{refdev}.
 \end{itemize}
 
 \subsubsection{\gls{partfilereq}} \label{partnerfilerequest}
-Der \gls{partfilereq} dient, wie der \gls{filereq}, zum Versenden einer Dateianfrage \abbildung{partfilereq}.
 \messagestart
 	\begin{rightwordgroup}{\isprotomsgtype}
 		\wordbox[tlr]{1}{7}
@@ -214,13 +212,13 @@ Der \gls{partfilereq} dient, wie der \gls{filereq}, zum Versenden einer Dateianf
 		\wordbox[blr]{1}{}
 	\end{rightwordgroup}
 \messageend{partfilereq}
+Der \gls{partfilereq} dient, wie der \gls{filereq}, zum Versenden einer Dateianfrage \abbildung{partfilereq}.
 \begin{description}
 	\descriptionitem{Versionsverlauf}
 	Der Versionsverlauf wird, wie beim \gls{filereq} mitgeschickt, damit der Partner die Datei identifizieren kann. Dies verhindert, dass der Partner den Dateipfad kennt und somit auf den Inhalt der Datei schließen kann. Weiters kann aus diesem Versionsverlauf, der lediglich Hashes enthält, nicht auf den Inhalt der Datei geschlossen werden, da das Verhashen eine Einwegfunktion ist. 
 \end{description}
 
 \subsubsection{\gls{partfileres}}
-Der \gls{partfileres} dient zum Antworten auf einen \gls{partfilereq} \abbildung{partfileres}.
 \messagestart
 	\begin{rightwordgroup}{\isprotomsgtype}
 		\wordbox[tlr]{1}{8}
@@ -233,6 +231,7 @@ Der \gls{partfileres} dient zum Antworten auf einen \gls{partfilereq} \abbildung
 		\wordbox[blr]{1}{Need-Flag}
 	\end{rightwordgroup}
 \messageend{partfileres}
+Der \gls{partfileres} dient zum Antworten auf einen \gls{partfilereq} \abbildung{partfileres}.
 
 \begin{description}
 	\descriptionitem{Versionsverlauf}
@@ -242,7 +241,6 @@ Der \gls{partfileres} dient zum Antworten auf einen \gls{partfilereq} \abbildung
 \end{description}
 
 \subsubsection{\gls{partfilemsg}}
-Die \gls{partfilemsg} dient zum Versenden einer Datei an Partnergeräte \referenz{Partnergerät} \abbildung{partfilemsg}.
 \messagestart
 	\begin{rightwordgroup}{\isprotomsgtype}
 		\wordbox[tlr]{1}{9}
@@ -263,6 +261,7 @@ Die \gls{partfilemsg} dient zum Versenden einer Datei an Partnergeräte \referen
 		\wordbox[blr]{1}{}
 	\end{rightwordgroup}
 \messageend{partfilemsg}
+Die \gls{partfilemsg} dient zum Versenden einer Datei an Partnergeräte \referenz{Partnergerät} \abbildung{partfilemsg}.
 \begin{description}
 	\descriptionitem{Versionsverlauf}
 	Da der Versionsverlauf zur Identifikation der Datei benötigt wird, wird er auch bei der \gls{partfilemsg} mitgeschickt. Gleichzeitig dient der letzte Hash im Versionsverlauf als Dateiname auf dem Partnergerät.
@@ -275,7 +274,6 @@ Die \gls{partfilemsg} dient zum Versenden einer Datei an Partnergeräte \referen
 \end{description}
 
 \subsubsection{\gls{partfiledel}}
-Die \gls{partfiledel} dient, wie die \gls{filedel}, zum Löschen von Dateien auf den eigenen Geräten \abbildung{partfiledel}.
 \messagestart
 	\begin{rightwordgroup}{\isprotomsgtype}
 		\wordbox[tlr]{1}{10}
@@ -291,9 +289,9 @@ Die \gls{partfiledel} dient, wie die \gls{filedel}, zum Löschen von Dateien auf
 	\descriptionitem{Dateipfad}
 	Das einzige Attribut der \gls{partfiledel} ist der verschlüsselte Dateipfad. Dieser wird eine Woche lang gespeichert und dann gelöscht.
 \end{description}
+Die \gls{partfiledel} dient, wie die \gls{filedel}, zum Löschen von Dateien auf den eigenen Geräten \abbildung{partfiledel}.
 
 \subsubsection{\gls{filedel}}
-Um Platz auf den Partnergeräten zu sparen, werden die Dateien gelöscht, sobald diese auf allen eigenen Geräten verteilt sind. Dies wird mit der \gls{filedel} initiiert. In der \gls{filedel} zwischen Partnergerät und eigenem Gerät wird der Versionsverlauf statt dem Dateinamen angegeben \abbildung{filedel}.
 \messagestart
 	\begin{rightwordgroup}{\isprotomsgtype}
 		\wordbox[tlr]{1}{11}
@@ -305,7 +303,8 @@ Um Platz auf den Partnergeräten zu sparen, werden die Dateien gelöscht, sobald
 		\wordbox[blr]{1}{}
 	\end{rightwordgroup}
 \messageend{filedel}
+Um Platz auf den Partnergeräten zu sparen, werden die Dateien gelöscht, sobald diese auf allen eigenen Geräten verteilt sind. Dies wird mit der \gls{filedel} initiiert. In der \gls{filedel} zwischen Partnergerät und eigenem Gerät wird der Versionsverlauf statt dem Dateinamen angegeben \abbildung{filedel}.
 \begin{description}
 	\descriptionitem{Versionsverlauf}
-	Der Versionsverlauf gibt die Datei an, die vom Partnergerät gelöscht werden soll.
+	Der Versionsverlauf gibt die Datei an, die vom Partnergerät gelöscht werden soll. 
 \end{description}
