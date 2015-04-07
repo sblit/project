@@ -1,60 +1,5 @@
-\subsection{Ausgangssituation}
-In der heutigen Zeit nimmt die Technik einen großen Einfluss auf unser Leben.
-Jeder durchschnittliche Haushalt besitzt mindestens einen Computer mit
-Internetanschluss und die meisten Leute haben heutzutage auch ein Smartphone.
-Selten allerdings bleibt es bei diesen beiden Gerätschaften und so kommt zum Beispiel
-ein Notebook für die Schule oder für den Arbeitsplatz zum Einsatz. Oftmals
-müssen dabei die selben Dateien auf verschiedenen Geräten bearbeitet werden und
-das möglichst ohne \glspl{versionconflict}. Daten müssen von jedem
-Gerät und zu jederzeit erreichbar sein, weshalb Cloud- und
-Dateisynchronisationsdienste einen immer größer werdenden Stellenwert bekommen.
-Das Verwalten beziehungsweise die Verarbeitung von Daten in einer
-zentrale Stelle, meistens einem Server und die dahinter liegende Datenbank des
-jeweiligen Anbieters, soll dabei mit hoher Uptime den dauerhaften Zugriff auf
-die eigenen Dateien sicherstellen.
 
-\subsection{Funktionsweise üblicher Dateisynchronisationsdienste}
-Die Idee hinter \sblit basiert auf den sicherheitsbezogenen Problemen, die mit
-der Speicherung von Daten auf einer zentralen Stelle einhergehen. Die
-Erleuterung der Funktionsweise üblicher Dateisynchronsationsdienste soll beim
-Verstehen der grundsätzlichen Idee hinter \sblit helfen.
-
-% TODO  Bild "Dropbox_1" einfügen
-\includegraphics[]{images/Dropbox_1}
-Üblich gehandhabtes Uploaden einer Datei.
-
-Bei der Synchronisation einer Datei von einem Heimrechner zu einem Laptop am
-Arbeitsplatz oder in der Schule wird eine Kopie dieser Datei auf den vom
-Betreiber zur Verfügung gestellten Cloadspeicher beziehungsweise Server
-hochgeladen und dort gespeichert. Der Sender behält dabei die Originaldatei.
-
-% TODO  Bild "Dropbox_2" einfügen
-\includegraphics[]{images/Dropbox_2}
-Üblich gehandhabtes Downloaden einer Datei.
-
-Wenn der Laptop (TODO) in diesem Beispiel verfügbar ist, wird er über die Änderung
-im Cloadspeicher informiert und lädt die Änderung, in diesem Fall die Datei von
-dem Server herunter. Die Datei wurde somit über eine zentrale Stelle, hier den
-Server synchronisiert.
-
-\subsection{Problematik}
-Ereignisse wie "The Fappening" oder diverse Hackerangriffe auf große Firmen, bei
-denen Unmengen an Kundendaten gestohlen werden, zeigen wie leicht Mengen an
-privaten Daten in falsche Hände fallen können, wenn diese zentral an einem Ort
-gespeichert werden.
-
-Geheimdienste oder staatliche Sicherheitsbehörden haben außerdem ein leichtes
-Spiel an Userdaten heranzukommen, wenn sie gesammelt auf den Servern eines
-Unternehmens gespeichert werden. Diese Unternehmen sind als Anbieter solcher
-Cloudspeicher unter Umständen zur Herausgabe der Nutzerdaten gesetzlich
-verpflichtet.
-
-Und selbst wenn der duchschnittliche Benutzer nichts zu verbergen hat, ist der
-dreiste Eingriff in die Privatsphäre doch als äußerst problematisch einzustufen
-und leider gestaltet sich dieser zum Bedauern der betroffenen Benutzer, für
-Fremden oft viel zu einfach.
-
-\subsection{Idee}
+\subsection{Einleitung}
 Hauptursache für diese Problematik ist die oft unverschlüsselte, zentrale
 Speicherung der Daten. Damit aber nicht auf den Komfort verzichtet werden muss,
 der von üblichen Dateisynchronisationsdiensten geboten wird, werden die zuvor angesprochenen
@@ -91,7 +36,6 @@ Konfiguration angegebenen wurde. Sobald sich Dateien innerhalb des Ordners
 erreichbaren Synchronisationspartnern über einen \gls{p2plink}
 gesendet.
 
-% TODO Bild "sblit_1" einfügen
 \includegraphics[]{images/sblit_1}
 Übertragung der Datei zwischen zwei erreichbaren Hosts.
 
@@ -106,7 +50,6 @@ in die dezentrale \gls{filecloud} gespeichert, sodass nur ein Bruchteil der
 Partnergeräte erreichbar sein muss, um auf die vollständige Datei zugreifen zu
 können.
 
-% TODO Bild "sblit_2" einfügen
 \includegraphics[]{images/sblit_2}
 Hochladen der Datei in die dezentrale \gls{filecloud}.
 
@@ -119,7 +62,6 @@ vollständigen Datei zusammengesetzt.
 Die Datei wurde also über die Partnergeräte synchronisiert, die eine dezentrale
 \gls{filecloud} darstellen.
 
-% TODO Bild "sblit_3"
 \includegraphics[]{images/sblit_3}
 Gegenseitiges Speichern von Dateiblöcken (Konzept einer \gls{partnership}).
 
