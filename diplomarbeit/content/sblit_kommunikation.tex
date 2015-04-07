@@ -41,8 +41,8 @@ Die Gesamtlänge der Daten, die mit RSA-2048 verschlüsselt werden, darf maximal
 	\end{rightwordgroup}
 	
 \messageend{authres}
-Bevor die Daten wieder zurückgeschickt werden, müssen diese von Gerät A verschlüsselt werden. Dies geschieht mit dem Private-Key des Gerätes A. Bevor die Daten verschlüsselt werden, wird ein zufälliger Wert mit einer Länge von 64 Bit an die empfangenen Daten angefügt.
-Wird dieses Paket nun von Gerät B empfangen, kann der Inhalt mit dem Public-Key des Gerätes A, also dessen Adresse, entschlüsselt werden. Von den erhaltenen Daten werden die ersten 64 Byte mit den ursprünglich gesendeten 64 Byte verglichen. Stimmen die beiden Werte überein, konnte damit das Gerät seine Authentizität beweisen. Stimmen diese jedoch nicht überein, handelt es sich um einen Betrüger, der offensichtlich den richtigen Private-Key zur von ihm angegebenen Adresse nicht kennt \abbildung{authres}.
+Bevor die Daten verschlüsselt werden, wird ein zufälliger Wert mit einer Länge von 64 Bit an die empfangenen Daten angefügt.
+Wird dieses Paket nun von Gerät B empfangen, kann der Inhalt mit dem Public-Key des Gerätes A, also dessen Adresse, entschlüsselt werden \abbildung{authres}.
 		
 \subsection{Nachrichten an eigene Geräte}
 \subsubsection{Allgemein}
@@ -72,7 +72,7 @@ Wird dieses Paket nun von Gerät B empfangen, kann der Inhalt mit dem Public-Key
 		\wordbox[blr]{1}{}
 	\end{rightwordgroup}
 \messageend{filereq}
-Bevor Gerät A eine Datei an Gerät B sendet, muss es zunächst eine Dateianfrage an Gerät B senden. Dies hat 2 Gründe: Einerseits muss eruiert werden, ob die Datei bereits auf Gerät B vorhanden ist und andererseits soll ein möglicher Konflikt \referenz{Konflikt} ausgeschlossen werden \abbildung{filereq}.
+Mithilfe des \gls{filereq} kann eruiert werden, ob die Datei bereits auf einem anderen Gerät bereits vorhanden ist. Außerdem kann mit dem \gls{filereq} ein möglicher Konflikt \referenz{Konflikt} ausgeschlossen werden \abbildung{filereq}.
 
 \begin{description} 
 	\descriptionitem{Dateipfad}
@@ -101,6 +101,7 @@ Bevor Gerät A eine Datei an Gerät B sendet, muss es zunächst eine Dateianfrag
 		\wordbox[blr]{1}{}
 	\end{rightwordgroup}
 \messageend{fileres}
+Der \gls{fileres} wird benötigt, um dem Gerät, das den \gls{filereq} geschickt hat, zu antworten, ob die Datei benötigt wird.
 
 \begin{description}
 	\descriptionitem{Need-Flag}
@@ -110,9 +111,6 @@ Bevor Gerät A eine Datei an Gerät B sendet, muss es zunächst eine Dateianfrag
 	\descriptionitem{Hash}
 		Hier wird noch einmal der letzte Hash des Versionsverlaufs der Dateianfrage verschickt, um sicherzustellen, dass die Datei in der Zwischenzeit nicht geändert wurde. 
 \end{description}
-Nach Empfang der Dateianfrage wird zunächst geprüft, ob die Datei vorhanden und aktuell ist. Ist die lokale Datei nicht aktuell, wird das Need-Flag, auf den Hexadezimalwert \code{0x01} gesetzt. Ist die Datei auf dem aktuellsten Stand, wird es auf den Hexadezimalwert \code{0x00} gesetzt. Außerdem wird überprüft, ob ein Konflikt aufgetreten ist \referenz{Konflikterkennung}.
-
-Nach Empfang der Antwort wird zunächst überprüft, ob der Hashwert der Datei mit dem erhaltenen Pfad übereinstimmt. Stimmt der Hashwert in der Anfrage nicht mit dem aktuellen Hashwert überein, wird die Antwort verworfen. Dies kann beispielsweise passieren, wenn in der Zwischenzeit eine neuere Version der Datei erzeugt wurde. Stimmt dieser jedoch überein, kann die Datei nun im nächsten Schritt verschickt werden.
 		
 \subsubsection{\gls{filemsg}}
 \messagestart
@@ -266,7 +264,7 @@ Die \gls{partfilemsg} dient zum Versenden einer Datei an Partnergeräte \referen
 	\descriptionitem{Versionsverlauf}
 	Da der Versionsverlauf zur Identifikation der Datei benötigt wird, wird er auch bei der \gls{partfilemsg} mitgeschickt. Gleichzeitig dient der letzte Hash im Versionsverlauf als Dateiname auf dem Partnergerät.
 	\descriptionitem{Dateiinhalt}
-	Um den Inhalt der Datei vor fremdem Zugriff zu schützen, wird er mit dem symmetrischen Schlüssel \referenz{symmetricKey} verschlüsselt. 
+	Um den Inhalt der Datei vor fremdem Zugriff zu schützen, wird er mit dem symmetrischen Schlüssel \referenz{sicherheit} verschlüsselt. 
 	\descriptionitem{Dateipfad}
 	Der Dateipfad wird, wie auch beim \gls{partfilereq}, verschlüsselt übertragen. 
 	\descriptionitem{Geräte mit der aktuellen Version}
@@ -308,3 +306,32 @@ Um Platz auf den Partnergeräten zu sparen, werden die Dateien gelöscht, sobald
 	\descriptionitem{Versionsverlauf}
 	Der Versionsverlauf gibt die Datei an, die vom Partnergerät gelöscht werden soll. 
 \end{description}
+
+\subsection{Ablauf}
+\subsubsection{Allgemein}
+Bevor eine Verbindung nicht autorisiert ist, werden sämtliche Nachrichten verworfen. Die einzige Außnahme hierbei sind Nachrichten, die zur Authentifizierung dienen. 
+
+\subsubsection{Authentifizierung}
+Beim Programmstart versucht sich \sblit zu allen eigenen Geräten und \gls{partnerdevice}en zu verbinden. Dazu schickt es über \gls{dcl} \gls{appch} Anfragen und fügt die Adresse des anderen Gerätes einer Liste mit unautorisierten \gls{appch}s hinzu. Wird die Anfrage angenommen, wird sofort ein \gls{authreq} verschickt. 
+
+Wird der \gls{appch} von einem anderen Gerät angefragt, wird zunächst in der Liste der eigenen Geräte \referenz{receiverstxt} und der Liste der Partnergeräte \referenz{freceiverstxt} nachgeschaut, ob die Adresse des Gerätes, das die Anfrage verschickt hat, in dieser vorhanden ist. Ist sie nicht vorhanden, wird der \gls{appch} sofort verworfen. Andernfalls wird ein \gls{authreq} über den \gls{appch} verschickt und die Adresse des Gerätes, das den \gls{appch} angefragt hat, zur Liste an unautorisierten \gls{appch} hinzugefügt.
+
+Wird ein \gls{authreq} empfangen, werden die angefragten 64 Byte durch zufällige weitere 64 Byte ergänzt. Anschließend werden die insgesamt 128 Byte mit dem eigenen Private-Key verschlüsselt. Schließlich antwortet \sblit mithilfe des \gls{authres}s auf den \gls{authreq}.
+
+Beim Empfangen des \gls{authres}s entschlüsselt \sblit die Daten mithilfe des Public-Keys des Kommunikationspartners. Von den erhaltenen Daten werden die ersten 64 Byte mit den ursprünglich gesendeten 64 Byte verglichen. Stimmen die beiden Werte überein, konnte damit das Gerät seine Authentizität beweisen und die Adresse des Kommunikationspartners wird der Liste der authentifizierten Geräte hinzugefügt. Stimmen diese jedoch nicht überein, handelt es sich um einen Betrüger, der offensichtlich den richtigen Private-Key zur von ihm angegebenen Adresse nicht kennt.
+
+\subsubsection{Änderung einer Datei}
+Bevor die eigentliche Datei übertragen werden kann, muss zunächst ein \gls{filereq} an den Kommunikationspartner gesendet werden. Das Senden des \gls{filereq}s wird entweder direkt vom \gls{watchservice} oder beim Autorisieren eines \gls{appch} initiiert.
+
+Nach Empfang des \gls{filereq} wird zunächst geprüft, ob die Datei vorhanden und aktuell ist. Dazu wird der Versionsverlauf im \gls{filereq} mit dem Versionsverlauf im lokalen \gls{logfile} verglichen. Ist die aktuellste Version der Datei im mitgeschickten Versionsverlauf nicht im lokalen Versionsverlauf enthalten, wird das Need-Flag, auf den Hexadezimalwert \code{0x01} gesetzt. Stimmen die aktuellsten Hashes in empfangenem und lokalem Versionsverlauf überein, wird es auf den Hexadezimalwert \code{0x00} gesetzt und die Adresse des Partners im \gls{logfile} der Liste der Geräte mit der aktuellsten Version hinzugefügt. Des Weiteren wird überprüft, ob ein Konflikt aufgetreten ist \referenz{Konflikterkennung}. Anschließend wird der \gls{fileres} verschickt.
+
+Nach Empfang des \gls{fileres} wird zunächst überprüft, ob der Hashwert der Datei im \gls{logfile} mit dem erhaltenen Pfad übereinstimmt. Stimmt der Hashwert im \gls{fileres} nicht mit dem aktuellen lokalen Hashwert überein, wird die Antwort verworfen. Dies kann beispielsweise passieren, wenn in der Zwischenzeit eine neuere Version der Datei erzeugt wurde. Stimmt dieser jedoch überein, kann die Datei nun im nächsten Schritt mithilfe der \gls{filemsg} verschickt werden.
+
+Wird ein \gls{fileres} empfangen, wird zunächst das \gls{logfile} bearbeitet. Dazu wird der ursprüngliche Eintrag zur empfangenen Datei samt dem Versionsverlauf und den Geräten mit der aktuellen Version durch die neuen Parameter ersetzt. Dies passiert, damit die Änderung vom \gls{watchservice} nicht fälschlicherweise als Änderung durch den Benutzer wahrgenommen wird. Anschließend wird der empfangene Dateiinhalt in die Datei geschrieben. Dieser gesamte Prozess findet jedoch erst nach dem Empfang der vollständigen Datei statt, damit keine beschädigte Datei bei einem Verbindungsabbruch entsteht, die möglicherweise als neue Version erkannt werden würde.
+
+\subsubsection{Löschen einer Datei}
+Das Senden einer \gls{filedel} wird, wie das Senden eines \gls{filereq}, entweder durch das \gls{watchservice} oder beim Autorisieren eines \gls{appch} initiiert. 
+
+Beim Empfangen dieser Anfrage, wird die Datei mit einem Zeitstempel in einer Datei gespeichert, damit die Datei auch auf Geräten, die gerade nicht online sind, gelöscht werden kann. Außerdem wird die angefragte Datei gelöscht, sobald die Anfrage empfangen wird. Deshalb sollte man eine alte Version nicht löschen, nur weil sie nicht auf dem aktuellsten Stand ist, den dies löscht ebenfalls die Datei auf dem aktuellsten Stand.
+
+\subsubsection{Aktualisieren der Gerätedatei}

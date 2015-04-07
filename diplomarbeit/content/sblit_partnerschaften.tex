@@ -2,15 +2,18 @@
 Um nicht immer mindestens zwei Geräte eingeschalten haben zu müssen, werden die Daten nicht nur auf den eigenen Geräten gespeichert, sondern auch auf sogenannten Partnergeräten. Damit man trotz hoher Verfügbarkeit nicht zu viel Speicher freigeben muss, sollte man Partnerschaften mit in etwa 10 Geräten eingehen. 
 
 \subsection{Partnergeräte} \label{Partnergerät}
-Ein Partnergerät zeichnet sich dadurch aus, dass entweder meine Daten auf dem Partnergerät oder dessen Daten am eigenen Gerät zwischengespeichert werden. 
+Ein \gls{partnerdevice} zeichnet sich dadurch aus, dass entweder meine Daten auf dem \gls{partnerdevice} oder dessen Daten am eigenen Gerät zwischengespeichert werden. Zwischen den \gls{partnerdevice}en bestehen sogenannte Partnerschaften. Diese werden zwischen zwei Benutzern geschlossen und erlauben es dem jeweils anderen, Dateien auf einem eigenen Gerät zu speichern.
 
 \subsection{Delta-Daten}
 Um den auf den Partnergeräten benötigten und somit auch den freigegebenen Speicherplatz möglichst gering zu halten, synchronisiert \sblit nur Delta-Daten. Unter Delta-Daten kann man sich die Änderungen an einer Datei vorstellen. Da \sblit nicht erkennen kann, in welchem Teil der Datei sich etwas ändert wird hierbei jedoch immer eine ganze Datei mitgeschickt.
 
-Das heißt, wenn sich eine Datei ändert wird diese so lange auf den Partnergeräten gespeichert, bis diese auf allen Geräten verfügbar ist.
+Wenn sich eine Datei ändert wird diese so lange auf den Partnergeräten gespeichert, bis diese auf allen Geräten verfügbar ist.
 
 \subsection{Dauer einer Partnerschaft}
 Da manche Geräte von Zeit zu Zeit mehr oder weniger genutzt werden, können Partnerschaften bei Inaktivität eines Nutzers gekündigt werden. Dazu löscht man einfach das Partnergerät aus der Liste. Beim Löschen kommt das Partnergerät auf eine Blacklist. Bei der nächsten Anfrage des Partnergeräts wird die Verbindung nicht mehr zugelassen und das Gerät merkt, dass die Partnerschaft nicht mehr gewünscht ist. Danach wird die Partnerschaft auch vom Partnergerät gelöscht.
+
+\subsection{Sicherheit} \label{sicherheit}
+Um zu verhindern, dass eine Datei vom Benutzer eines \gls{partnerdevice}es gelesen wird, wird diese mit dem \gls{aes} im \gls{gcm} verschlüsselt. Des Weiteren wird dadurch verhindert, dass die Datei durch den Partner verändert werden kann. 
 
 \subsection{Wunschpartnerschaften}
 Kennen sich zwei \sblit-User und haben einen ähnlichen Verwendungsrythmus, können diese eine Partnerschaft miteinander schließen. Dabei müssen die beiden nur ihre Adressen austauschen und zur Liste der Partnergeräte hinzufügen. Im weiteren Verlauf verhalten sich Wunschpartnerschaften nicht anders als andere Partnerschaften. Diese können, wie auch andere Partnerschaften, bei Bedarf gelöscht werden.

@@ -123,8 +123,9 @@ Wurde die Datei bearbeitet, wird sie ausgelesen und anschließend verhasht. Nach
 }
 logFile.createNewFile();
 write(files, synchronizedDevices);
+writeFilesToDelete(filesToDelete);
 \end{lstlisting}
-Das \gls{logfile} wird neu erstellt und die neuen Daten werden anschließend darin gespeichert.
+Das \gls{logfile} wird neu erstellt und die neuen Daten werden anschließend darin gespeichert. Außerdem werden die zu löschenden Dateien in eine Datei geschrieben, damit sie auch auf Geräten gelöscht werden können, die gerade nicht online sind.
 \subsection{Konflikte}\label{Konflikt}
 \subsubsection{Allgemein}
 Ein Konflikt ist ein Problem, das bei Synchronisationsdiensten vorkommt. Dieser tritt auf, wenn eine Datei bearbeitet wird, bevor sie synchronisiert werden kann. 
@@ -142,7 +143,7 @@ Stimmt der Versionsverlauf aus dem \gls{filereq} mit dem einer Konfliktdatei üb
 Ist der aktuelle Hash der lokalen Datei jedoch nicht in der Dateianfrage enthalten, wurde die lokale Datei bearbeitet, bevor diese auf den aktuellsten Stand gebracht werden konnte. Anders gesagt: Ein Konflikt ist aufgetreten.
 
 \subsubsection{Konfliktlösung}
-Damit die Änderungen von einem Gerät nicht überschrieben werden, speichert \sblit beide Versionen. Da jedoch beide Dateien nicht den gleichen Namen haben können, benennt das Gerät, das den Konflikt erkennt, (im Folgenden Gerät A) die lokale Datei um. Die Datei wird folgendermaßen umbenannt: \datei{Datei.Endung} wird zu \datei{Datei (Konflikt [Konfliktnummer]).Endung}).
+Damit die Änderungen von einem Gerät nicht überschrieben werden, speichert \sblit beide Versionen. Da jedoch beide Dateien nicht den gleichen Namen haben können, benennt das Gerät, das den Konflikt erkennt, (im Folgenden Gerät A) die lokale Datei um. Die Datei wird folgendermaßen umbenannt: \datei{Datei.Endung} wird zu \datei{Datei (Konflikt [Konfliktnummer]).Endung}.
 
  Anschließend schickt Gerät A eine Antwort an das Gerät, das die Dateianfrage geschickt hat,  (im Folgenden Gerät B) in der es die neue Version anfordert, als ob kein Konflikt aufgetreten wäre. Außerdem schickt Gerät A eine Dateianfrage mit der neuen Datei an Gerät B. Gerät B sendet nun die angeforderte Datei an Gerät A und akzeptiert die Konfliktdatei, da es eine Datei mit dem gleichen Namen noch nicht besitzt. 
 
