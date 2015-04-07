@@ -1,5 +1,5 @@
 \subsection{Allgemein}
-Um zu verhindern, dass Daten mitgelesen werden, verwendet \sblit den sicheren \nameref{Applicationchannel} (siehe Seite \pageref{Applicationchannel}) der \gls{cl}.
+Um zu verhindern, dass Daten mitgelesen werden, verwendet \sblit den sicheren \gls{appch} (siehe Seite \pageref{dcl-appch}) der \gls{cl}.
 
 Dabei unterscheidet man grundsätzlich zwischen Nachrichten, die an Partnergeräte \referenz{Partnergerät} und Nachrichten, die an die eigene Geräte geschickt werden. Weiters gibt es Nachrichten, die bei beiden Arten von Geräten gleich sind.
 
@@ -41,7 +41,7 @@ Die Gesamtlänge der Daten, die mit RSA-2048 verschlüsselt werden, darf maximal
 	\end{rightwordgroup}
 	
 \messageend{authres}
-Bevor die Daten wieder zurückgeschickt werden, müssen diese von Gerät A verschlüsselt werden. Dies geschieht mit dem Private-Key des Gerätes A. Dabei wird vorher noch ein zufälliger Wert an die empfangenen Daten angefügt.
+Bevor die Daten wieder zurückgeschickt werden, müssen diese von Gerät A verschlüsselt werden. Dies geschieht mit dem Private-Key des Gerätes A. Bevor die Daten verschlüsselt werden, wird ein zufälliger Wert mit einer Länge von 64 Bit an die empfangenen Daten angefügt.
 Wird dieses Paket nun von Gerät B empfangen, kann der Inhalt mit dem Public-Key des Gerätes A, also dessen Adresse, entschlüsselt werden. Von den erhaltenen Daten werden die ersten 64 Byte mit den ursprünglich gesendeten 64 Byte verglichen. Stimmen die beiden Werte überein, konnte damit das Gerät seine Authentizität beweisen. Stimmen diese jedoch nicht überein, handelt es sich um einen Betrüger, der offensichtlich den richtigen Private-Key zur von ihm angegebenen Adresse nicht kennt \abbildung{authres}.
 		
 \subsection{Nachrichten an eigene Geräte}
@@ -302,7 +302,7 @@ Die \gls{partfiledel} dient, wie die \gls{filedel}, zum Löschen von Dateien auf
 		\skippedwords \\
 		\wordbox[blr]{1}{}
 	\end{rightwordgroup}
-\messageend{filedel}
+\messageend{filedelpart}
 Um Platz auf den Partnergeräten zu sparen, werden die Dateien gelöscht, sobald diese auf allen eigenen Geräten verteilt sind. Dies wird mit der \gls{filedel} initiiert. In der \gls{filedel} zwischen Partnergerät und eigenem Gerät wird der Versionsverlauf statt dem Dateinamen angegeben \abbildung{filedel}.
 \begin{description}
 	\descriptionitem{Versionsverlauf}
