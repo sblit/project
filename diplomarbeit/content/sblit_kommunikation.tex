@@ -335,3 +335,4 @@ Das Senden einer \gls{filedel} wird, wie das Senden eines \gls{filereq}, entwede
 Beim Empfangen dieser Anfrage, wird die Datei mit einem Zeitstempel in einer Datei gespeichert, damit die Datei auch auf Geräten, die gerade nicht online sind, gelöscht werden kann. Außerdem wird die angefragte Datei gelöscht, sobald die Anfrage empfangen wird. Deshalb sollte man eine alte Version nicht löschen, nur weil sie nicht auf dem aktuellsten Stand ist, den dies löscht ebenfalls die Datei auf dem aktuellsten Stand.
 
 \subsubsection{Aktualisieren der Gerätedatei}
+Die Gerätedateien werden ebenfalls von einem Watchservice überwacht. Werden diese bearbeitet, wird eine \gls{refdev} an die anderen Geräte, die gerade online sind, verschickt. Außerdem wird diese periodisch, in einem konfigurierbaren Intervall, den anderen Geräten mitgeteilt.
