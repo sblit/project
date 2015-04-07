@@ -71,8 +71,8 @@ zur Folge, in der viele Versionskonflikte auftreten könnten.
 Deshalb verwendet \sblit eine Cloud, um Dateien für nicht erreichbare
 Synchronisationspartner extern zwischenspeichern zu können. Die Cloud bildet
 sich dabei aber nicht aus einem Server, wie üblich, sondern aus einem \gls{p2pnet}
-aller Nutzer von \sblit. Diese dezentrale \gls{Filecloud} wird
-mit sogenannten \gls{partnership} realisiert. Dabei geht es darum, dass sich
+aller Nutzer von \sblit. Diese dezentrale \gls{filecloud} wird
+mit sogenannten \glspl{partnership} realisiert. Dabei geht es darum, dass sich
 User, die sich gegenseitig nicht kennen müssen, einander ihre Daten direkt über
 verschlüsselte Kanäle auf den Geräten des jeweiligen anderen speichern.
 Um die Dateien nicht nur sicher zu übertragen, sondern auch zwischenzuspeichern
@@ -95,20 +95,20 @@ gesendet.
 \includegraphics[]{images/sblit_1}
 Übertragung der Datei zwischen zwei erreichbaren Hosts.
 
-Für Synchronisationspartner, die nicht erreichbar sind, wird die Datei in der
-\gls{dezentralen Filecloud} zwischengespeichert. Die Datei wird kopiert und in Blöcke
+Für Synchronisationspartner, die nicht erreichbar sind, wird die Datei in der dezentralen
+\gls{filecloud} zwischengespeichert. Die Datei wird kopiert und in Blöcke
 aufgeteilt. Diese Blöcke werden mit dem privaten Schlüssel des Clients
 verschlüsselt und verteilt auf den \glspl{partnerdevice} gespeichert.
 
 Da die Erreichbarkeit der Partnergeräte, auf denen die veschlüsselten
 Datei-Blöcke gespeichert sind, nicht gewährleistet ist, wird die Datei mehrmals
-in die \gls{dezentrale Filecloud} gespeichert, sodass nur ein Bruchteil der
+in die dezentrale \gls{filecloud} gespeichert, sodass nur ein Bruchteil der
 Partnergeräte erreichbar sein muss, um auf die vollständige Datei zugreifen zu
 können.
 
 % TODO Bild "sblit_2" einfügen
 \includegraphics[]{images/sblit_2}
-Hochladen der Datei in die dezentrale Filecloud.
+Hochladen der Datei in die dezentrale \gls{filecloud}.
 
 Sobald der Synchronisationspartner, hier Home_1 wieder erreichbar, also dem
 \gls{p2pnet} beigetreten ist, fordert er die verschlüsselten
@@ -117,7 +117,7 @@ werden aufgebaut und die Blöcke werden übertragen, entschlüsselt und zu der
 vollständigen Datei zusammengesetzt.
 
 Die Datei wurde also über die Partnergeräte synchronisiert, die eine dezentrale
-Filecloud darstellen.
+\gls{filecloud} darstellen.
 
 % TODO Bild "sblit_3"
 \includegraphics[]{images/sblit_3}
