@@ -10,7 +10,7 @@
 \newcommand{\siehet}[1]{siehe~\linkt{#1}}
 \newcommand{\siehe}[1]{\hyperref[#1]{\siehet{#1}}}
 \newcommand{\referenz}[1]{\hyperref[#1]{(\siehet{#1})}}
-\newcommand{\abbildung}[1]{(siehe Abbildung \linkt{#1})}
+\newcommand{\abbildung}[1]{(siehe Abbildung \linkt{#1fig})}
 \newcommand{\figurelinkt}[1]{Abbildung~\ref{#1}, \nameref{#1}}
 \newcommand{\figurelink}[1]{\hyperref[#1]{\figurelinkt{#1}}}
 \newcommand{\figurelinkpt}[1]{Abbildung~\ref{#1}, \nameref{#1}, \pagelinkt{#1}}
@@ -72,8 +72,8 @@
 
 \newcommand{\javalisting}{\lstset{language=Java, breaklines=true, basicstyle=\ttfamily, keywordstyle=\color{javakeyword}\bfseries, stringstyle=\color{javastring}, commentstyle=\color{javacomment}, morecomment=[s][\color{javadoc}]{/**}{*/}, numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=5pt, tabsize=4, showspaces=false, showstringspaces=false, frame=single}}
 
-\newcommand{\messagestart}{\begin{wrapfigure}{r}{0.5\textwidth} \centering \begin{bytefield}[bitwidth=2em]{8}}
-\newcommand{\messageend}[1]{\end{bytefield} \par \protect\caption{\gls{#1}} \label{#1} \end{wrapfigure}}
+\newcommand{\messagestart}{\begin{figure}[p] \centering \begin{bytefield}[bitwidth=2em]{8}}
+\newcommand{\messageend}[1]{\end{bytefield} \par \protect\caption{\gls{#1}} \label{#1fig} \end{figure}}
 
 
 \newcommand{\listingstart}[1]{\javalisting \begin{lstlisting}[caption={#1},captionpos=b]}
