@@ -38,6 +38,7 @@ def cc(c = {}, add = {}, cpy = []):
 		"border": (c["border"] & (T|L|R)) if c.has_key("border") else (T|L|R),
 		"rwg": c["rwg"] if c.has_key("rwg") else True,
 		"varlensize": c["varlensize"] if c.has_key("varlensize") else 3,
+		"size": c["size"] if c.has_key("size") else 1,
 		"flexnumstyle": c["flexnumstyle"] if c.has_key("flexnumstyle") else "normal"
 	}
 	for k, v in add.iteritems():
@@ -156,7 +157,7 @@ def fixlen(c):
 			content += " (\\code{"+c["val"]+"})"
 		else:
 			content += "\\code{"+c["val"]+"}"
-	return "\\wordbox["+_borderstr(c["border"])+"]{1}{"+content+"}\n"
+	return "\\wordbox["+_borderstr(c["border"])+"]{"+str(c["size"])+"}{"+content+"}\n"
 
 ###
 
@@ -181,6 +182,9 @@ def key(c):
 
 def data(c):
 	return con(flexnum(cc(c, {"desc": (c["desc"] if c.has_key("desc") else "Data") + " Length"})), varlen(cc(c, {"desc": "Data, $N$ Bytes"}, ["border", "desc"])))
+
+def fixdata(c):
+	return varlen(cc(c, {"desc": "Data, "+str(c["size"])+" Bytes"}, ["border", "desc"]))
 
 def string(c):
 	return con(varlen(cc(c, {"desc": "ASCII String Data, $N$ Bytes"}, ["desc"])), byte(cc(c, {"desc": "String Delimiter", "val": "0"}, ["border"])))
@@ -409,6 +413,54 @@ def keycrsa():
 
 ###
 
+def _sblitinit(i, c = {}):
+	return rwg(cc(), "", byte(cc(c, {"val": str(i)}, ["border"])), "Message Type")
+
+def sblit():
+	return con(byte(cc({}, {"desc": "Message Type"})), varlen(cc({}, {"border": T|B|L|R, "desc": "Message Data \\\\ $N$ Bytes"})))
+	
+def versionsverlauf(cc):
+	return con(fixdata({"desc": "Versionsverlauf", "size":20, "border" : T|B|L|R}))
+
+def geraete(cc):
+	return con(fixdata({"desc": "Geräte mit der aktuellen Version", "size":20, "border" : T|B|L|R}))
+
+def sblitauthreq():
+	return con(_sblitinit(0), fixdata({"desc": "Zufallsdaten", "size": 64, "border" : T|B|L|R}))
+
+def sblitauthres():
+	return con(_sblitinit(1), fixdata({"desc": "Zufallsdaten", "size": 128, "border" : T|B|L|R}))
+
+def sblitfilereq(c = {}):
+	return con(_sblitinit(2), string({"desc": "Dateipfad", "border" : T|B|L|R, "varlensize" : 3}), array(cc(c, {"rwgid": "llalist", "name": "Version", "content": versionsverlauf(cc(c)), "border" : T|B|L|R}, ["border"])))#, array({"desc" : "Versionsverlauf"}))
+	
+def sblitfileres(c = {}):
+	return con(_sblitinit(3),byte({"desc" : "Need-Flag"}), string({"desc": "Dateipfad", "border" : T|B|L|R, "varlensize" : 3}), array(cc(c, {"rwgid": "llalist", "name": "Version", "content": versionsverlauf(cc(c)), "border" : T|B|L|R}, ["border"])))
+	
+def sblitfilemsg(c = {}):
+	return con(_sblitinit(4), data({"desc": "Dateiinhalt"}), string({"desc": "Dateipfad", "varlensize" : 3}),array(cc(c, {"rwgid": "llalist", "name": "Version", "content": versionsverlauf(cc(c)), "border" : T|B|L|R}, ["border"])), array(cc(c, {"rwgid": "llalist", "name": "Gerät", "content": geraete(cc(c)), "border" : T|B|L|R}, ["border"])))
+	
+def sblitfiledel():
+	return con(_sblitinit(5), string({"desc": "Dateipfad", "varlensize" : 3, "border" : T|B|L|R}))
+	
+def sblitrefdev():
+	return con(_sblitinit(6), byte({"desc" : "File-Flag"}), string({"desc": "Dateipfad", "varlensize" : 3, "border" : T|B|L|R}))
+	
+def sblitpartfilereq(c = {}):
+	return con(_sblitinit(7), array(cc(c, {"rwgid": "llalist", "name": "Version", "border" : T|B|L|R, "content": versionsverlauf(cc(c))}, ["border"])))
+	
+def sblitpartfileres(c = {}):
+	return con(_sblitinit(8), array(cc(c, {"rwgid": "llalist", "name": "Version", "content": versionsverlauf(cc(c)), "border" : T|B|L|R}, ["border"])), byte({"desc" : "Need-Flag", "border" : T|B|L|R}))
+
+def sblitpartfilemsg(c = {}):
+	return con(_sblitinit(9), array(cc(c, {"rwgid": "llalist", "name": "Version", "content": versionsverlauf(cc(c)), "border" : T|B|L|R}, ["border"])), data({"desc": "Dateiinhalt"}), string({"desc": "Dateipfad", "varlensize" : 3}), array(cc(c, {"rwgid": "llalist", "name": "Gerät", "content": geraete(cc(c)), "border" : T|B|L|R}, ["border"])))
+	
+def sblitpartfiledel():
+	return con(_sblitinit(10), string({"desc": "Dateipfad", "varlensize" : 3, "border" : T|B|L|R}))
+
+def sblitfiledelpart(c = {}):
+	return con(_sblitinit(11), array(cc(c, {"rwgid": "llalist", "name": "Version", "border" : T|B|L|R, "content": versionsverlauf(cc(c))}, ["border"]))) 
+	 
 PROTOCOLS = {
 	"isproto": {
 		"latexname": "\\gls*{isproto}",
@@ -484,6 +536,25 @@ PROTOCOLS = {
 		"gentext": "\\gls*{keyc} -- Genereller Componentaufbau",
 		"messages": {
 			"rsa": "RSA Key"
+		}
+	},
+	"sblit" : {
+		"latexname" : "\\gls*{sblit}", 
+		"messages" : {
+			"authreq" : "\\gls*{authreq}",
+			"authres": "\\gls*{authres}", 
+			"filereq" : "\\gls*{filereq}",
+			"fileres" : "\\gls*{fileres}",
+			"filemsg" : "\\gls*{filemsg}",
+			"filedel" : "\\gls*{filedel}",
+			"refdev" : "\\gls*{refdev}",
+			"partfilereq" : "\\gls*{partfilereq}",
+			"partfileres" : "\\gls*{partfileres}",
+			"partfilemsg" : "\\gls*{partfilemsg}",
+			"partfiledel" : "\\gls*{partfiledel}",
+			"filedelpart" : "\\gls*{filedelpart}"
+			# format ist immer: { ..., "messageid": "Voller Name der Message, wurscht ob mit glossary oder direkt", ... }
+			# protocol key ist hier "sblit", messages sind "req" und "res" - d.h. es müssen folgende funktionen definiert sein: sblit, sblitauthreq, sblitauthres
 		}
 	}
 }
