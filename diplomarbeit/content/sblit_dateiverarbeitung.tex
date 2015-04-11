@@ -45,9 +45,8 @@ Der Thread wird angehalten, da das Programm beim Empfangen einer Datei das Logfi
 \listingstart{Unterteilen in einzelne Dateien}
 for (WatchEvent event : events) {
 	String path = event.context().toString();
-	File changedFile = new File(
-			Configuration.getSblitDirectory()
-					+ Configuration.slash + path);
+	if(!(path.startsWith("\\.sblit\\.") || path.contains(Configuration.slash + "\\.sblit\\."))){
+		File changedFile = new File(Configuration.getSblitDirectory() + Configuration.slash + path);
 \end{lstlisting}
 \begin{description}
 	\descriptionitem{event}
@@ -57,6 +56,7 @@ for (WatchEvent event : events) {
 	\descriptionitem{changedFile}
 	\code{changedFile} enthält die Datei, die gerade geändert wurde.
 \end{description}
+Neben dem Unterteilen der Dateien wird überprüft, ob die Datei mit \datei(.sblit.) anfängt. Ist dies der Fall, wird die Datei nicht synchronisiert, da es sich dabei um eine unvollständig synchronisierte Datei handelt.
 \listingstart{Erstellen einer Datei}
 if (event.kind() == StandardWatchEventKinds.ENTRY_CREATE && logs.get(path) == null) {
 	byte[] fileContent = Files.readAllBytes(changedFile.toPath());
@@ -120,6 +120,7 @@ else if (event.kind() == StandardWatchEventKinds
 \end{description}
 Wurde die Datei bearbeitet, wird sie ausgelesen und anschließend verhasht. Nachdem der Versionsverlauf für die Datei in der Variable \code{hashes} gespeichert wurde, wird überprüft, ob der Versionsverlauf die Datei schon enthält. Ist dies der Fall, ist ein Fehler aufgetreten und die neue Version wird nicht synchronisiert. Falls der Versionsverlauf die aktuelle Version noch nicht enthält, wird der Hash der aktuellen Version im Versionsverlauf gespeichert. Anschließend wird eine neue Liste an Geräten erstellt, auf denen schon die neuste Version synchronisiert ist. In diesem Fall wird nur das eigene Gerät hinzugefügt, da die neuste Version bis jetzt nur auf diesem Gerät vorhanden ist. \\
 \listingstart{Schreiben des \gls{logfile}s}
+	}
 }
 logFile.createNewFile();
 write(files, synchronizedDevices);

@@ -10,37 +10,14 @@ Bevor ein fremdes Gerät eine Verbindung aufbaut, muss auf jeden Fall seine Iden
 	\item \gls{authreq}s
 	\item \gls{authres}s
 \end{itemize}
+\sblitauthreqbytefield
 
-\subsubsection{\gls{authreq}}
-\messagestart
-	\bitheader{0-7} \\
-	
-	\begin{rightwordgroup}{\isprotomsgtype}
-		\wordbox[tlr]{1}{0}
-	\end{rightwordgroup} \\
-	
-	\begin{rightwordgroup}{\isprotomsgdata}
-		\wordbox[tblr]{4}{Zufallsdaten, 64 Bytes} 
-	\end{rightwordgroup}
-	
-\messageend{authreq}
 Sobald zwei Geräte (Gerät A, Gerät B) Daten austauschen wollen, müssen sie die Identität des jeweiligen Kommunikationspartners überprüfen. Dies erfolgt über \gls{authreq}s. Dabei schickt Gerät B zufällige Daten an Gerät A mit der Aufforderung, diese zu verschlüsseln \abbildung{authreq}. 
 %TODO Umformulieren
 Die Gesamtlänge der Daten, die mit RSA-2048 verschlüsselt werden, darf maximal 128 Byte betragen. Um zu verhindern, dass Gerät B bestimmte Daten mit dem Private-Key von Gerät A verschlüsseln lässt, werden 64 von den maximal 128 Byte reserviert. Diese 64 Byte nutzt Gerät A, um zufällige Daten hinzuzufügen, damit sich Gerät B nicht gewünschte Werte verschlüsseln lassen kann.
 
 \subsubsection{\gls{authres}}
-\messagestart
-	\bitheader{0-7} \\
-	
-	\begin{rightwordgroup}{\isprotomsgtype}
-		\wordbox[tlr]{1}{1}
-	\end{rightwordgroup} \\
-	
-	\begin{rightwordgroup}{\isprotomsgdata}
-		\wordbox[tblr]{4}{Verschlüsselte Daten, 128 Bytes} 
-	\end{rightwordgroup}
-	
-\messageend{authres}
+\sblitauthresbytefield
 Bevor die Daten verschlüsselt werden, wird ein zufälliger Wert mit einer Länge von 64 Bit an die empfangenen Daten angefügt.
 Wird dieses Paket nun von Gerät B empfangen, kann der Inhalt mit dem Public-Key des Gerätes A, also dessen Adresse, entschlüsselt werden \abbildung{authres}.
 		
@@ -56,22 +33,7 @@ Wird dieses Paket nun von Gerät B empfangen, kann der Inhalt mit dem Public-Key
 \end{itemize}
 
 \subsubsection{\gls{filereq}} \label{Dateianfrage}
-\messagestart
-	\bitheader{0-7} \\
-	
-	\begin{rightwordgroup}{\isprotomsgtype}
-		\wordbox[tlr]{1}{2}
-	\end{rightwordgroup} \\
-	
-	\begin{rightwordgroup}{\isprotomsgdata}
-		\wordbox[tlr]{2}{Dateipfad, variable Länge} \\
-		\skippedwords \\
-		\wordbox[lr]{1}{} \\
-		\wordbox[tlr]{2}{Versionsverlauf, variable Länge} \\
-		\skippedwords \\
-		\wordbox[blr]{1}{}
-	\end{rightwordgroup}
-\messageend{filereq}
+\sblitfilereqbytefield
 Mithilfe des \gls{filereq} kann eruiert werden, ob die Datei bereits auf einem anderen Gerät bereits vorhanden ist. Außerdem kann mit dem \gls{filereq} ein möglicher Konflikt \referenz{Konflikt} ausgeschlossen werden \abbildung{filereq}.
 
 \begin{description} 
@@ -84,23 +46,7 @@ Mithilfe des \gls{filereq} kann eruiert werden, ob die Datei bereits auf einem a
 		
 \subsubsection{\gls{fileres}} \label{fileres}
 
-\messagestart
-	\bitheader{0-7} \\
-	
-	\begin{rightwordgroup}{\isprotomsgtype}
-		\wordbox[tlr]{1}{3}
-	\end{rightwordgroup} \\
-	
-	\begin{rightwordgroup}{\isprotomsgdata}
-		\wordbox[tlr]{1}{Need-Flag, 1 Byte} \\
-		\wordbox[tlr]{2}{Dateipfad, variable Länge} \\
-		\skippedwords \\
-		\wordbox[lr]{1}{} \\
-		\wordbox[tlr]{2}{Hash, variable Länge} \\
-		\skippedwords \\
-		\wordbox[blr]{1}{}
-	\end{rightwordgroup}
-\messageend{fileres}
+\sblitfileresbytefield
 Der \gls{fileres} wird benötigt, um dem Gerät, das den \gls{filereq} geschickt hat, zu antworten, ob die Datei benötigt wird.
 
 \begin{description}
@@ -113,29 +59,7 @@ Der \gls{fileres} wird benötigt, um dem Gerät, das den \gls{filereq} geschickt
 \end{description}
 		
 \subsubsection{\gls{filemsg}}
-\messagestart
-	\bitheader{0-7} \\
-	
-	\begin{rightwordgroup}{\isprotomsgtype}
-		\wordbox[tlr]{1}{5}
-	\end{rightwordgroup} \\
-	
-	\begin{rightwordgroup}{\isprotomsgdata}
-		\wordbox[tlr]{2}{Dateiinhalt, variable Länge} \\
-		\skippedwords \\
-		\wordbox[lr]{1}{} \\
-		\wordbox[tlr]{2}{Dateipfad, variable Länge} \\
-		\skippedwords \\
-		\wordbox[lr]{1}{} \\
-		\wordbox[tlr]{2}{Versionsverlauf, variable Länge} \\
-		\skippedwords \\
-		\wordbox[lr]{1}{} \\
-		\wordbox[tlr]{2}{Geräte mit der aktuellen Verision, variable Länge} \\
-		\skippedwords \\
-		\wordbox[blr]{1}{}
-	\end{rightwordgroup}
-	
-\messageend{filemsg}
+\sblitfilemsgbytefield
 Die \gls{filemsg} dient zur Übertragung der Datei \abbildung{filemsg}.
 \begin{description}
 	\descriptionitem{Dateiinhalt}
@@ -149,38 +73,11 @@ Die \gls{filemsg} dient zur Übertragung der Datei \abbildung{filemsg}.
 \end{description}
 		
 \subsubsection{\gls{filedel}}
-\messagestart
-	\bitheader{0-7} \\
-	
-	\begin{rightwordgroup}{\isprotomsgtype}
-		\wordbox[tlr]{1}{5}
-	\end{rightwordgroup} \\
-	
-	\begin{rightwordgroup}{\isprotomsgdata}
-		\wordbox[tlr]{2}{Dateipfad, variable Länge} \\
-		\skippedwords \\
-		\wordbox[blr]{1}{} 
-	\end{rightwordgroup}
-	
-\messageend{filedel}
+\sblitfiledelbytefield
 Eine \gls{filedel} beinhaltet den Pfad zur zu löschenden Datei. Nach Empfang der \gls{filedel} wird die Datei gelöscht \abbildung{filedel}.
 
 \subsubsection{\gls{refdev}}
-\messagestart
-	\bitheader{0-7} \\
-	
-	\begin{rightwordgroup}{\isprotomsgtype}
-		\wordbox[tlr]{1}{6}
-	\end{rightwordgroup} \\
-	
-	\begin{rightwordgroup}{\isprotomsgdata}
-		\wordbox[tlr]{1}{File-Flag, 1 Byte} \\
-		\wordbox[tlr]{2}{Geräte, variable Länge} \\
-		\skippedwords \\
-		\wordbox[blr]{1}{} 
-	\end{rightwordgroup} 
-	
-\messageend{refdev}
+\sblitrefdevbytefield
 Die \gls{refdev} dient zur Aktualisierung von Gerätelisten \abbildung{refdev}.
 \begin{description}
 	\descriptionitem{File-Flag}
@@ -199,17 +96,7 @@ Die \gls{refdev} dient zur Aktualisierung von Gerätelisten \abbildung{refdev}.
 \end{itemize}
 
 \subsubsection{\gls{partfilereq}} \label{partnerfilerequest}
-\messagestart
-	\begin{rightwordgroup}{\isprotomsgtype}
-		\wordbox[tlr]{1}{7}
-	\end{rightwordgroup} \\
-	
-	\begin{rightwordgroup}{\isprotomsgdata}
-		\wordbox[tlr]{2}{Versionsverlauf, variable Länge} \\
-		\skippedwords \\
-		\wordbox[blr]{1}{}
-	\end{rightwordgroup}
-\messageend{partfilereq}
+\sblitpartfilereqbytefield
 Der \gls{partfilereq} dient, wie der \gls{filereq}, zum Versenden einer Dateianfrage \abbildung{partfilereq}.
 \begin{description}
 	\descriptionitem{Versionsverlauf}
@@ -217,18 +104,7 @@ Der \gls{partfilereq} dient, wie der \gls{filereq}, zum Versenden einer Dateianf
 \end{description}
 
 \subsubsection{\gls{partfileres}}
-\messagestart
-	\begin{rightwordgroup}{\isprotomsgtype}
-		\wordbox[tlr]{1}{8}
-	\end{rightwordgroup} \\
-	
-	\begin{rightwordgroup}{\isprotomsgdata}
-		\wordbox[tlr]{2}{Versionsverlauf, variable Länge} \\
-		\skippedwords \\
-		\wordbox[blr]{1}{}\\
-		\wordbox[blr]{1}{Need-Flag}
-	\end{rightwordgroup}
-\messageend{partfileres}
+\sblitpartfileresbytefield
 Der \gls{partfileres} dient zum Antworten auf einen \gls{partfilereq} \abbildung{partfileres}.
 
 \begin{description}
@@ -239,26 +115,7 @@ Der \gls{partfileres} dient zum Antworten auf einen \gls{partfilereq} \abbildung
 \end{description}
 
 \subsubsection{\gls{partfilemsg}}
-\messagestart
-	\begin{rightwordgroup}{\isprotomsgtype}
-		\wordbox[tlr]{1}{9}
-	\end{rightwordgroup}\\
-	
-	\begin{rightwordgroup}{\isprotomsgdata}
-		\wordbox[tlr]{2}{Versionsverlauf, variable Länge} \\
-		\skippedwords \\
-		\wordbox[lr]{1}{} \\
-		\wordbox[tlr]{2}{Dateiinhalt, variable Länge} \\
-		\skippedwords \\
-		\wordbox[lr]{1}{} \\
-		\wordbox[tlr]{2}{Dateipfad, variable Länge} \\
-		\skippedwords \\
-		\wordbox[lr]{1}{} \\
-		\wordbox[tlr]{2}{Geräte mit der aktuellen Verision, variable Länge} \\
-		\skippedwords \\
-		\wordbox[blr]{1}{}
-	\end{rightwordgroup}
-\messageend{partfilemsg}
+\sblitpartfilemsgbytefield
 Die \gls{partfilemsg} dient zum Versenden einer Datei an Partnergeräte \referenz{Partnergerät} \abbildung{partfilemsg}.
 \begin{description}
 	\descriptionitem{Versionsverlauf}
@@ -272,17 +129,7 @@ Die \gls{partfilemsg} dient zum Versenden einer Datei an Partnergeräte \referen
 \end{description}
 
 \subsubsection{\gls{partfiledel}}
-\messagestart
-	\begin{rightwordgroup}{\isprotomsgtype}
-		\wordbox[tlr]{1}{10}
-	\end{rightwordgroup} \\
-	
-	\begin{rightwordgroup}{\isprotomsgdata}
-		\wordbox[tlr]{2}{Dateipfad, variable Länge} \\
-		\skippedwords \\
-		\wordbox[blr]{1}{} \\
-	\end{rightwordgroup}
-\messageend{partfiledel}
+\sblitpartfiledelbytefield
 \begin{description}
 	\descriptionitem{Dateipfad}
 	Das einzige Attribut der \gls{partfiledel} ist der verschlüsselte Dateipfad. Dieser wird eine Woche lang gespeichert und dann gelöscht.
@@ -290,17 +137,7 @@ Die \gls{partfilemsg} dient zum Versenden einer Datei an Partnergeräte \referen
 Die \gls{partfiledel} dient, wie die \gls{filedel}, zum Löschen von Dateien auf den eigenen Geräten \abbildung{partfiledel}.
 
 \subsubsection{\gls{filedel}}
-\messagestart
-	\begin{rightwordgroup}{\isprotomsgtype}
-		\wordbox[tlr]{1}{11}
-	\end{rightwordgroup}\\
-	
-	\begin{rightwordgroup}{\isprotomsgdata}
-		\wordbox[tlr]{2}{Versionsverlauf, variable Länge} \\
-		\skippedwords \\
-		\wordbox[blr]{1}{}
-	\end{rightwordgroup}
-\messageend{filedelpart}
+\sblitfiledelpartbytefield
 Um Platz auf den Partnergeräten zu sparen, werden die Dateien gelöscht, sobald diese auf allen eigenen Geräten verteilt sind. Dies wird mit der \gls{filedel} initiiert. In der \gls{filedel} zwischen Partnergerät und eigenem Gerät wird der Versionsverlauf statt dem Dateinamen angegeben \abbildung{filedel}.
 \begin{description}
 	\descriptionitem{Versionsverlauf}
@@ -327,12 +164,21 @@ Nach Empfang des \gls{filereq} wird zunächst geprüft, ob die Datei vorhanden u
 
 Nach Empfang des \gls{fileres} wird zunächst überprüft, ob der Hashwert der Datei im \gls{logfile} mit dem erhaltenen Pfad übereinstimmt. Stimmt der Hashwert im \gls{fileres} nicht mit dem aktuellen lokalen Hashwert überein, wird die Antwort verworfen. Dies kann beispielsweise passieren, wenn in der Zwischenzeit eine neuere Version der Datei erzeugt wurde. Stimmt dieser jedoch überein, kann die Datei nun im nächsten Schritt mithilfe der \gls{filemsg} verschickt werden.
 
-Wird ein \gls{fileres} empfangen, wird zunächst das \gls{logfile} bearbeitet. Dazu wird der ursprüngliche Eintrag zur empfangenen Datei samt dem Versionsverlauf und den Geräten mit der aktuellen Version durch die neuen Parameter ersetzt. Dies passiert, damit die Änderung vom \gls{watchservice} nicht fälschlicherweise als Änderung durch den Benutzer wahrgenommen wird. Anschließend wird der empfangene Dateiinhalt in die Datei geschrieben. Dieser gesamte Prozess findet jedoch erst nach dem Empfang der vollständigen Datei statt, damit keine beschädigte Datei bei einem Verbindungsabbruch entsteht, die möglicherweise als neue Version erkannt werden würde.
+Wird ein \gls{fileres} empfangen, wird zunächst das \gls{logfile} bearbeitet. Dazu wird der ursprüngliche Eintrag zur empfangenen Datei samt dem Versionsverlauf und den Geräten mit der aktuellen Version durch die neuen Parameter ersetzt. Dies passiert, damit die Änderung vom \gls{watchservice} nicht fälschlicherweise als Änderung durch den Benutzer wahrgenommen wird. Anschließend wird der empfangene Dateiinhalt vorerst in eine temporäre Datei geschrieben. Diese versteckte, temporäre Datei wird mit dem Prefix \datei{.sblit.} gespeichert, damit bei einem Absturz keine Dateien verloren gehen. Nach dem Schreiben der Datei wird sie in den urspünglichen Namen umbenannt.
 
 \subsubsection{Löschen einer Datei}
 Das Senden einer \gls{filedel} wird, wie das Senden eines \gls{filereq}, entweder durch das \gls{watchservice} oder beim Autorisieren eines \gls{appch} initiiert. 
 
 Beim Empfangen dieser Anfrage, wird die Datei mit einem Zeitstempel in einer Datei gespeichert, damit die Datei auch auf Geräten, die gerade nicht online sind, gelöscht werden kann. Außerdem wird die angefragte Datei gelöscht, sobald die Anfrage empfangen wird. Deshalb sollte man eine alte Version nicht löschen, nur weil sie nicht auf dem aktuellsten Stand ist, den dies löscht ebenfalls die Datei auf dem aktuellsten Stand.
 
-\subsubsection{Aktualisieren der Gerätedatei}
-Die Gerätedateien werden ebenfalls von einem Watchservice überwacht. Werden diese bearbeitet, wird eine \gls{refdev} an die anderen Geräte, die gerade online sind, verschickt. Außerdem wird diese periodisch, in einem konfigurierbaren Intervall, den anderen Geräten mitgeteilt.
+\subsubsection{Aktualisieren einer Gerätedatei}
+Die Gerätedateien werden ebenfalls von einem Watchservice überwacht. Werden diese bearbeitet, wird eine \gls{refdev} an die anderen Geräte, die gerade online sind, verschickt. Außerdem wird diese periodisch, in einem konfigurierbaren Intervall, den anderen Geräten mitgeteilt. Beim Empfangen wird überprüft, ob die Empfangene Version aktueller ist. Im Falle, dass die Datei aktueller ist, werden die Neuerungen in die Datei geschrieben.
+
+\subsubsection{Speichern einer Datei auf einem \gls{partnerdevice}}
+Wird eine Datei von einem Benutzer verändert, wird diese, sofern nicht alle eigenen Geräte online sind, auf ein \gls{partnerdevice} übertragen. Dazu wird ein \gls{partfilereq} an das \gls{partnerdevice} geschickt. 
+
+Beim Empfangen des \gls{partfilereq} wird überprüft, ob eine Datei mit dem in der Anfrage mitgeschickten Versionsverlauf noch nicht existiert und ob genug von dem zur Verfügung gestellten Speicherplatz vorhanden ist. Werden beide Bedingungen erfüllt, wird das Need-Flag auf den Hexadezimalwert \code{0x01} gesetzt und gemeinsam mit dem Versionsverlauf in einem \gls{partfileres} zurückgeschickt. Andernfalls wird mit dem Versionsverlauf und dem Hexadezimalwert \code{0x00} geantwortet. 
+
+Nachdem der \gls{partfileres} empfangen wurde, wird, falls das Need-Flag auf \code{0x01} gesetzt ist, wird mit der \gls{partfilemsg} geantwortet. Bevor die \gls{partfilemsg} verschickt wird, werden der Dateiinhalt, Dateipfad und die Geräte mit der aktuellen Version mit dem symmetrischen Schlüssel verschlüsselt \referenz{sicherheit}.
+
+Beim Empfangen des \gls{partfilereq} wird der aktuellste Hash gekürzt. Anschließend wird der verschlüsselte Dateiinhalt in einer Datei mit dem Namen des gekürzten Hashes gespeichert. Anschließend werden Dateipfad und die Geräteliste ebenfalls verschlüsselt gespeichert.
