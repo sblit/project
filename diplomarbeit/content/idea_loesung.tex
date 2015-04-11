@@ -1,28 +1,31 @@
 \subsection{Einleitung}
 Der signifikanteste Unterschied zwischen üblichen Dateisynchronisationsdiensten
 und \sblit besteht im Verzicht eines Servers. Anders als im Kapitel 1.1.2. erklärt,
-findet die Kommunikation zwischen zwei Endgeräten nicht über einen Server statt,
+findet die Datenübertragung bei \sblit zwischen zwei Endgeräten nicht über einen Server statt,
 sondern über eine direkte verschlüsselte Verbindung zwischen diesen zwei Geräten.
 
-Durch diesen Ansatz, fällt die zentrale Sammelstelle von Nutzerdaten
+Durch diesen Ansatz fällt die zentrale Sammelstelle von Nutzerdaten
 weg und dem Datendiebstahl von Hackern wird ein Riegel vorgeschoben. Außerdem
 wird kein betreibendes Unternehmen mehr benötigt, um Server zu warten, womit auch
 die einheitliche Anlaufstelle für staatliche Sicherheitsbehörden und Geheimdienste
 nicht mehr existiert.
 
 \subsection{Herausforderungen}
+\subsubsection{Allgemein}
 Mit dem Weglassen eines Servers, entstehen aber auch viele Herausforderungen,
 wenn der volle Funktionsumfang eines üblichen Dateisynchronisationsdienstes
 trotzdem gewährleistet werden soll.
 
+\subsubsection{Verbindungsaufbau zwischen Clients}
 So fehlt der öffentliche Server als bekannter \glqq{} Mittelmann \grqq{} in der Kommunikation
 zwischen den Clients, sodass sich diese über das Internet hinwegüber mit einem
 eigenen Protokoll finden, um eine direkte Verbindung erfolgreich aufbauen zu können.
 Mehr zu den genauen Herausforderungen beim Verbindungsaufbau und
 die Bewältigung dieser folgt im Kapitel ...
 %TODO Kapitel eintragen mit verlinken.
-Der Server dient aber nicht aber nicht nur als \glqq{} Mittelmann \grqq{} damit die Clients
-miteinander kommunizieren können. Er dient nämlich auch als \gls{filecloud},
+\subsubsection{Alternative zu Server als \gls{filecloud}}
+Der Server agiert aber nicht aber nicht nur als \glqq{} Mittelmann \grqq{} damit die
+Clients miteinander kommunizieren können. Er dient nämlich auch als \gls{filecloud},
 also als Zwischenspeicher für Daten. Dieser ist nämlich essenziell, wenn man
 Dateien ohne große Komplikationen synchronisieren will. Um zu erklären warum das
 so ist, gehen wir von folgendem Szenario bei Verwendung eines Servers aus:
@@ -36,7 +39,7 @@ zwischengespeichert wurde und sie von dort aus gesendet wurde.
 
 Ohne den Server als \gls{filecloud}, wäre die alte Version der Datei bearbeitet worden, sodass zwei
 neue Versionen der Datei existieren würden. Dies nennt man einen \gls{versionconflict}.
-
+%TODO Bild einfügen, auf dem bei sblit ein Client nicht erreichbar ist.
 Mit dem Verzicht auf den Server, muss also eine alternative \gls{filecloud} benutzt
 werden, um Dateien zwischenspeichern zu können, sodass in vorherigen Szenario ohne Server
 keine \glspl{versionconflict} auftreten.
@@ -46,7 +49,7 @@ eines zentralen Speicherns durch einen Server, wird auf den Speicherplatz der
 verschiedenen Nutzern von \sblit zurückgegriffen. Diese dezentrale \gls{filecloud}
 besteht also aus den verteilten Speicherplätzen verschiedenster Nutzer.
 
-Dieses Prinzip funktioniert durch ein faires Abkommen zwischen den \sblit-Nutzern,
+Dieses Prinzip funktioniert durch ein \gls{p2pnet}, welches durch faire Abkommen zwischen den \sblit-Nutzern realisiert wird,
 sogenannten \glspl{partnership}. Grundsätzlich sind \glspl{partnership} einfach eine
 Vereinbarung mit anderen, teilweise sogar fremden Nutzern, sich gegenseitig Speicherplatz
 freizugeben. Eine \gls{partnership} wird entweder automatisch mit unbekannten Nutzern
@@ -59,43 +62,72 @@ natürlich Pflicht, es wurde allerdings noch einen Schritt weiter gedacht. Gener
 hat bei \sblit nämlich nur der Nutzer, dem der die Datei auf den Partnergeräten speichert und
 dessen \glspl{syncpartner} Zugriff auf die vollständigen Dateien.
 
-Wenn also ein oder mehrere \glspl{syncpartner} nicht erreichbar sind.
+Wenn also mindestens ein \gls{syncpartner} nicht erreichbar ist und die Datei somit
+nicht direkt über eine verschlüsselte Verbindung übertragen werden kann, wird eine Kopie
+dieser Datei in viele Datenblöcke aufgeteilt. Diese Blöcke werden verschlüsselt und
+verstreut auf den \glspl{partnerdevice} gespeichert.
 
-Bei \sblit werden Dateien anstatt über einen Server, nämlich über verschlüsselte
-Verbindungen zwischen zwei Endgeräten direkt übertragen.
-Oft kommt es allerdings vor, dass \glspl{syncpartner} beim Verändern von
-Dateien nicht erreichbar sind und keine Verbindung aufgebaut und auch
-keine Datei synchronisiert werden kann.
-Mit dem Senden einer neuen Version von Dateien zu warten,
-bis beide Clients gleichzeitig erreichbar sind, hätte eine zu große Zeitspanne
-zur Folge, in der viele Versionskonflikte auftreten könnten.
-Deshalb verwendet \sblit eine Cloud, um Dateien für nicht erreichbare
-Synchronisationspartner extern zwischenspeichern zu können. Die Cloud bildet
-sich dabei aber nicht aus einem Server, wie üblich, sondern aus einem \gls{p2pnet}
-aller Nutzer von \sblit. Diese dezentrale \gls{filecloud} wird
-mit sogenannten \glspl{partnership} realisiert. Dabei geht es darum, dass sich
-User, die sich gegenseitig nicht kennen müssen, einander ihre Daten direkt über
-verschlüsselte Kanäle auf den Geräten des jeweiligen anderen speichern.
-Um die Dateien nicht nur sicher zu übertragen, sondern auch zwischenzuspeichern,
-ohne, dass Dritte Zugriff haben, werden die zu
-synchronisierenden Dateien in Blöcke aufgeteilt und verschlüsselt. Diese
-verschlüsselten Blöcke werden dann verteilt auf die \glspl{partnerdevice} gespeichert,
-sodass diese fremden User nichts damit anfangen können, da sie weder den
-Schlüssel zum Entschlüsseln, noch die Informationen über den Ort der restlichen
-Blöcke besitzen. Diese befindet sich ausnahmslos nur bei dem User, zu dem die
-Blöcke gehören.
+Für die Nutzer hinter den \glspl{partnerdevice} ist es somit unmöglich auf die ursprüngliche
+Datei zu schließen. Einerseits, ist der bei ihm gespeicherte Datenblock nämlich
+verschlüsselt und andererseits, besitzen, wie zuvor erwähnt, nur der Nutzer, dem
+der die Datei auf den Partnergeräten speichert und dessen \glspl{syncpartner}
+die Information, wo die gesamten Blöcke gespeichert sind. % und in welcher Reihenfolge man diese wieder zusammensetzen muss.
 
-\subsection{Szenario}
+Von einer ständigen Erreichbarkeit darf auch bei den \glspl{partnerdevice} nicht
+ausgegangen werden. Problematisch wäre es, wenn die Datei nicht von der dezentralen
+\gls{filecloud} heruntergeladen werden kann, nur weil eines von vielen \glspl{partnerdevice}
+nicht erreichbar ist. Um das zu vermeiden, wird jeder verschlüsselte Datenblock so in
+etwa zehn mal in der \gls{filecloud} gespeichert, sodass nur mindestens 10\% der
+\glspl{partnerdevice} erreichbar sein müssen um die komplette Datei anfordern zu können.
+
+Um den Ablauf eines Synchronisationsvorgangs bei \sblit vollständig aufzuzeigen,
+folgen nun häufig auftretende Szenarios.
+%Bei \sblit werden Dateien anstatt über einen Server, nämlich über verschlüsselte
+%Verbindungen zwischen zwei Endgeräten direkt übertragen.
+%Oft kommt es allerdings vor, dass \glspl{syncpartner} beim Verändern von
+%Dateien nicht erreichbar sind und keine Verbindung aufgebaut und auch
+%keine Datei synchronisiert werden kann.
+%Mit dem Senden einer neuen Version von Dateien zu warten,
+%bis beide Clients gleichzeitig erreichbar sind, hätte eine zu große Zeitspanne
+%zur Folge, in der viele Versionskonflikte auftreten könnten.
+%Deshalb verwendet \sblit eine Cloud, um Dateien für nicht erreichbare
+%Synchronisationspartner extern zwischenspeichern zu können. Die Cloud bildet
+%sich dabei aber nicht aus einem Server, wie üblich, sondern aus einem \gls{p2pnet}
+%aller Nutzer von \sblit. Diese dezentrale \gls{filecloud} wird
+%mit sogenannten \glspl{partnership} realisiert. Dabei geht es darum, dass sich
+%User, die sich gegenseitig nicht kennen müssen, einander ihre Daten direkt über
+%verschlüsselte Kanäle auf den Geräten des jeweiligen anderen speichern.
+%Um die Dateien nicht nur sicher zu übertragen, sondern auch zwischenzuspeichern,
+%ohne, dass Dritte Zugriff haben, werden die zu
+%synchronisierenden Dateien in Blöcke aufgeteilt und verschlüsselt. Diese
+%verschlüsselten Blöcke werden dann verteilt auf die \glspl{partnerdevice} gespeichert,
+%sodass diese fremden User nichts damit anfangen können, da sie weder den
+%Schlüssel zum Entschlüsseln, noch die Informationen über den Ort der restlichen
+%Blöcke besitzen. Diese befindet sich ausnahmslos nur bei dem User, zu dem die
+%Blöcke gehören.
+%TODO entfernen bei der Überschrift
+\subsection{Szenarios (stimmt noch nicht und wird überarbeitet)}
+\subsubsection{Allgemein}
 Bei \sblit wird der Inhalt eines Ordners synchronisert, der bei der
-Konfiguration angegebenen wurde. Sobald sich Dateien innerhalb des Ordners
+Erstinstallation der Anwendung angegebenen wurde. Sobald sich Dateien innerhalb des Ordners
 ändern, wird die neue Version der Datei kopiert und die Kopie wird den
 erreichbaren Synchronisationspartnern über eine direkte verschlüsselte Verbindung
 gesendet.
 
-\includegraphics[]{images/sblit_1}
-%\caption{Übertragung der Datei zwischen zwei erreichbaren Hosts}.
+\subsubsection{Synchronisieren zwischen zwei erreichbaren \glspl{syncpartner}}
+Wenn auf dem Schulrechner eine bereits synchronisierte Datei verändert und
+gespeichert wurde, dann werden diese Änderungen an der Datei in mehrere Datenblöcke
+aufgeteilt, diese Blöcke werden verschlüsselt und direkt über eine verschlüsselte
+Verbindung an den .
 
-Für Synchronisationspartner, die nicht erreichbar sind, wird die Datei in der dezentralen
+Hier folgt eine Grafik (noch nicht vollendet).
+%\begin{figure}[h]
+%	\centering
+%  \includegraphics[]{images/sblit_1}
+%  \caption{Übertragung der Datei zwischen zwei erreichbaren Hosts}.
+%\end{figure}
+
+Für \glspl{syncpartner}, die nicht erreichbar sind, wird die Datei in der dezentralen
 \gls{filecloud} zwischengespeichert. Die Datei wird kopiert und in Blöcke
 aufgeteilt. Diese Blöcke werden mit dem privaten Schlüssel des Clients
 verschlüsselt und verteilt auf den \glspl{partnerdevice} gespeichert.
@@ -106,8 +138,11 @@ in die dezentrale \gls{filecloud} gespeichert, sodass nur ein Bruchteil der
 Partnergeräte erreichbar sein muss, um auf die vollständige Datei zugreifen zu
 können.
 
-\includegraphics[]{images/sblit_2}
-%\caption{Hochladen der Datei in die dezentrale \gls{filecloud}}.
+\begin{figure}[h]
+	\centering
+  \includegraphics[]{images/sblit_1}
+  \caption{Hochladen der Datei in die dezentrale \gls{filecloud}}.
+\end{figure}
 
 Sobald der \gls{syncpartner}, hier Home wieder hochgefahren ist, fordert er die
 verschlüsselten Dateiblöcke von den \glspl{partnerdevice} an. Die Blöcke werden
@@ -116,11 +151,14 @@ verschlüsselten Dateiblöcke von den \glspl{partnerdevice} an. Die Blöcke werd
 Die Datei wurde also über die Partnergeräte synchronisiert, die eine dezentrale
 \gls{filecloud} darstellen.
 
-\includegraphics[]{images/sblit_3}
-%\caption{Gegenseitiges Speichern von Dateiblöcken (Konzept einer \gls{partnership})}.
-
 Im Gegenzug, dass man Daten auf Geräten anderer speichern darf, gibt man selbst
 Speicherplatz für diese User frei, in dem die von ihnen verschlüsselten
 Dateiblöcke zwischengespeichert werden können. Der für andere User freigegebene
 Speicherplatz beträgt dabei die Speichermenge, die man selbst bei anderen Usern
 beansprucht.
+
+\begin{figure}[h]
+	\centering
+  \includegraphics[]{images/sblit_3}
+  \caption{Gegenseitiges Speichern von Dateiblöcken (Konzept einer \gls{partnership})}.
+\end{figure}
