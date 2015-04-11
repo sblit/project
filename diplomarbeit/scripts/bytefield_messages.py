@@ -118,14 +118,14 @@ def genheadings(part, proto, info, makegeneral = True):
 
 def rwg(c, name, text, desc):
 	if c["rwg"] == True or c["rwg"].count(name) > 0:
-		text = "\\begin{rightwordgroup}{"+desc+"}\n"\
+		text = "\\begin{rightwordgroup}{\parbox{8em}{\\raggedright "+desc+"}}\n"\
 			 + text + "\n"\
 			 + "\\end{rightwordgroup}\n"
 	return text
 
 def lwg(c, name, text, desc):
 	if c["lwg"] == True or c["lwg"].count(name) > 0:
-		text = "\\begin{leftwordgroup}{"+desc+"}\n"\
+		text = "\\begin{leftwordgroup}{\parbox{8em}{\\raggedleft "+desc+"}}\n"\
 			 + text + "\n"\
 			 + "\\end{leftwordgroup}\n"
 	return text
@@ -446,10 +446,10 @@ def sblitauthres():
 	return con(_sblitinit(1), fixdata({"desc": "Zufallsdaten", "size": 128, "border" : T|B|L|R}))
 
 def sblitfilereq(c = {}):
-	return con(_sblitinit(2), string({"desc": "Dateipfad", "border" : T|B|L|R, "varlensize" : 3}), )#, array({"desc" : "Versionsverlauf"}))
+	return con(_sblitinit(2), string({"desc": "Dateipfad", "border" : T|B|L|R, "varlensize" : 3}), lwg(cc(), "", array(cc(c, {"rwgid": "filereq", "name": "Version", "content": version(cc(c)), "border" : T|B|L|R}, ["border"])), "Versionsverlauf"))#, array({"desc" : "Versionsverlauf"}))
 	
 def sblitfileres(c = {}):
-	return con(_sblitinit(3),byte({"desc" : "Need-Flag"}), string({"desc": "Dateipfad", "border" : T|B|L|R, "varlensize" : 3}), lwg(cc(), "", array(cc(c, {"rwgid": "filereq", "name": "Version", "content": version(cc(c)), "border" : T|B|L|R}, ["border"])), "Versionsverlauf"))
+	return con(_sblitinit(3),byte({"desc" : "Need-Flag"}), string({"desc": "Dateipfad", "border" : T|B|L|R, "varlensize" : 3}), fixdata({"desc" : "Hash", "size" : 20, "border" : T|B|L|R}))
 	
 def sblitfilemsg(c = {}):
 	return con(_sblitinit(4), data({"desc": "Dateiinhalt"}), string({"desc": "Dateipfad", "varlensize" : 3}), lwg(cc(), "", array(cc(c, {"rwgid": "filereq", "name": "Version", "content": version(cc(c)), "border" : T|B|L|R}, ["border"])), "Versionsverlauf"), lwg(cc(), "",array(cc(c, {"rwgid": "partfilemsg", "name": "Gerät", "content": geraet(cc(c)), "border" : T|B|L|R}, ["border"])), "Geräte mit der\\\\aktuellen Version"))
@@ -467,7 +467,7 @@ def sblitpartfileres(c = {}):
 	return con(_sblitinit(8), lwg(cc(), "", array(cc(c, {"rwgid": "filereq", "name": "Version", "content": version(cc(c)), "border" : T|B|L|R}, ["border"])), "Versionsverlauf"), byte({"desc" : "Need-Flag", "border" : T|B|L|R}))
 
 def sblitpartfilemsg(c = {}):
-	return con(_sblitinit(9), lwg(cc(), "", array(cc(c, {"rwgid": "filereq", "name": "Version", "content": version(cc(c)), "border" : T|B|L|R}, ["border"])), "Versionsverlauf"), data({"desc": "Dateiinhalt"}), string({"desc": "Dateipfad", "varlensize" : 3}), lwg(cc(), "",array(cc(c, {"rwgid": "partfilemsg", "name": "Gerät", "content": geraet(cc(c)), "border" : T|B|L|R}, ["border"])), "Geräte mit der\\\\aktuellen Version"))
+	return con(_sblitinit(9), lwg(cc(), "", array(cc(c, {"rwgid": "filereq", "name": "Version", "content": version(cc(c)), "border" : T|B|L|R}, ["border"])), "Versionsverlauf"), data({"desc": "Dateiinhalt"}), string({"desc": "Dateipfad", "varlensize" : 3}), lwg(cc(), "",array(cc(c, {"rwgid": "partfilemsg", "name": "Gerät", "content": geraet(cc(c)), "border" : T|B|L|R}, ["border"])), "Geräte mit der aktuellen Version"))
 	
 def sblitpartfiledel():
 	return con(_sblitinit(10), string({"desc": "Dateipfad", "varlensize" : 3, "border" : T|B|L|R}))
@@ -559,14 +559,14 @@ PROTOCOLS = {
 			"authres": "\\gls*{authres}", 
 			"filereq" : "\\gls*{filereq}",
 			"fileres" : "\\gls*{fileres}",
-			"filemsg" : "\\gls*{filemsg}",
-			"filedel" : "\\gls*{filedel}",
-			"refdev" : "\\gls*{refdev}",
+			"filemsg" : "File",
+			"filedel" : "File Delete",
+			"refdev" : "Device Refresh",
 			"partfilereq" : "\\gls*{partfilereq}",
 			"partfileres" : "\\gls*{partfileres}",
-			"partfilemsg" : "\\gls*{partfilemsg}",
-			"partfiledel" : "\\gls*{partfiledel}",
-			"filedelpart" : "\\gls*{filedelpart}"
+			"partfilemsg" : "Partner File",
+			"partfiledel" : "Partner File Delete",
+			"filedelpart" : "File Delete Partner"
 			# format ist immer: { ..., "messageid": "Voller Name der Message, wurscht ob mit glossary oder direkt", ... }
 			# protocol key ist hier "sblit", messages sind "req" und "res" - d.h. es müssen folgende funktionen definiert sein: sblit, sblitauthreq, sblitauthres
 		}
