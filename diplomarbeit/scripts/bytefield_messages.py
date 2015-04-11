@@ -37,6 +37,7 @@ def cc(c = {}, add = {}, cpy = []):
 	nc = {
 		"border": (c["border"] & (T|L|R)) if c.has_key("border") else (T|L|R),
 		"rwg": c["rwg"] if c.has_key("rwg") else True,
+		"lwg": c["lwg"] if c.has_key("lwg") else True,
 		"varlensize": c["varlensize"] if c.has_key("varlensize") else 3,
 		"size": c["size"] if c.has_key("size") else 1,
 		"flexnumstyle": c["flexnumstyle"] if c.has_key("flexnumstyle") else "normal"
@@ -122,6 +123,13 @@ def rwg(c, name, text, desc):
 			 + "\\end{rightwordgroup}\n"
 	return text
 
+def lwg(c, name, text, desc):
+	if c["lwg"] == True or c["lwg"].count(name) > 0:
+		text = "\\begin{leftwordgroup}{"+desc+"}\n"\
+			 + text + "\n"\
+			 + "\\end{leftwordgroup}\n"
+	return text
+	
 ###
 
 def varlen(c):
@@ -419,11 +427,17 @@ def _sblitinit(i, c = {}):
 def sblit():
 	return con(byte(cc({}, {"desc": "Message Type"})), varlen(cc({}, {"border": T|B|L|R, "desc": "Message Data \\\\ $N$ Bytes"})))
 	
-def versionsverlauf(cc):
-	return con(fixdata({"desc": "Versionsverlauf", "size":20, "border" : T|B|L|R}))
+def version(cc):
+	return con(fixdata({"desc": "Hash", "size":20, "border" : T|B|L|R}))
 
-def geraete(cc):
-	return con(fixdata({"desc": "Geräte mit der aktuellen Version", "size":20, "border" : T|B|L|R}))
+def geraet(cc):
+	return con(fixdata({"desc": "Gerät mit der aktuellen Version", "size":20, "border" : T|B|L|R}))
+	
+def geraete(c):
+	return lwg(cc(), "",array(cc(c, {"rwgid": "partfilemsg", "name": "Gerät", "content": geraet(cc(c)), "border" : T|B|L|R}, ["border"])), "Geräte mit der\\\\aktuellen Version")
+	
+def versionsverlauf(c):
+	lwg(cc(), "", array(cc(c, {"rwgid": "filereq", "name": "Version", "content": version(cc(c)), "border" : T|B|L|R}, ["border"])), "Versionsverlauf")
 
 def sblitauthreq():
 	return con(_sblitinit(0), fixdata({"desc": "Zufallsdaten", "size": 64, "border" : T|B|L|R}))
@@ -432,13 +446,13 @@ def sblitauthres():
 	return con(_sblitinit(1), fixdata({"desc": "Zufallsdaten", "size": 128, "border" : T|B|L|R}))
 
 def sblitfilereq(c = {}):
-	return con(_sblitinit(2), string({"desc": "Dateipfad", "border" : T|B|L|R, "varlensize" : 3}), array(cc(c, {"rwgid": "llalist", "name": "Version", "content": versionsverlauf(cc(c)), "border" : T|B|L|R}, ["border"])))#, array({"desc" : "Versionsverlauf"}))
+	return con(_sblitinit(2), string({"desc": "Dateipfad", "border" : T|B|L|R, "varlensize" : 3}), )#, array({"desc" : "Versionsverlauf"}))
 	
 def sblitfileres(c = {}):
-	return con(_sblitinit(3),byte({"desc" : "Need-Flag"}), string({"desc": "Dateipfad", "border" : T|B|L|R, "varlensize" : 3}), array(cc(c, {"rwgid": "llalist", "name": "Version", "content": versionsverlauf(cc(c)), "border" : T|B|L|R}, ["border"])))
+	return con(_sblitinit(3),byte({"desc" : "Need-Flag"}), string({"desc": "Dateipfad", "border" : T|B|L|R, "varlensize" : 3}), lwg(cc(), "", array(cc(c, {"rwgid": "filereq", "name": "Version", "content": version(cc(c)), "border" : T|B|L|R}, ["border"])), "Versionsverlauf"))
 	
 def sblitfilemsg(c = {}):
-	return con(_sblitinit(4), data({"desc": "Dateiinhalt"}), string({"desc": "Dateipfad", "varlensize" : 3}),array(cc(c, {"rwgid": "llalist", "name": "Version", "content": versionsverlauf(cc(c)), "border" : T|B|L|R}, ["border"])), array(cc(c, {"rwgid": "llalist", "name": "Gerät", "content": geraete(cc(c)), "border" : T|B|L|R}, ["border"])))
+	return con(_sblitinit(4), data({"desc": "Dateiinhalt"}), string({"desc": "Dateipfad", "varlensize" : 3}), lwg(cc(), "", array(cc(c, {"rwgid": "filereq", "name": "Version", "content": version(cc(c)), "border" : T|B|L|R}, ["border"])), "Versionsverlauf"), lwg(cc(), "",array(cc(c, {"rwgid": "partfilemsg", "name": "Gerät", "content": geraet(cc(c)), "border" : T|B|L|R}, ["border"])), "Geräte mit der\\\\aktuellen Version"))
 	
 def sblitfiledel():
 	return con(_sblitinit(5), string({"desc": "Dateipfad", "varlensize" : 3, "border" : T|B|L|R}))
@@ -447,19 +461,19 @@ def sblitrefdev():
 	return con(_sblitinit(6), byte({"desc" : "File-Flag"}), string({"desc": "Dateipfad", "varlensize" : 3, "border" : T|B|L|R}))
 	
 def sblitpartfilereq(c = {}):
-	return con(_sblitinit(7), array(cc(c, {"rwgid": "llalist", "name": "Version", "border" : T|B|L|R, "content": versionsverlauf(cc(c))}, ["border"])))
+	return con(_sblitinit(7), lwg(cc(), "", array(cc(c, {"rwgid": "filereq", "name": "Version", "content": version(cc(c)), "border" : T|B|L|R}, ["border"])), "Versionsverlauf"))
 	
 def sblitpartfileres(c = {}):
-	return con(_sblitinit(8), array(cc(c, {"rwgid": "llalist", "name": "Version", "content": versionsverlauf(cc(c)), "border" : T|B|L|R}, ["border"])), byte({"desc" : "Need-Flag", "border" : T|B|L|R}))
+	return con(_sblitinit(8), lwg(cc(), "", array(cc(c, {"rwgid": "filereq", "name": "Version", "content": version(cc(c)), "border" : T|B|L|R}, ["border"])), "Versionsverlauf"), byte({"desc" : "Need-Flag", "border" : T|B|L|R}))
 
 def sblitpartfilemsg(c = {}):
-	return con(_sblitinit(9), array(cc(c, {"rwgid": "llalist", "name": "Version", "content": versionsverlauf(cc(c)), "border" : T|B|L|R}, ["border"])), data({"desc": "Dateiinhalt"}), string({"desc": "Dateipfad", "varlensize" : 3}), array(cc(c, {"rwgid": "llalist", "name": "Gerät", "content": geraete(cc(c)), "border" : T|B|L|R}, ["border"])))
+	return con(_sblitinit(9), lwg(cc(), "", array(cc(c, {"rwgid": "filereq", "name": "Version", "content": version(cc(c)), "border" : T|B|L|R}, ["border"])), "Versionsverlauf"), data({"desc": "Dateiinhalt"}), string({"desc": "Dateipfad", "varlensize" : 3}), lwg(cc(), "",array(cc(c, {"rwgid": "partfilemsg", "name": "Gerät", "content": geraet(cc(c)), "border" : T|B|L|R}, ["border"])), "Geräte mit der\\\\aktuellen Version"))
 	
 def sblitpartfiledel():
 	return con(_sblitinit(10), string({"desc": "Dateipfad", "varlensize" : 3, "border" : T|B|L|R}))
 
 def sblitfiledelpart(c = {}):
-	return con(_sblitinit(11), array(cc(c, {"rwgid": "llalist", "name": "Version", "border" : T|B|L|R, "content": versionsverlauf(cc(c))}, ["border"]))) 
+	return con(_sblitinit(11), lwg(cc(), "", array(cc(c, {"rwgid": "filereq", "name": "Version", "content": version(cc(c)), "border" : T|B|L|R}, ["border"])), "Versionsverlauf")) 
 	 
 PROTOCOLS = {
 	"isproto": {

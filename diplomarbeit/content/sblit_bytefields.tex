@@ -47,10 +47,11 @@
  \\ 
 \wordbox[lrt]{1}{String Delimiter (\code{0})}
  \\ 
+\begin{leftwordgroup}{Versionsverlauf}
 \wordbox[lrt]{3}{Version Count \\ \flexnumfield \\ $\vdots$}
  \\ 
 \begin{rightwordgroup}{Version}
-\wordbox[lrtb]{3}{Versionsverlauf \\ Data, 20 Bytes \\ $\vdots$}
+\wordbox[lrtb]{3}{Hash \\ Data, 20 Bytes \\ $\vdots$}
 
 \end{rightwordgroup}
  \\ 
@@ -58,11 +59,14 @@
 \wordbox[lrtb]{1}{$\vdots$}
 
 \end{rightwordgroup}
+
+\end{leftwordgroup}
  \\ 
+\begin{leftwordgroup}{Geräte mit der\\aktuellen Version}
 \wordbox[lrt]{3}{Gerät Count \\ \flexnumfield \\ $\vdots$}
  \\ 
 \begin{rightwordgroup}{Gerät}
-\wordbox[lrtb]{3}{Geräte mit der aktuellen Version \\ Data, 20 Bytes \\ $\vdots$}
+\wordbox[lrtb]{3}{Gerät mit der aktuellen Version \\ Data, 20 Bytes \\ $\vdots$}
 
 \end{rightwordgroup}
  \\ 
@@ -70,6 +74,8 @@
 \wordbox[lrtb]{1}{$\vdots$}
 
 \end{rightwordgroup}
+
+\end{leftwordgroup}
 \end{bytefield}\par\end{centering}\protect\caption{\gls*{sblit} -- \msg{\sblitfilemsgt}}\label{dcl-sblit-filemsg-bytefield}\end{figure}}
 \newcommand{\sblitfilereqbytefield}{\begin{figure}\begin{centering}\begin{bytefield}[bitwidth=2.2em]{8} \\ 
 \bitheader{0-7} \\ 
@@ -81,18 +87,6 @@
 \wordbox[lrt]{3}{Dateipfad \\ ASCII String Data, $N$ Bytes \\ $\vdots$}
  \\ 
 \wordbox[lrtb]{1}{String Delimiter (\code{0})}
- \\ 
-\wordbox[lrt]{3}{Version Count \\ \flexnumfield \\ $\vdots$}
- \\ 
-\begin{rightwordgroup}{Version}
-\wordbox[lrtb]{3}{Versionsverlauf \\ Data, 20 Bytes \\ $\vdots$}
-
-\end{rightwordgroup}
- \\ 
-\begin{rightwordgroup}{Version}
-\wordbox[lrtb]{1}{$\vdots$}
-
-\end{rightwordgroup}
 \end{bytefield}\par\end{centering}\protect\caption{\gls*{sblit} -- \msg{\sblitfilereqt}}\label{dcl-sblit-filereq-bytefield}\end{figure}}
 \newcommand{\sblitfileresbytefield}{\begin{figure}\begin{centering}\begin{bytefield}[bitwidth=2.2em]{8} \\ 
 \bitheader{0-7} \\ 
@@ -107,10 +101,11 @@
  \\ 
 \wordbox[lrtb]{1}{String Delimiter (\code{0})}
  \\ 
+\begin{leftwordgroup}{Versionsverlauf}
 \wordbox[lrt]{3}{Version Count \\ \flexnumfield \\ $\vdots$}
  \\ 
 \begin{rightwordgroup}{Version}
-\wordbox[lrtb]{3}{Versionsverlauf \\ Data, 20 Bytes \\ $\vdots$}
+\wordbox[lrtb]{3}{Hash \\ Data, 20 Bytes \\ $\vdots$}
 
 \end{rightwordgroup}
  \\ 
@@ -118,6 +113,8 @@
 \wordbox[lrtb]{1}{$\vdots$}
 
 \end{rightwordgroup}
+
+\end{leftwordgroup}
 \end{bytefield}\par\end{centering}\protect\caption{\gls*{sblit} -- \msg{\sblitfilerest}}\label{dcl-sblit-fileres-bytefield}\end{figure}}
 \newcommand{\sblitfiledelbytefield}{\begin{figure}\begin{centering}\begin{bytefield}[bitwidth=2.2em]{8} \\ 
 \bitheader{0-7} \\ 
@@ -168,10 +165,11 @@
 
 \end{rightwordgroup}
  \\ 
+\begin{leftwordgroup}{Versionsverlauf}
 \wordbox[lrt]{3}{Version Count \\ \flexnumfield \\ $\vdots$}
  \\ 
 \begin{rightwordgroup}{Version}
-\wordbox[lrtb]{3}{Versionsverlauf \\ Data, 20 Bytes \\ $\vdots$}
+\wordbox[lrtb]{3}{Hash \\ Data, 20 Bytes \\ $\vdots$}
 
 \end{rightwordgroup}
  \\ 
@@ -179,6 +177,8 @@
 \wordbox[lrtb]{1}{$\vdots$}
 
 \end{rightwordgroup}
+
+\end{leftwordgroup}
  \\ 
 \wordbox[lrt]{3}{Dateiinhalt Length \\ \flexnumfield \\ $\vdots$}
  \\ 
@@ -188,10 +188,11 @@
  \\ 
 \wordbox[lrt]{1}{String Delimiter (\code{0})}
  \\ 
+\begin{leftwordgroup}{Geräte mit der\\aktuellen Version}
 \wordbox[lrt]{3}{Gerät Count \\ \flexnumfield \\ $\vdots$}
  \\ 
 \begin{rightwordgroup}{Gerät}
-\wordbox[lrtb]{3}{Geräte mit der aktuellen Version \\ Data, 20 Bytes \\ $\vdots$}
+\wordbox[lrtb]{3}{Gerät mit der aktuellen Version \\ Data, 20 Bytes \\ $\vdots$}
 
 \end{rightwordgroup}
  \\ 
@@ -199,6 +200,8 @@
 \wordbox[lrtb]{1}{$\vdots$}
 
 \end{rightwordgroup}
+
+\end{leftwordgroup}
 \end{bytefield}\par\end{centering}\protect\caption{\gls*{sblit} -- \msg{\sblitpartfilemsgt}}\label{dcl-sblit-partfilemsg-bytefield}\end{figure}}
 \newcommand{\sblitpartfiledelbytefield}{\begin{figure}\begin{centering}\begin{bytefield}[bitwidth=2.2em]{8} \\ 
 \bitheader{0-7} \\ 
@@ -218,10 +221,11 @@
 
 \end{rightwordgroup}
  \\ 
+\begin{leftwordgroup}{Versionsverlauf}
 \wordbox[lrt]{3}{Version Count \\ \flexnumfield \\ $\vdots$}
  \\ 
 \begin{rightwordgroup}{Version}
-\wordbox[lrtb]{3}{Versionsverlauf \\ Data, 20 Bytes \\ $\vdots$}
+\wordbox[lrtb]{3}{Hash \\ Data, 20 Bytes \\ $\vdots$}
 
 \end{rightwordgroup}
  \\ 
@@ -229,6 +233,8 @@
 \wordbox[lrtb]{1}{$\vdots$}
 
 \end{rightwordgroup}
+
+\end{leftwordgroup}
 \end{bytefield}\par\end{centering}\protect\caption{\gls*{sblit} -- \msg{\sblitpartfilereqt}}\label{dcl-sblit-partfilereq-bytefield}\end{figure}}
 \newcommand{\sblitpartfileresbytefield}{\begin{figure}\begin{centering}\begin{bytefield}[bitwidth=2.2em]{8} \\ 
 \bitheader{0-7} \\ 
@@ -237,10 +243,11 @@
 
 \end{rightwordgroup}
  \\ 
+\begin{leftwordgroup}{Versionsverlauf}
 \wordbox[lrt]{3}{Version Count \\ \flexnumfield \\ $\vdots$}
  \\ 
 \begin{rightwordgroup}{Version}
-\wordbox[lrtb]{3}{Versionsverlauf \\ Data, 20 Bytes \\ $\vdots$}
+\wordbox[lrtb]{3}{Hash \\ Data, 20 Bytes \\ $\vdots$}
 
 \end{rightwordgroup}
  \\ 
@@ -248,6 +255,8 @@
 \wordbox[lrtb]{1}{$\vdots$}
 
 \end{rightwordgroup}
+
+\end{leftwordgroup}
  \\ 
 \wordbox[lrtb]{1}{Need-Flag}
 \end{bytefield}\par\end{centering}\protect\caption{\gls*{sblit} -- \msg{\sblitpartfilerest}}\label{dcl-sblit-partfileres-bytefield}\end{figure}}
@@ -258,10 +267,11 @@
 
 \end{rightwordgroup}
  \\ 
+\begin{leftwordgroup}{Versionsverlauf}
 \wordbox[lrt]{3}{Version Count \\ \flexnumfield \\ $\vdots$}
  \\ 
 \begin{rightwordgroup}{Version}
-\wordbox[lrtb]{3}{Versionsverlauf \\ Data, 20 Bytes \\ $\vdots$}
+\wordbox[lrtb]{3}{Hash \\ Data, 20 Bytes \\ $\vdots$}
 
 \end{rightwordgroup}
  \\ 
@@ -269,5 +279,7 @@
 \wordbox[lrtb]{1}{$\vdots$}
 
 \end{rightwordgroup}
+
+\end{leftwordgroup}
 \end{bytefield}\par\end{centering}\protect\caption{\gls*{sblit} -- \msg{\sblitfiledelpartt}}\label{dcl-sblit-filedelpart-bytefield}\end{figure}}
 
