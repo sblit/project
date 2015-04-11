@@ -5,7 +5,7 @@ Um nicht immer mindestens zwei Geräte eingeschalten haben zu müssen, werden di
 Ein \gls{partnerdevice} zeichnet sich dadurch aus, dass entweder meine Daten auf dem \gls{partnerdevice} oder dessen Daten am eigenen Gerät zwischengespeichert werden. Zwischen den \gls{partnerdevice}en bestehen sogenannte Partnerschaften. Diese werden zwischen zwei Benutzern geschlossen und erlauben es dem jeweils anderen, Dateien auf einem eigenen Gerät zu speichern.
 
 \subsection{Delta-Daten}
-Um den auf den Partnergeräten benötigten und somit auch den freigegebenen Speicherplatz möglichst gering zu halten, synchronisiert \sblit nur Delta-Daten. Unter Delta-Daten kann man sich die Änderungen an einer Datei vorstellen. Da \sblit nicht erkennen kann, in welchem Teil der Datei sich etwas ändert wird hierbei jedoch immer eine ganze Datei mitgeschickt.
+Um den auf den Partnergeräten benötigten und somit auch den freigegebenen Speicherplatz möglichst gering zu halten, synchronisiert \sblit nur Delta-Daten. Unter Delta-Daten kann man sich die Änderungen an einer Datei vorstellen. Bis zur Umsetzung des Erkennungsalgorithmus für Delta-Daten werden die Änderungen Datei-weise synchronisiert.
 
 Wenn sich eine Datei ändert wird diese so lange auf den Partnergeräten gespeichert, bis diese auf allen Geräten verfügbar ist.
 
