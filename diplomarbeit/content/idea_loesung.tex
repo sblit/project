@@ -10,18 +10,56 @@ wird kein betreibendes Unternehmen mehr benötigt, um Server zu warten, womit au
 die einheitliche Anlaufstelle für staatliche Sicherheitsbehörden und Geheimdienste
 nicht mehr existiert.
 
-Mit dem Weglassen eines Servers, entstehen aber auch viele ungelöste Probleme,
+\subsection{Herausforderungen}
+Mit dem Weglassen eines Servers, entstehen aber auch viele Herausforderungen,
 wenn der volle Funktionsumfang eines üblichen Dateisynchronisationsdienstes
 trotzdem gewährleistet werden soll.
 
-So fehlt der öffentliche Server als bekannter "Mittelmann" in der Kommunikation
-zwischen den Clients, sodass diese sich über ein eigenes Protokoll über das
-Internet hinweg finden und eine Verbindung erfolgreich aufbauen können. Mehr zu
-den genauen Herausforderungen beim Verbindungsaufbau zwischen zwei Geräten und
-die Bewältigung dieser gibt es im Kapitel ...
+So fehlt der öffentliche Server als bekannter \glqq{} Mittelmann \grqq{} in der Kommunikation
+zwischen den Clients, sodass sich diese über das Internet hinwegüber mit einem
+eigenen Protokoll finden, um eine direkte Verbindung erfolgreich aufbauen zu können.
+Mehr zu den genauen Herausforderungen beim Verbindungsaufbau und
+die Bewältigung dieser folgt im Kapitel ...
 %TODO Kapitel eintragen mit verlinken.
+Der Server dient aber nicht aber nicht nur als \glqq{} Mittelmann \grqq{} damit die Clients
+miteinander kommunizieren können. Er dient nämlich auch als \gls{filecloud},
+also als Zwischenspeicher für Daten. Dieser ist nämlich essenziell, wenn man
+Dateien ohne große Komplikationen synchronisieren will. Um zu erklären warum das
+so ist, gehen wir von folgendem Szenario bei Verwendung eines Servers aus:
+%TODO Bild einfügen, auf dem bei Dropbox ein Client nicht erreichbar ist.
+Der Rechner in der Schule ist eingeschaltet, das Gerät zu Hause nicht. Wird nun
+eine bereits synchronisierte Datei auf dem Schulrechner bearbeitet, wird eine Kopie dieser wie
+üblich auf die \gls{filecloud}, also den Server hochgeladen. Wenn die Schule vorbei ist,
+wird der Schulrechner abgedreht und zu Hause kann die neuste Version der geänderten Datei beim
+Einschalten des Heim-PCs trotzdem übertragen werden, da diese in der \gls{filecloud}
+zwischengespeichert wurde und sie von dort aus gesendet wurde.
 
+Ohne den Server als \gls{filecloud}, wäre die alte Version der Datei bearbeitet worden, sodass zwei
+neue Versionen der Datei existieren würden. Dies nennt man einen \gls{versionconflict}.
 
+Mit dem Verzicht auf den Server, muss also eine alternative \gls{filecloud} benutzt
+werden, um Dateien zwischenspeichern zu können, sodass in vorherigen Szenario ohne Server
+keine \glspl{versionconflict} auftreten.
+
+Deshalb kommt bei \sblit eine dezentrale \gls{filecloud} zum Einsatz. Anstelle
+eines zentralen Speicherns durch einen Server, wird auf den Speicherplatz der
+verschiedenen Nutzern von \sblit zurückgegriffen. Diese dezentrale \gls{filecloud}
+besteht also aus den verteilten Speicherplätzen verschiedenster Nutzer.
+
+Dieses Prinzip funktioniert durch ein faires Abkommen zwischen den \sblit-Nutzern,
+sogenannten \glspl{partnership}. Grundsätzlich sind \glspl{partnership} einfach eine
+Vereinbarung mit anderen, teilweise sogar fremden Nutzern, sich gegenseitig Speicherplatz
+freizugeben. Eine \gls{partnership} wird entweder automatisch mit unbekannten Nutzern
+geschlossen, oder durch den Nutzer selbst mit Bekannten. Genauer wird auf dieses Thema allerdings weiter hinten im Buch im
+Kapitel ... eingegangen.
+%TODO Kapitel eintragen mit verlinken des selbigen
+Die Dateien werden aber natülich nicht nach einer verschlüsselten Übertragung unverschlüsselt
+auf den teilweise fremden \glspl{partnerdevice} gespeichert. Verschlüsseln ist dabei
+natürlich Pflicht, es wurde allerdings noch einen Schritt weiter gedacht. Generell
+hat bei \sblit nämlich nur der Nutzer, dem der die Datei auf den Partnergeräten speichert und
+dessen \glspl{syncpartner} Zugriff auf die vollständigen Dateien.
+
+Wenn also ein oder mehrere \glspl{syncpartner} nicht erreichbar sind.
 
 Bei \sblit werden Dateien anstatt über einen Server, nämlich über verschlüsselte
 Verbindungen zwischen zwei Endgeräten direkt übertragen.
