@@ -1,20 +1,25 @@
+Einen Server als Dreh- und Angelpunkt eines Dienstes einzusetzen scheint die am
+einfachsten umzusetzende und kosteneffizienteste Methode zu sein, birgt aber Sicherheitsrisiken
+für den Benutzer.
+
 In der Vergangenheit kam es schon öfters zu Hackerangriffen auf große Firmen, bei
 denen große Mengen an Kundendaten gestohlen wurden. Vorfälle wie diese zeigen wie leicht
-Mengen anprivaten Daten in falsche Hände fallen können, wenn diese zentral an einem Ort
+Mengen an privaten Daten in falsche Hände fallen können, wenn diese zentral an einem Ort
 gespeichert werden.
 
-Geheimdienste oder staatliche Sicherheitsbehörden haben außerdem ein leichtes
-Spiel an Userdaten heranzukommen, wenn sie gesammelt auf den Servern eines
-Unternehmens gespeichert werden. Diese Unternehmen sind als Anbieter solcher
-\gls{cloudstorage} unter Umständen zur Herausgabe der Nutzerdaten gesetzlich
-verpflichtet.
+Die Speicherung privater Daten von Usern auf zentralen Servern eines Unternehmens ebnet
+Geheimdiensten und staatlichen Sicherheitsbehörden außerdem den Weg, flächendeckende Überwachung
+durchzuführen und damit massiv in die Privatsphäre aller User des Synchronisationsdienstes
+einzugreifen, da das Unternehmen als Anbieter solcher \gls{cloudstorage} unter Umständen zur
+Herausgabe der Nutzerdaten gesetzlich verpflichtet ist.
 
-Und selbst wenn der duchschnittliche Benutzer nichts zu verbergen hat, ist der
-dreiste Eingriff in die Privatsphäre doch als äußerst problematisch einzustufen
-und leider gestaltet sich dieser zum Bedauern der betroffenen Benutzer, für
-Fremde oft viel zu einfach.
+% Und selbst wenn der duchschnittliche Benutzer nichts zu verbergen hat, ist der
+% dreiste Eingriff in die Privatsphäre doch als äußerst problematisch einzustufen
+% und leider gestaltet sich dieser zum Bedauern der betroffenen Benutzer, für
+% Fremde oft viel zu einfach.
+% TODO ganz umformulieren oder weglassen
+Hauptursache für diese Problematik ist die unverschlüsselte und vor allem zentrale
+Speicherung der Daten.
 
-Hauptursache für diese Problematik ist die oft unverschlüsselte, zentrale
-Speicherung der Daten. Damit aber nicht auf den Komfort verzichtet werden muss,
-der von üblichen Dateisynchronisationsdiensten geboten wird, werden die zuvor
-angesprochenen Probleme bei \sblit umgangen.
+Bei \sblit werden die angesprochenen Probleme umgangen, ohne den durch Synchronisationsdienste
+gebotenen Komfort zu mindern.

@@ -1,65 +1,76 @@
 \subsection{Einleitung}
-In der heutigen Zeit nimmt die Technik einen großen Einfluss auf unser Leben.
-Jeder durchschnittliche Haushalt besitzt mindestens einen Computer mit
-Internetanschluss und die meisten Leute haben heutzutage auch ein Smartphone.
-Selten allerdings bleibt es bei diesen beiden Gerätschaften und so kommt zum Beispiel
-ein Notebook für die Schule oder für den Arbeitsplatz zum Einsatz. Oftmals
-müssen dabei die selben Dateien auf verschiedenen Geräten bearbeitet werden und
-das möglichst ohne \glspl{versionconflict}. Daten müssen von jedem
-Gerät und zu jederzeit erreichbar sein, weshalb Cloud- und
-Dateisynchronisationsdienste einen immer größer werdenden Stellenwert bekommen.
-Das Verwalten beziehungsweise die Verarbeitung von Daten in einer
-zentralen Stelle, meistens einem Server und die dahinter liegende Datenbank des
-jeweiligen Anbieters, soll dabei mit hoher Uptime den dauerhaften Zugriff auf
-die eigenen Dateien sicherstellen.
+Zahlreiche Dienste wie Dropbox, Google Drive, iCloud, Microsoft Onedrive und Box
+bieten ihren Kunden kostenlosen Cloudspeicher an.
+Der Vorteil bei der Verwendung solcher Dateisynchronisationsdienste liegt in der
+Einfachheit, mit der diese Dienste Datenbestände auf mehreren Geräten synchron
+halten.
+
+Besonders bei Verwendung eines Laptops in der Schule und eines zweiten Rechners
+Zuhause ist die Anmeldung bei einem dieser Anbieter hilfreich.
+Statt Dateien mühsam über externe Speichermedien wie USB-Sticks kopieren zu
+müssen, kann ein Synchronisationsclient des Anbieters installiert werden, der
+neue und geänderte Dateien von einem Gerät automatisch auf den Cloudspeicher
+lädt und somit auf das zweite Gerät synchronisiert.
+
+Die meisten Cloudspeicher sind so aufgebaut, dass die Daten der Nutzer zentral
+und unverschlüsselt auf Servern des Anbieters gespeichert werden.
+Dieses Modell ist zwar effizient und vergleichsweise einfach umzusetzen, birgt
+aber Risiken für die Privatsphäre der Nutzer.
+
+Durch die zentrale Speicherung der Daten entsteht ein einziger Angriffspunkt,
+der, wenn ein Angriff erfolgreich oder ein Fremdzugriff auf einem anderen Weg
+möglich ist, den Zugang zum gesamten System und damit zu den Daten aller Nutzer
+erlaubt.
+Der Verzicht auf die Verschlüsselung der Daten ermöglicht es einem Angreifer
+außerdem, die Daten vollständig auszuwerten.
+
+\sblitg verfolgt statt einer klassischen Client-Server-Infrastruktur einen
+vollständig dezentralen Ansatz in Kombination mit starker Verschlüsselung,
+wodurch es keinen zentralen Angriffspunkt mehr gibt, der die Privatsphäre der Nutzer gefährdet.
 
 \subsection{Funktionsweise üblicher Dateisynchronisationsdienste}
 \subsubsection{Allgemein}
 Die Erläuterung der Funktionsweise üblicher Dateisynchronsationsdienste soll beim
 Verstehen der grundsätzlichen Idee von \sblit helfen, da diese auf den
-sicherheitsbezogenen Problemen, die mit der Speicherung von Daten auf einer
-zentralen Stelle einhergehen basieren.
+sicherheitsbezogenen Problemen basiert, die mit der Speicherung von Daten auf einer
+zentralen Stelle einhergehen.
 
 Übliche Dateisynchronisationsdienste bauen auf einer Client-Server-Struktur auf.
-Hierbei werden Dateien über die zentrale Schnittstelle des betreibenden
-Unternehmens, den Servern übertragen, zwischengespeichert, verwaltet und schließlich
+Hierbei werden Dateien auf den zentralen Servern des betreibenden
+Unternehmens übertragen, zwischengespeichert, verwaltet und schließlich
 synchronisiert.
 
-Einen Server als Dreh- und Angelpunkt eines Dienstes einzusetzen scheint die am
-einfachsten umzusetzende und kosteneffizienteste Methode zu sein, birgt aber
-definitiv Sicherheitsrisiken für den Benutzer mit sich, aber vorerst noch ein
-spezifisches Beispiel zum üblichen Funktionsablauf eines Synchronisationsvorgangs von
-Dateien.
+Als Erklärung des üblichen Funktionsablauf eines Synchronisationsvorgangs von
+Dateien folgt ein Szenrio.
 
 \subsubsection{Szenario}
-In der Schule wird ein Übungsprotokoll geschrieben. Sofern die Übung nicht
-fertig gestellt werden kann, muss man dies zu Hause nachholen.
+In der Schule wird ein Übungsprotokoll geschrieben. Wird die Übung nicht
+fertiggestellt, muss sie zu Hause fertiggestellt werden.
 
-\begin{figure}[ht]
+Bei dem Erstellen und Bearbeiten des Übungsprotokolls auf dem Schulrechner
+wird eine Kopie dieser Datei auf den vom Betreiber zur Verfügung gestellten
+\gls{cloudstorage} beziehungsweise dessen Server hochgeladen und dort gespeichert.
+Der Sender behält dabei die Originaldatei. (\figurelink{dropbox_upload})
+\begin{figure}[H]
 	\centering
   \includegraphics[]{images/dropbox_upload}
+	\label{dropbox_upload}
   \caption{Üblich gehandhabtes Uploaden einer Datei}
 \end{figure}
 
-Bei dem Erstellen und Bearbeiten des Übungsprotokolls auf dem Schulrechner in Form
-einer Text-Datei wird eine Kopie Datei auf den vom Betreiber zur Verfügung gestellten
-\gls{cloudstorage} beziehungsweise dessen Server hochgeladen und dort gespeichert.
-Der Sender behält dabei die Originaldatei.
+Der Schulrechner wird heruntergefahren, zu Hause wird der Heimrechner hochgefahren. Die Synchronisations-Software wird
+sobald gestartet, über die Änderungen im \gls{cloudstorage} informiert und aktualisiert den lokalen Datenbestand, in
+diesem Fall durch Herunterladen des neu angelegten Übungsprotokolls vom Server. (\figurelink{dropbox_download})
 
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
   \includegraphics[]{images/dropbox_download}
+	\label{dropbox_download}
   \caption{Üblich gehandhabtes Downloaden einer Datei}
 \end{figure}
 
-Wenn der Heim-PC in diesem Beispiel hochgefahren ist, wird er
-über die Änderung im \gls{cloudstorage} informiert und lädt die Änderung, in
-diesem Fall die neuste Version des Übungsprotokoll von dem Server herunter.
-Die Text-Datei wurde somit über die zentrale Stelle, hier den Server synchronisiert.
-
-Das Übungsprotokoll hat nach dem Synchronistationsvorgang natürlich auf dem Heim-PC
+Das Übungsprotokoll hat nach dem Synchronistationsvorgang auf dem Heim-PC
 den gleichen Inhalt wie die Datei auf dem Schulrechner, da es sich um die selbe Version
-handelt. Wenn man das Übungsprotokoll nun dem Heim-PC bearbeiten würde, würde
-die neue Version genauso wie vorhin zuerst auf den Server geladen werden und vom Server
-aus auf die einzelnen Clients, hier nur auf den Schulrechner synchronisiert
-werden und die neue Version des Übungsprotokoll überschreibt die alte.
+handelt. Würde das Übungsprotokoll nun auf dem Heim-PC bearbeiten werden, würde
+die neue Version analog dazu zuerst auf den Server geladen werden und vom Server
+aus auf die anderen Rechner synchronisiert werden.
