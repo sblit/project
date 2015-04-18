@@ -61,7 +61,7 @@ unique network identifier.
 At the time of writing, the only network defined for DCL is the circle network
 with the identifier \code{org.dclayer.circle}. In this network, each node has
 an address which is computed by hashing the RSA public key of an RSA keypair
-the node generates at startup. As hash algorithm, \code{SHA-1} is used, which
+the node generates at startup. \code{SHA-1} is used as hash algorithm, which
 yields addresses that are 20 bytes in length. Those addresses can then be
 validated by performing a crypto challenge with the node that should be checked.
 
@@ -85,12 +85,12 @@ channels and the transmission of unreliable packets over the circle network, the
 public key of the remote node is required as destination address.
 
 \section*{Overview}
-For integration of DCL communication features in third party applications,
+In order to integrate DCL communication features in third party applications,
 DCL provides a Java library that manages the TCP connection to the DCL
 service, including creating and accepting application channels and sending and
 receiving unreliably transmitted messages.
 
-The \code{org.dclayer} package contains all required classes.
+The \code{org.dclayer} packages contain all required classes.
 
 \section*{Usage}
 
@@ -106,10 +106,10 @@ Service service = new Service(port);
 \end{lstlisting}
 \end{minipage}
 
-Afterwards, an \code{ApplicationInstance} object needs to be created for the
+Afterwards, an \code{Application\-Instance} object needs to be created for the
 application to be connected to the service. This works best by utilizing an
-\code{ApplicationInstanceBuilder} object, which is returned by
-\code{Service.applicationInstance()}.
+\code{Application\-Instance\-Builder} object, which is returned by
+\code{Service.application\-Instance()}.
 
 \shortjavalisting
 \begin{minipage}{\linewidth}
@@ -123,12 +123,10 @@ address, to join DCL networks and to connect the application to the service.
 The code below will use the \code{KeyPair} object referenced by
 \code{addrKeyPair} as this application's address, join the default DCL networks,
 register the object referenced by \code{listener} as the
-\code{NetworkEndpointActionListener} for the default network endpoints and
+\code{Network\-Endpoint\-Action\-Listener} for the default network endpoints and
 connect the application to the DCL service.
 
-%TODO explain NetworkEndpoints
-%TODO here?
-A network endpoint is a pair existing of an address and a DCL network that
+A network endpoint is a pair that consists of an address and a DCL network that
 address has joined. Unreliably transmitted packets are sent over a DCL network
 and between two addresses -- thus between two network endpoints on the same
 network.
@@ -136,12 +134,12 @@ The DCL application to service protocol utilizes network endpoint slots,
 which are essentially numbers referring to network endpoints, to specify
 the origin of a message sent from the application and the destination of a
 message sent to the application.
-The DCL application library uses \code{NetworkEndpointSlot} objects to define
+The DCL application library uses \code{Network\-Endpoint\-Slot} objects to define
 those network endpoint slots and to refer to the address and network of a
-network endpoint. The \code{NetworkEndpointSlot} object is required in every
+network endpoint. The \code{Network\-Endpoint\-Slot} object is required in every
 library method that requires the address and network that should be used to be
 specified and is passed in every callback method defined in the
-\code{NetworkEndpointActionListener} interface.
+\code{Network\-Endpoint\-Action\-Listener} interface.
 
 \shortjavalisting
 \begin{minipage}{\linewidth}
@@ -156,61 +154,61 @@ ApplicationInstance application
 
 The call to \code{connect()} will block until the TCP connection to the service
 is established and the application-to-service protocol is initiated. If an error
-occurs, a \code{ConnectionException} will be thrown.
-Otherwise, \code{connect()} will return a new \code{ApplicationInstance} object,
+occurs, a \code{Connection\-Exception} will be thrown.
+Otherwise, \code{connect()} will return a new \code{Application\-Instance} object,
 which can be used to send unreliably transmitted packets and to initiate
 application channels.
 
 \subsection*{Callbacks}
 \subsubsection*{NetworkEndpointActionListener}
-The \code{NetworkEndpointActionListener} interface defines methods for receiving
+The \code{Network\-Endpoint\-Action\-Listener} interface defines methods for receiving
 callbacks upon joining of DCL networks (\code{onJoin()}), receipt of unreliably
 transmitted packets (\code{onReceive()}) and incoming application channel
-requests (\code{onApplicationChannelRequest()}).
+requests (\code{on\-Application\-Channel\-Request()}).
 
 \subsubsection*{ApplicationChannelActionListener}
-The \code{ApplicationChannelActionListener} interface defines methods for
+The \code{Application\-Channel\-Action\-Listener} interface defines methods for
 receiving callbacks upon successful connection
-(\code{onApplicationChannelConnected()}) and disconnection
-(\code{onApplicationchannelDisconnected()}) of an application channel.
+(\code{on\-Application\-Channel\-Connected()}) and disconnection
+(\code{on\-Applicationchannel\-Disconnected()}) of an application channel.
 
 \subsection*{Unreliably transmitted packets}
 \subsubsection*{Sending}
 In order to send unreliably transmitted packets, the \code{send()} method of an
-\code{ApplicationInstance} object needs to be called.
-The \code{send()} method takes 3 arguments: a \code{NetworkEndpointSlot} object
-decribing the address and network to use, a \code{Data} object containing the
+\code{Application\-Instance} object needs to be called.
+The \code{send()} method takes 3 arguments: a \code{Network\-Endpoint\-Slot} object
+describing the address and network to use, a \code{Data} object containing the
 destination address and another \code{Data} object containing the payload to
 transmit, respectively.
 
 \subsubsection*{Receiving}
 Upon receipt of an unreliably transmitted packet, the \code{onReceive()} method
-of the \code{NetworkEndpointActionListener} assigned to the address and network
+of the \code{Network\-Endpoint\-Action\-Listener} assigned to the address and network
 the packet was received on is called and passed 3 arguments:
-the \code{NetworkEndpointSlot} object corresponding to the address and network
+the \code{Network\-Endpoint\-Slot} object corresponding to the address and network
 the packet was received on, a \code{Data} object containing the source address
 and another \code{Data} object containing the payload received, respectively.
 
-Note that the source address might be empty, indicating the the origin chose not
+Note that the source address might be empty, indicating that the origin chose not
 to include its own address in the message.
 
 \subsection*{Application channels}
 \subsubsection*{Initiating}
 To request an application channel to a specific address, the
-\code{requestApplicationChannel()} method of an \code{ApplicationInstance}
-object needs to be called and passed 4 arguments: a \code{NetworkEndpointSlot}
+\code{request\-Application\-Channel()} method of an \code{Application\-Instance}
+object needs to be called and passed 4 arguments: a \code{Network\-Endpoint\-Slot}
 object to use as the source of this application channel, a \code{String} used as
 an action identifier which the remote will receive in its
-\code{onApplicationChannelRequest} callback, a \code{Key} object containing the
+\code{on\-Application\-Channel\-Request} callback, a \code{Key} object containing the
 public key used as address by the remote that the application channel should be
-connected to and an \code{ApplicationChannelActionListener} object that will
+connected to and an \code{Application\-Channel\-Action\-Listener} object that will
 receive callbacks regarding the application channel.
 
 \subsubsection*{Accepting}
 When an application channel is requested, the
-\code{onApplicationChannelRequest()} of the \code{NetworkEndpointActionListener}
+\code{on\-Application\-Channel\-Request()} of the \code{Network\-Endpoint\-Action\-Listener}
 object assigned to the network endpoint the application channel request was
-received on is called and passed 4 arguments: the \code{NetworkEndpointSlot}
+received on is called and passed 4 arguments: the \code{Network\-Endpoint\-Slot}
 object corresponding to the network endpoint the request was received on, a
 \code{Key} object containing the public key used as address by the remote that
 requested the application channel, a \code{String} object containing the action
@@ -219,40 +217,40 @@ lower-level address (i.e., the IP address and port) of the remote requesting the
 application channel.
 
 To accept the application channel request, return an
-\code{ApplicationChannelActionListener} object that will receive callbacks
+\code{Application\-Channel\-Action\-Listener} object that will receive callbacks
 regarding the application channel.
 
 To ignore the request, simply return \code{null}.
 
 \subsubsection*{Usage}
 As soon as the application channel is successfully connected, the
-\code{onApplicationChannelConnected()} method of the
-\code{ApplicationChannelActionListener} that was either passed when calling the
-\code{requestApplicationChannel()} method or returned from the
-\code{onApplicationChannelRequest()} callback method will be called. The
-\code{onApplicationChannelConnected()} callback will be passed an
-\code{ApplicationChannel} object that refers to the established application
+\code{on\-Application\-Channel\-Connected()} method of the
+\code{Application\-Channel\-Action\-Listener} that was either passed when calling the
+\code{request\-Application\-Channel()} method or returned from the
+\code{on\-Application\-Channel\-Request()} callback method will be called. The
+\code{on\-Application\-Channel\-Connected()} callback will be passed an
+\code{Application\-Channel} object that refers to the established application
 channel.
 
-The \code{ApplicationChannel} object has the following methods that can be
+The \code{Application\-Channel} object has the following methods that can be
 utilized:
 
 \begin{description}
 
     \item[{\code{getOutputStream()}}] \hfill \\
-        Returns a \code{BufferedOutputStream} object
+        Returns a \code{Buffered\-Output\-Stream} object
         that can be used to write data which will be securely sent through the
         interservice connection of the local and the remote service and then
-        made available for the remote to read from its \code{InputStream}
+        made available for the remote to read from its \code{Input\-Stream}
         object.
 
-        Call \code{flush()} on the \code{BufferedOutputStream} object to make
+        Call \code{flush()} on the \code{Buffered\-Output\-Stream} object to make
         sure the data written is sent.
 
     \item[{\code{getInputStream()}}] \hfill \\
-        Returns an \code{InputStream} object that can be used to read the data
-        which the remote wrote into its \code{BufferedOutputStream} object
-        obtained via \code{getOutputStream()}.
+        Returns an \code{Input\-Stream} object that can be used to read the data
+        which the remote wrote into its \code{Buffered\-Output\-Stream} object
+        obtained via \code{get\-Output\-Stream()}.
 
     \item[{\code{getRemotePublicKey()}}] \hfill \\
         Returns a \code{Key} object containing the public key used as address
@@ -260,7 +258,7 @@ utilized:
 
     \item[{\code{getActionIdentifier()}}] \hfill \\
         Returns a \code{String} object containing the action identifier that was
-        passed to the \code{requestApplicationChannel()} method by the end that
+        passed to the \code{request\-Application\-Channel()} method by the end that
         initiated the application channel.
 
     \item[{\code{wasInitiatedLocally()}}] \hfill \\
