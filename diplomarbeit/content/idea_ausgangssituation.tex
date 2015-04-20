@@ -47,11 +47,11 @@ Dateien folgt ein Szenrio.
 In der Schule wird ein Übungsprotokoll geschrieben. Wird die Übung nicht
 fertiggestellt, muss sie zu Hause fertiggestellt werden.
 
-Bei dem Erstellen und Bearbeiten des Übungsprotokolls auf dem Schulrechner
+Beim Erstellen und Bearbeiten des Übungsprotokolls auf dem Schulrechner
 wird eine Kopie dieser Datei auf den vom Betreiber zur Verfügung gestellten
 \gls{cloudstorage} beziehungsweise dessen Server hochgeladen und dort gespeichert.
 Der Sender behält dabei die Originaldatei. (\figurelink{dropbox_upload})
-\begin{figure}[H]
+\begin{figure}[htb]
 	\centering
   \includegraphics[]{images/dropbox_upload}
 	\label{dropbox_upload}
@@ -62,14 +62,14 @@ Der Schulrechner wird heruntergefahren, zu Hause wird der Heimrechner hochgefahr
 sobald gestartet, über die Änderungen im \gls{cloudstorage} informiert und aktualisiert den lokalen Datenbestand, in
 diesem Fall durch Herunterladen des neu angelegten Übungsprotokolls vom Server. (\figurelink{dropbox_download})
 
-\begin{figure}[H]
+\begin{figure}[htb]
 	\centering
   \includegraphics[]{images/dropbox_download}
 	\label{dropbox_download}
   \caption{Üblich gehandhabtes Downloaden einer Datei}
 \end{figure}
 
-Das Übungsprotokoll hat nach dem Synchronistationsvorgang auf dem Heim-PC
+Das Übungsprotokoll hat nach dem Synchronisationsvorgang auf dem Heim-PC
 den gleichen Inhalt wie die Datei auf dem Schulrechner, da es sich um die selbe Version
 handelt. Würde das Übungsprotokoll nun auf dem Heim-PC bearbeiten werden, würde
 die neue Version analog dazu zuerst auf den Server geladen werden und vom Server

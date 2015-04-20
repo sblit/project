@@ -1,5 +1,5 @@
 \subsection{Einleitung}
-Anders als bei herkönnlichen Dateisynchronisationsanwendungen, findet die
+Anders als bei herkömmlichen Dateisynchronisationsanwendungen, findet die
 Datenübertragung bei \sblit nicht über zentrale Server des Betreibers statt,
 sondern über eine direkte, verschlüsselte Verbindung zwischen den beteiligten
 Geräten.
@@ -17,7 +17,7 @@ herkömmlichen Dateisynchronisationsdiensten durch den Einsatz zentraler Stellen
 vergleichsweise einfach bewältigt werden können, welche in den folgenden Abschnitten erläutert werden.
 
 \subsubsection{Verbindung von zu synchronisierenden Geräten}
-So fehlt der öffentliche Server als bekannter Mittelmann in der Kommunikation
+Bei \sblit fehlt der öffentliche Server als bekannte Vermittlungsstelle in der Kommunikation
 zwischen den zu synchronisierenden Geräten, sodass sich diese über einen speziellen
 Mechanismus finden müssen, um eine direkte Verbindung aufbauen zu können.
 Das \kap{DCL} widmet sich der Bewältigung dieser, sowie weiterer
@@ -31,18 +31,18 @@ zu synchronisierenden Geräte gelichzeitig eingeschaltet ist. Um zu erklären wa
 so ist, folgt ein Szenario mit Verwendung eines Servers:
 Der Rechner in der Schule ist eingeschaltet, das Gerät zu Hause nicht. Wird nun
 eine bereits synchronisierte Datei auf dem Schulrechner bearbeitet, wird eine Kopie dieser wie
-üblich auf die \gls{filecloud}, also den Server hochgeladen. Wenn die Schule vorbei ist,
-wird der Schulrechner abgedreht und zu Hause nach Einschalten des Heim-PCs kann sofort die neuste Version der
+üblich auf die \gls{filecloud}, also den Server hochgeladen. Wenn der Unterricht vorbei ist,
+wird der Schulrechner abgedreht und zu Hause nach Einschalten des Heim-PCs kann sofort die neueste Version der
 geänderten weiterbearbeitet werden, obwohl der Schulrechner ausgeschaltet ist, da die Datei in der \gls{filecloud}
 zwischengespeichert und von dort aus auf den Heimrechner übertragen wurde.
-\begin{figure}[H]
+\begin{figure}[htb]
 	\centering
   \includegraphics[]{images/dropbox_temp_1}
 	\label{dropbox_temp_1}
   \caption{Heimrechner ist nicht erreichbar. Die Datei kann nicht synchronisert werden.}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[htb]
 	\centering
   \includegraphics[]{images/dropbox_temp_2}
 	\label{dropbox_temp_2}
@@ -63,13 +63,13 @@ Die Geräte der Nutzer speichern sich also gegenseitig die Änderungen ihrer Dat
 in verlüsselter Form.
 
 Dieses Prinzip funktioniert durch ein \gls{p2pnet}, welches durch faire Abkommen zwischen den \sblit-Nutzern,
-sogenannten \glspl{partnership}, realisiert wird. Grundsätzlich sind \glspl{partnership} einfach eine
-Vereinbarung mit anderen Nutzern, sich gegenseitig Speicherplatz freizugeben.
+sogenannte \glspl{partnership}, realisiert wird. Grundsätzlich sind \glspl{partnership} einfach eine
+Vereinbarung mit anderen Nutzern, um sich gegenseitig Speicherplatz freizugeben.
 Eine \gls{partnership} wird entweder automatisch mit den Geräten unbekannter Nutzer
-geschlossen, oder durch den Nutzer selbst mit den Geräten bekannter.
+geschlossen oder durch den Nutzer selbst mit den Geräten bekannter.
 Das \kap{Partnerschaften} widmet sich dieser Thematik genauer.
 
-Bei dem externen Zwischenspeichern auf \glspl{partnerdevice}n sollen diese allerdings
+Beim externen Zwischenspeichern auf \glspl{partnerdevice}n sollen diese allerdings
 nie vollständigen Zugriff auf fremde Dateien erhalten, welche bei ihnen gespeichert
 wurden. Deshalb werden extern zu speichernde Dateien in viele Datenblöcke aufgeteilt.
 Diese Blöcke werden verschlüsselt und verstreut auf den \glspl{partnerdevice}n gespeichert.
@@ -77,7 +77,7 @@ Die Information zum korrekten Zusammensetzen der Datei besitzen dabei nur der Er
 \glspl{syncpartner}.
 
 Für die Besitzer der \glspl{partnerdevice} ist es somit unmöglich auf die ursprüngliche
-Datei zu schließen. Sollte es nämlich einer von ihnen schaffen, die Datenblöcke zu
+Datei zu schließen. Sollte es nämlich einer von ihnen schaffen die Datenblöcke zu
 entschlüsseln, würde ihnen noch immer der Rest an Datenblöcken fehlen und die Information
 zum korrekten Zusammensetzen dieser.
 
@@ -107,7 +107,7 @@ Verbindung an den Heimrechner gesendet, sofern der jeweilige \gls{syncpartner}
 erreichbar ist. Beim \gls{syncpartner} angekommen, werden diese
 entschlüsselt und zu der vollständigen neuen Datei zusammengesetzt.
 
-\begin{figure}[H]
+\begin{figure}[htb]
 	\centering
   \includegraphics[]{images/sblit_p2p}
 	\label{sblit_p2p}
@@ -118,7 +118,7 @@ entschlüsselt und zu der vollständigen neuen Datei zusammengesetzt.
 Für \glspl{syncpartner}, die nicht erreichbar sind, wird die Datei in der dezentralen
 \gls{filecloud} zwischengespeichert. Die Datei wird kopiert und in Blöcke
 aufgeteilt. Diese Blöcke werden verschlüsselt und verteilt auf den
-\glspl{partnerdevice} gespeichert.
+\glspl{partnerdevice}n gespeichert.
 
 Da die Erreichbarkeit der gesamten Datei auf den Partnergeräten zu gewährleisten
 ist, wird die Datei mehrmals
@@ -126,22 +126,19 @@ in die dezentrale \gls{filecloud} gespeichert, sodass nur ein Bruchteil der
 Partnergeräte erreichbar sein muss, um auf die vollständige Datei zugreifen zu
 können.
 
-\begin{figure}[H]
+\begin{figure}[htb]
 	\centering
   \includegraphics[]{images/sblit_upload}
 	\label{sblit_upload}
   \caption{Hochladen einer Datei in die dezentrale \gls{filecloud}.}
 \end{figure}
 
-Sobald der \gls{syncpartner}, hier der Heim-PC wieder hochgefahren ist, fordert er die
-verschlüsselten Dateiblöcke von den \glspl{partnerdevice} an. Die Blöcke werden über
+Sobald der \gls{syncpartner}, hier der Heim-PC, wieder hochgefahren ist, fordert er die
+verschlüsselten Dateiblöcke von den \glspl{partnerdevice}n an. Die Blöcke werden über
 direkte verschlüsselte Verbindungen gesendet, entschlüsselt und zu der
 vollständigen neuen Datei zusammengesetzt.
 
-%Die Datei wurde somit über die aus den \glspl{partnerdevice} bestehende dezentrale
-%\gls{filecloud} synchronisiert.
-
-\begin{figure}[H]
+\begin{figure}[htb]
 	\centering
   \includegraphics[]{images/sblit_download}
 	\label{sblit_download}
