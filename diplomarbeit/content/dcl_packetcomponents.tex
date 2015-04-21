@@ -1,7 +1,7 @@
 
 \label{dcl-packetcomponents}
 
-\subsection*{FlexNum}
+\subsection{FlexNum}
 \label{dcl-packetcomponents-flexnum}
 Ein \gls{fnumc} ist ein \gls{pktc} zur Übertragung einer bis zu 64 Bits langen Ganzzahl.
 Die Besonderheit liegt darin, dass der \gls{fnumc} zwar Zahlen bis zu $2^{64}-1$ übertragen kann,
@@ -88,7 +88,7 @@ long readFlexNum() {
 
 %TODO
 
-\subsection*{KeyComponent}
+\subsection{KeyComponent}
 \label{dcl-packetcomponents-key}
 
 Der \gls{keyc} dient zur Übertragung kryptographischer Schlüsselinformationen.
@@ -97,13 +97,13 @@ Dabei definiert der \gls{pktc} einen grundsätzlichen Aufbau, bei dem ein
 einzelnes Byte am Beginn des \gls{pktc} den Typ des Schlüssels angibt, anhand
 dessen die Daten eingelesen werden.
 
-\keycbytefield
+\keycbytefieldattr{htb}
 
 Derzeit kann der \gls{keyc} nur \gls{rsa}-Schlüssel übertragen.
 
-\subsubsection{RSA Key}
+\subsubsection{RSA Key Component}
 \label{dcl-keyc-rsa}
-Der \comp{\keycrsa} überträgt den Modul und den Exponenten des
+Der \comp{\keycrsa} überträgt den Modul und den Exponenten eines
 \gls{rsa}-Schlüssels.
 
 \keycrsabytefield
