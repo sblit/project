@@ -34,9 +34,12 @@ Untereigenschaften zusammen.
 Das im \gls{dcl} standardmäßig verwendete \gls{net} ist das \gls{cnet}. Der Typstring des \gls{nt} des
 \gls{cnet} ist \code{\cnettype}.
 
-Adressen werden im \gls{cnet} standardmäßig durch Anwendung des \gls{hash} \gls{sha1} auf die öffentlichen
+Adressen werden im \gls{cnet} standardmäßig durch Anwendung des \gls{hash} \gls{sha1} auf öffentliche
 \gls{rsa}-Schlüssel erzeugt und haben eine Länge von 20 Bytes, was der \gls{digestlength} von \gls{sha1}
 entspricht.
+Das Verfahren zur Bildung von Adressen im \gls{cnet} wird unter
+\labellink{dcl-addr-format} auf \pagelink{dcl-addr-format} im Detail
+beschrieben.
 
 Das Format des Attributstrings des \gls{nt} des \gls{cnet} ist
 \sloppy{\mbox{\code{\gls{hash}/Adresslänge}}}.

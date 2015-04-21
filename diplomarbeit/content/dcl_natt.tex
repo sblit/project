@@ -8,17 +8,17 @@ Einsatz und ermöglicht es dort, mehrere Hosts über eine einzige öffentliche
 IP-Adresse an das Internet anzubinden.
 
 Realisiert wird das durch Übersetzen der privaten Quell-IP-Adressen zur
-öffentlichen IP-Adresse bei Paketen die das lokale Netzwerk verlassen und
+öffentlichen IP-Adresse bei Paketen, die das lokale Netzwerk verlassen, und
 Rückübersetzen der öffentlichen Ziel-IP-Adresse zu den privaten IP-Adressen
-bei Paketen die aus dem Internet in das lokale Netzwerk eintreten.
+bei Paketen, die aus dem Internet in das lokale Netzwerk eintreten.
 
 Bei ankommenden Paketen wird dabei anhand des Ziel-Ports entschieden, an welche
 lokale IP-Adresse das Paket weitergeleitet wird.
 Um es mehreren lokalen Hosts zu ermöglichen, vom gleichen Port aus Pakete zu
-senden, werden die Quell-Ports von Paketen die das lokale Netzwerk verlassen
-gegebenenfalls, zusätzlich zur Quell-IP-Adresse, ebenfalls übersetzt.
+senden, werden die Quell-Ports von Paketen, die das lokale Netzwerk verlassen,
+zusätzlich zur Quell-IP-Adresse, auch übersetzt.
 Beim Eintritt von Antwortpaketen in das lokale Netzwerk werden die Ziel-Ports
-entsprechend Rückübersetzt. Man spricht dann von der sogenannten Port Address
+entsprechend rückübersetzt. Man spricht dann von der sogenannten Port Address
 Translation, die eine Unterkategorie der \acrlong{nat} bildet.
 
 Im \gls{natdev} werden die aktuellen Übersetzungen in einer Datenstruktur
@@ -60,7 +60,7 @@ sonst bei Paketen, die aus dem Internet in das lokale Netzwerk eintreten, nicht
 unterschieden werden kann, ob diese an den Host mit der IP-Adresse
 \code{10.0.0.1} oder an den Host mit der IP-Adresse \code{10.0.0.2}
 weitergeleitet werden sollen. Die Übersetzung des Quellports ermöglicht es,
-das lokale Ziel von Antwortpaketen anhand deren Zielport zu bestimmen.
+das lokale Ziel von Antwortpaketen anhand von deren Zielport zu bestimmen.
 
 %TODO erwähnen, dass öffentliche IP+Port bei unterschiedlichen Zielen gleich
 %bleibt?
@@ -75,14 +75,14 @@ können.
 Um trotzdem Peer-to-Peer-Verbindungen zwischen solchen Hosts aufbauen zu können,
 müssen Verfahren zum \gls{natt} angewandt werden.
 Hierfür existieren unterschiedliche Protokolle zur Einrichtung einer
-Portweiterleitung auf dem lokalen \gls{natdev}, welche eine Verbindung von Außen
+Portweiterleitung auf dem lokalen \gls{natdev}, welche eine Verbindung von außen
 ermöglicht.
 
 Die derzeitige Implementierung des \gls{service} wendet das sogenannte
 \gls{nathp} an, für das kein spezielles Netzwerkprotokoll notwendig ist.
 
 \subsection{NAT Hole Punching}
-Für \gls{nathp} wird für eine neue Verbindung ein Kommunikationskanal zwischen
+Bei \gls{nathp} wird für eine neue Verbindung ein Kommunikationskanal zwischen
 den Verbindungspartnern benötigt, der schon vor Aufbau der Verbindung existieren
 muss.
 Diesen Kommunikationskanal kann ein dritter Host bereitstellen, zu dem beide
@@ -92,34 +92,37 @@ kommunizieren können.
 In beiden Fällen muss bereits eine Verbindung zu einem Host außerhalb des
 lokalen Netzwerks bestehen.
 
-Einer der beiden Hosts, die direkt miteinander verbunden werden sollen,
+Einer der beiden Hosts, die direkt miteinander verbunden werden sollen, im
+Folgenden Host A,
 ermittelt seine öffentliche IP-Adresse und seinen öffentlichen Port mithilfe
-eines Hosts, zu dem bereits eine Verbindung besteht.
+eines dritten Hosts, zu dem bereits eine Verbindung besteht.
 Diese Information wird über den bestehenden Kommunikationskanal an den Host
-übermittelt, zu dem eine Verbindung aufgebaut werden soll.
-Dieser sendet an die eben erhaltene Adresse ein Paket, das das lokale Netzwerk
-zwar verlässt, am \gls{natdev} des Ziels jedoch verworfen wird.
-Der Grund dafür liegt darin, dass das Ziel, an das es im lokalen Netzwerk der
-Empfängerseite weitergeleitet werden soll, vom dortigen \gls{natdev} nicht
+übermittelt, zu dem eine Verbindung aufgebaut werden soll, im Folgenden Host B.
+Host B sendet an die eben erhaltene Adresse von Host A ein Paket, das das lokale
+Netzwerk zwar verlässt, am \gls{natdev} von Host A jedoch verworfen wird.
+Der Grund dafür liegt darin, dass das Ziel, an das es im lokalen Netzwerk von
+Host A weitergeleitet werden soll, vom dortigen \gls{natdev} nicht
 bestimmt werden kann, da kein passender Eintrag in der Datenstruktur der
 Übersetzungen existiert.
-Das \gls{natdev} auf der Senderseite dieses Pakets erstellt jedoch trotzdem
-einen Übersetzungseintrag in seiner Datenstruktur, um Antwortpakete weiterleiten
-zu können.
+Das \gls{natdev} von Host B erstellt für dieses Paket jedoch trotzdem
+einen Übersetzungseintrag für die Weiterleitung von späteren Antwortpaketen in
+seiner Datenstruktur, da nicht erkannt werden kann, dass das Paket sein Ziel
+nicht erreichen wird.
 
-Gleichzeitig ermittelt dieser Host über einen anderen Host, zu dem bereits eine
-Verbindung besteht, ebenfalls seine öffentlichen Adresse.
+Gleichzeitig ermittelt Host B ebenfalls seine öffentliche Adresse über einen
+dritten Host, zu dem bereits eine Verbindung besteht.
 Diese sendet er zusätzlich zu dem soeben in der Übertragung gescheiterten Paket
-über den bestehenden Kommunikationskanal an den ersten Verbindungspartner.
+über den bestehenden Kommunikationskanal an Host A.
 
-Dieser sendet, sobald er die öffentliche Adresse des Gegenübers empfangen hat,
-ein normales Paket zur Verbindungsinitialisierung an dieses Gegenüber.
+Host A sendet, sobald er die öffentliche Adresse des Gegenübers empfangen hat,
+ein normales Paket zur Verbindungsinitialisierung an Host B.
 Dieses Paket verlässt das lokale Netzwerk, das lokale \gls{natdev} speichert
 einen Übersetzungseintrag in seiner Datenstruktur und das Paket erreicht das
-entfernte \gls{natdev}.
+\gls{natdev} von Host B.
 Dort wird jener Übersetzungseintrag gefunden, der durch das in der Übertragung
-bewusst gescheiterte Paket angelegt wurde.
-Das Paket wird anhand dieses Eintrags an den richtigen Host weitergeleitet und
+bewusst gescheiterte Paket von Host B and Host A angelegt wurde.
+Anhand dieses Eintrags kann das Paket zur Verbindungsinitialisierung, das von
+Host A and Host B gesendet wurde, im lokalen Netzwerk weitergeleitet werden und
 die Hosts können ab diesem Zeitpunkt normal miteinander kommunizieren.
 
 \subsection{Einschränkungen}

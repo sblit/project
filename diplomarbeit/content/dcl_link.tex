@@ -115,7 +115,7 @@ Der Empfänger bestätigt die Auflösung der Verbindung durch Senden einer
 \subsubsection*{Kill}
 \label{dcl-bmcp-kill}
 Die \msg{\bmcpkill} ist die letzte Nachricht eines \glslink{link}{Links}, die
-übertragen wird und markiert das Ende der Verbindung.
+übertragen wird, und markiert das Ende der Verbindung.
 Die Message wird als Antwort auf eine \msg{\bmcpdisconnect} gesendet, kann aber
 bei unerwartetem Beenden des \glslink{link}{Links} durch einen
 Verbindungspartner auch alleinstehend gesendet werden.
@@ -127,7 +127,7 @@ Verbindungspartner auch alleinstehend gesendet werden.
 \label{dcl-bmcp-cryptoinit}
 Die \msg{\bmcpcryptoinit} überträgt Daten zur Initialisierung der verwendeten
 Verschlüsselung des \glslink{link}{Links} und wird zu Beginn der Verbindung, je
-nach verwendeter \gls{cinitmethod} unterschiedlich oft, übertragen.
+nach verwendeter \gls{cinitmethod}, unterschiedlich oft übertragen.
 
 \bmcpcryptoinitbytefield
 
@@ -175,7 +175,7 @@ Der Empfänger kann anhand dieser \glspl{chblockstatrep} erkennen, welche Pakete
 nicht übertragen wurden und deshalb erneut gesendet werden müssen.
 
 Ein \gls{chblockstatrep} enthält den \gls{channelid} des
-\glslink{channel}{Channels} auf den er sich bezieht,
+\glslink{channel}{Channels}, auf den er sich bezieht,
 den niedrigsten und den höchsten \gls{dataid}, die auf diesem \gls{channel}
 empfangen wurden, % TODO die empfangen wurden oder der empfangen wurde?
 die Anzahl an unterschiedlichen \glspl{dataid}, die insgesamt auf diesem

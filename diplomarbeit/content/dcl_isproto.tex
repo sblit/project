@@ -4,7 +4,7 @@ Das \gls{isproto} wird zur Kommunikation zwischen zwei direkt miteinander verbun
 verwendet.
 Es dient zur Übertragung von zwischen Anwendungen gesendeten Nachrichten, zur
 Bekanntgabe von \glslink{endp}{Endpunkten} samt Adressen und beigetretenen
-\glslink{net}{Netzwerken}, sowie zum Einstieg in \glspl{net} des \gls{dcl}.
+\glslink{net}{Netzwerken} sowie zum Einstieg in \glspl{net} des \gls{dcl}.
 
 Die Messages des \glslink{isproto}{Interservice-Protokolls} werden über den
 \gls{isch}, einen \gls{channel} des \glslink{link}{Links} zwischen zwei
@@ -17,14 +17,14 @@ Dieses Unterkapitel beschreibt das \gls{isproto} in Version 0.
 Da \glspl{service} jeweils mehrere Adressen hosten können, ist es notwendig, diese mit dem
 \gls{isproto} unterscheiden zu können. Jede Adresse wird hierbei einem eigenen \gls{addrslot}
 zugeordnet, um sich in den Messages des Protokolls einfach auf einzelne Adressen beziehen zu können,
-ohne jedes mal die ganze Adresse senden zu müssen.
+ohne jedes Mal die ganze Adresse senden zu müssen.
 %TODO Übergang zu connection base; Verbindung Addr Slots <-> Net Slots
 
 \subsection{Network Slots}
 Eine Adresse kann gleichzeitig in mehreren verschiedenen \glslink{net}{Netzwerken} vertreten sein. Um diese
-\glspl{net} in den Messages des \gls{isproto} einfach referenzieren zu können, ohne jedes mal den
+\glspl{net} in den Messages des \gls{isproto}s einfach referenzieren zu können, ohne jedes Mal den
 ganzen \gls{ntid} übertragen und parsen zu müssen, wird jedes \gls{net}, dem ein \gls{service} mit einer
-oder mehreren Adressen beitritt einem \gls{netslot} zugeordnet.
+oder mehreren Adressen beitritt, einem \gls{netslot} zugeordnet.
 
 Werden Nachrichten zur Kommunikation zwischen Anwendungen, sogenannte
 \glspl{netpkt}, über den \gls{isch} übertragen, so wird auch das \gls{net}, in
@@ -49,7 +49,7 @@ Als Voraussetzung für die \gls{connbase} \const{trusted} gilt der Beweis der Ad
 an sein Gegenüber sendet.
 Der entfernte \gls{service} fordert den lokalen \gls{service} danach durch Senden einer
 \msg{\isprotoccreq} auf, mit seiner Adresse eine \gls{cchlg} zu lösen, um ihre Echtheit zu
-beweisen. Siehe dazu \link{dcl-addr-proving}.
+beweisen. Siehe dazu: \link{dcl-addr-proving}.
 Der lokale \gls{service} antwortet mit einer \msg{\isprotoccrep} und übermittelt die Daten der
 gelösten \gls{cchlg} an den entfernten \gls{service}.
 Ist die Lösung der \gls{cchlg} korrekt, so wird die \gls{connbase} des
@@ -96,7 +96,7 @@ Message den Typ angibt, anhand dessen die restliche Nachricht interpretiert wird
 \subsubsection{Version}
 \label{dcl-isproto-version}
 Die \msg{\isprotoversion} enthält eine Versionsnummer in Form eines FlexNum-Components und wird
-benutzt, um am Beginn der Verbindung die verwendete Version des \gls{isproto} auszuhandeln.
+benutzt, um am Beginn der Verbindung die verwendete Version des \gls{isproto}s auszuhandeln.
 
 \isprotoversionbytefield
 
@@ -221,7 +221,7 @@ mindestens einer Adresse mindestens einem \gls{net} beigetreten ist.
 \subsubsection{Integration Connect Request}
 \label{dcl-isproto-icreq}
 Die \msg{\isprotoicreq} fordert den Empfänger auf, eine Verbindung zur angegebenen \gls{lla}
-aufzubauen und wird als Antwort auf eine frühere \msg{\isprotoireq} gesendet. Sie wird benötigt,
+aufzubauen, und wird als Antwort auf eine frühere \msg{\isprotoireq} gesendet. Sie wird benötigt,
 um neue Teilnehmer eines \glslink{net}{Netzwerks} mit ihren entsprechenden Nachbarn verbinden zu
 können.
 
@@ -249,8 +249,9 @@ Die \msg{\isprotoacsa} benachrichtigt den Empfänger darüber, dass Nachrichten 
 zwischen den beiden durch die angegebenen \glspl{addrslot} referenzierten Adressen auf dem
 angegebenen \gls{appchslot} entgegen genommen werden.
 
-\Glspl{appch} sind verlässliche Kommunikationkanäle zwischen zwei Anwendungen.
-Siehe dazu \link{dcl-appch}.
+\Glspl{appch} sind verlässliche Kommunikationkanäle zwischen zwei über den
+\gls{dcl} kommunizierenden Anwendungen.
+Siehe dazu: \link{dcl-appch}.
 
 Diese Message wird vom Empfänger nur dann akzeptiert, wenn die \gls{connbase} des angegebenen
 \gls{addrslot} auf dem sendenden \gls{service} mindestens \const{trusted} entspricht und der
@@ -261,7 +262,7 @@ angegebene \gls{addrslot} auf dem Empfänger existiert.
 
 \subsubsection{Application Channel Data}
 \label{dcl-isproto-acd}
-Die \msg{\isprotoacd} wird dazu benutzt, um Daten des durch den angegebenen \gls{appchslot} % TODO Application ChannelS?
+Die \msg{\isprotoacd} wird benutzt, um Daten des durch den angegebenen \gls{appchslot}
 referenzierten \gls{appch} zu übertragen.
 
 Diese Message wird vom Empfänger nur dann akzeptiert, wenn er den angegebenen \gls{appchslot}
