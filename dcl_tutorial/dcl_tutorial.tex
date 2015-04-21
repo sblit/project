@@ -1,9 +1,11 @@
-\documentclass[a4paper,twoside,twocolumn,DIV=12,BCOR=1cm]{scrartcl}
+\documentclass[a4paper,twoside,DIV=12,BCOR=1cm]{scrartcl}
 
 \usepackage{color}
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage{enumitem}
+\usepackage{multicol} 
+\usepackage{needspace}
 
 % serif for headings
 \addtokomafont{disposition}{\rmfamily}
@@ -45,7 +47,7 @@
 
 \begin{document}
 \maketitle
-
+\begin{multicols}{2}
 \begin{abstract}
 This article aims at providing a simple tutorial on how to use the
 Decentralized Communication Layer with third party applications written
@@ -252,7 +254,7 @@ utilized:
         which the remote wrote into its \code{Buffered\-Output\-Stream} object
         obtained via \code{get\-Output\-Stream()}.
 
-    \item[{\code{getRemotePublicKey()}}] \hfill \\
+    \needspace{2\baselineskip}\item[{\code{getRemotePublicKey()}}] \hfill \\
         Returns a \code{Key} object containing the public key used as address
         by the remote.
 
@@ -266,5 +268,5 @@ utilized:
         end, \code{false} otherwise.
 
 \end{description}
-
+\end{multicols} 
 \end{document}
