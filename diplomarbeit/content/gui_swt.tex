@@ -84,12 +84,12 @@ public class erklaerungsGUI {
 
 \begin{description}
 	\item[{Display}]
-    Die \code{Display}-Klasse ist einer der Kernkomponenten innerhalb einer \acrshort{swt}-\acrshort{GUI}.
-    Sie verwaltet Event-Loops, Schriftarten, Farben und die generelle Kommunikation zwischen dem \acrshort{GUI}-Thread
-    und den anderen Threads. Jedes Programm mit einer \acrshort{swt}-\acrshort{GUI} muss ein \code{Display}-Objekt haben.
+    Die \code{Display}-Klasse ist einer der Kernkomponenten innerhalb einer \acrshort{swt}-\acrshort{gui}.
+    Sie verwaltet Event-Loops, Schriftarten, Farben und die generelle Kommunikation zwischen dem \acrshort{gui}-Thread
+    und den anderen Threads. Jedes Programm mit einer \acrshort{swt}-\acrshort{gui} muss ein \code{Display}-Objekt haben.
 
     \item[{Shell}]
-    Die \code{Shell}-Klasse ist die zweite der Kernkomponenten einer \acrshort{swt}-\acrshort{GUI}.
+    Die \code{Shell}-Klasse ist die zweite der Kernkomponenten einer \acrshort{swt}-\acrshort{gui}.
     Sie stellt das Programmfenster dar und wird das Elternelement aller eingefügten Widgets.
 		Das \code{Display}-Objekt muss ein oder mehrere \code{Shell}-Objekte als Unterobjekt haben.
     Mit der Funktion \code{shell.open()} wird das Programmfenster erst gezeichnet.
@@ -108,7 +108,7 @@ public class erklaerungsGUI {
     der Buttons.
 
     \item[{Eventloop}]
-    Damit das \acrshort{GUI} nicht sofort geschlossen wird, gibt es diese Eventloop.
+    Damit das \acrshort{gui} nicht sofort geschlossen wird, gibt es diese Eventloop.
 		Eine Schleife, die wartet bis ein gewisses Event eintritt. In diesem Fall wird
 		darauf gewartet, dass das Fenster, also das \code{Shell}-Objekt disposed, also
 		geschlossen wird.
@@ -119,5 +119,5 @@ public class erklaerungsGUI {
 	\centering
 	\includegraphics[]{images/erklaerungsgui.png}
 	\label{erklaerungsgui}
-  \caption{Beispiel-\acrshort{GUI} zur Erklärung}
+  \caption{Beispiel-\acrshort{gui} zur Erklärung}
 \end{figure}
