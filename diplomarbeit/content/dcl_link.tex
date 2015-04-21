@@ -163,7 +163,7 @@ Der Empfänger antwortet mit einer \msg{\bmcpchblockstatrep}, anhand der der
 Sender dieser \msg{\bmcpchblockstatreq} feststellen kann, welche Pakete nicht
 am Ziel angekommen sind und erneut übertragen werden müssen.
 
-\bmcpchblockstatreqbytefield
+\bmcpchblockstatreqbytefieldattr{htb}
 
 
 \subsubsection*{Channel Block Status Report}
@@ -199,7 +199,7 @@ kommuniziert werden soll.
 Nimmt der Empfänger die Anfrage an, wird eine \msg{\bmcpack} gesendet, die den
 \gls{dataid} dieser \msg{\bmcpopenchreq} enthält.
 
-\bmcpopenchreqbytefield
+\bmcpopenchreqbytefieldattr{htb}
 
 
 \subsubsection*{Throttle}
@@ -208,4 +208,4 @@ Die \msg{\bmcpthrottle} dient zur Limitierung der Sendeübertragungsrate des
 Empfängers und wird für die \gls{fcnt} des \glslink{link}{Links} genutzt.
 Die Message enthält die maximal zulässige Senderate in Bytes pro Sekunde.
 
-\bmcpthrottlebytefield
+\bmcpthrottlebytefieldattr{htb}
