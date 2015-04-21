@@ -56,7 +56,8 @@ def cc(c = {}, add = {}, cpy = []):
 
 def bf(wordsize, content, title, label):
 	if EMPTY: return ""
-	return "\\begin{figure}"\
+	return "\\needspace{2\\baselineskip}"\
+		 + "\\begin{figure}"\
 		 + "\\begin{centering}"\
 		 + "\\begin{bytefield}[bitwidth="+("%.1f" % (18.0 / wordsize))+"em]{"+str(wordsize)+"}"\
 		 + " \\\\ \n"\

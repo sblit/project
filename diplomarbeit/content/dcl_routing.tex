@@ -17,9 +17,9 @@ implementieren.
 
 Die meisten im Einsatz befindlichen Verfahren zum dynamischen Routing betrachten die gesamte
 Topologie und suchen darin Wege für Pakete. Bei zu großen Topologien werden Teile des Netzwerks
-zusammengefasst und die Teilnehmer innerhalb dieses Teils von Außerhalb als ein einziger Teilnehmer
+zusammengefasst und die Teilnehmer innerhalb dieses Teils von außerhalb als ein einziger Teilnehmer
 betrachtet. Der Pfadfindungsprozess kann dann effizienter gestaltet werden, indem das Routing in
-2 Schritten erfolgt: zuerst außerhalb bis zum zusammengefassten Teil und anschließend innerhalb
+zwei Schritten erfolgt: zuerst außerhalb bis zum zusammengefassten Teil und anschließend innerhalb
 des zusammengefassten Teils des Netzwerks, wo das Routing zum endgültigen Ziel erfolgt.
 
 Diese Technik funktioniert jedoch nur in einem hierarchisch aufgebauten Netzwerk, in dem Teilnehmer
@@ -35,7 +35,7 @@ Nachrichten zu finden.
 
 \subsection{Distanzbasiertes Routing}
 Im \gls{cnet} des \gls{dcl} werden nicht die Wege anhand der Topologie gesucht, sondern die
-Topologie anhand der gewünschten Wege aufgebaut. Das bedeutet konkret, dass die Teilnehmer, mit
+Topologie anhand der gewünschten Wege aufgebaut. Das bedeutet konkret, dass andere Teilnehmer, mit
 denen sich ein Teilnehmer verbindet, nicht zufällig gewählt werden, sondern ein Teilnehmer sich
 tendentiell mit mehr Teilnehmern verbindet, die eine ähnliche Adresse haben, als mit solchen,
 deren Adresse sich von der eigenen stark unterscheidet.
@@ -47,16 +47,16 @@ hexadezimal angegebenen Adressen \code{E539} und \code{1092} eine Distanz von \c
 obwohl \code{E539 - 1092 = D4A7}, weil die Distanz über den Überlauf kürzer ist:
 \code{10000 - E539 + 1092 = 2B59}.
 
-Des Weiteren werden Teilnehmer, die exakt die selbe Adresse aufweisen, stets direkt miteinander
-verbunden, um sicherzustellen, dass Nachrichten deren Zieladresse auf mehrere Teilnehmer verweist,
-an alle zugestellt werden. Dass zwei Teilnehmer die selbe Adresse bekommen ist jedoch erstens
+Des Weiteren werden Teilnehmer, die exakt dieselbe Adresse aufweisen, stets direkt miteinander
+verbunden, um sicherzustellen, dass Nachrichten, deren Zieladresse auf mehrere Teilnehmer verweist,
+an alle zugestellt werden. Dass zwei Teilnehmer dieselbe Adresse bekommen ist jedoch erstens
 extrem unwahrscheinlich und bedeutet zweitens nicht unbedingt, dass ihre Adressen auf den selben
 öffentlichen Schlüsseln basieren. Siehe dazu \link{dcl-addr-uniqueness}.
 
 Dadurch, dass die Teilnehmer des Netzwerks jeweils mehr Verbindungen zu Teilnehmern mit Adressen
 ähnlich zur eigenen haben, als Verbindungen zu Teilnehmern mit Adressen, die eine hohe Differenz
 zur eigenen aufweisen, können Nachrichten einfach an den Teilnehmer weitergeleitet werden, dessen
-Adresse die niedrigste Differenz zur Zieladresse der Nachricht aufweist. Auf diese weise gelangt
+Adresse die niedrigste Differenz zur Zieladresse der Nachricht aufweist. Auf diese Weise gelangt
 die Nachricht, logisch betrachtet, immer näher an ihr Ziel und wird schlussendlich an den Adressat
 zugestellt.
 
@@ -65,6 +65,7 @@ Nachfolgend ist jener Teil des Quellcodes von \gls{dcl} angeführt, welcher im \
 zum Routinglookup angewandt wird.
 
 \javalisting
+\listingneedspace
 \begin{lstlisting}[caption={Routing im \gls*{cnt} (Java)},captionpos=b]
 Nexthops lookup(Data scaledDestinationAddress, Address originAddress, Object originIdentifierObject) {
 
@@ -116,13 +117,13 @@ Nexthops lookup(Data scaledDestinationAddress, Address originAddress, Object ori
 
 	\descriptionitem{\code{originAddress}}
 		Das \javaarg \code{originAddress} referenziert ein \code{\gls{Address}}-Objekt, welches
-		den öffentlichen Schlüssel des Teilnehmers enthält, von welchem die zu weiterleitende
+		den öffentlichen Schlüssel des Teilnehmers enthält, von welchem die weiterzuleitende
 		Nachricht empfangen wurde.
 
 	\descriptionitem{\code{originIdentifierObject}}
 		Das \javaarg \code{originIdentifierObject} referenziert ein Objekt, das den Teilnehmer
-		identifiziert, von welchem die zu weiterleitende Nachricht empfangen wurde. Dieses wird
-		benötigt, um später sicherzustellen, dass die Nachricht nicht zum selben Teilnehmer
+		identifiziert, von welchem die weiterzuleitende Nachricht empfangen wurde. Dieses wird
+		benötigt, um sicherzustellen, dass die Nachricht nicht zum selben Teilnehmer
 		weitergeleitet wird, von welchem sie schon empfangen wurde.
 
 	\descriptionitem{\code{\gls{Nexthops}}}
@@ -152,7 +153,7 @@ Nexthops lookup(Data scaledDestinationAddress, Address originAddress, Object ori
 Mit \code{localEndpointRoutes.get(scaledDestinationAddress)} wird zu Beginn des Routinglookups
 nach lokalen \glslink{endp}{Endpunkten} mit der genauen Zieladresse dieser Nachricht gesucht.
 Werden ein oder mehrere \glspl{endp} gefunden, so wird weiters geprüft, ob es entfernte Endpunkte
-gibt, die die selbe Adresse haben. Gibt es solche \glspl{endp}, dann wird sichergestellt, dass
+gibt, die dieselbe Adresse haben. Gibt es solche \glspl{endp}, dann wird sichergestellt, dass
 keiner dieser \glspl{endp} derjenige \gls{endp} ist, von dem die Nachricht empfangen wurde und
 dass die Nachricht somit nicht wieder zu diesem \gls{endp} weitergeleitet wird.
 Anschließend werden die \glspl{endp} mit der gleichen Adresse wie der lokale \gls{endp} zur Liste
@@ -165,12 +166,12 @@ Wurden keine lokalen \glspl{endp} mit der Zieladresse der Nachricht gefunden, da
 \code{remoteServiceRoutes.getClosest(scaledDestinationAddress)} nach direkt verbundenen
 \glslink{endp}{Endpunkten} gesucht, deren Adresse der Zieladresse am ähnlichsten ist.
 Anschließend wird, wie schon bei den lokalen \glslink{endp}{Endpunkten}, sichergestellt,
-dass die Liste von \glspl{endp} nicht den \gls{endp} enthält, von dem die Nachricht empfangen
-wurde.
+dass die Liste von \glslink{endp}{Endpunkten} nicht den \gls{endp} enthält, von
+dem die Nachricht empfangen wurde.
 Falls das der Fall ist, wird \code{null} zurückgegeben und die Nachricht in Folge verworfen.
 
 Anderenfalls wird nur der letzte \gls{endp} in der von \code{nexthops} referenzierten
 Liste der \glspl{endp} zurückgegeben: Enthält die Liste mehrere Einträge, so haben die darin
-enthaltenen \glspl{endp} die selbe Adresse. Die Nachricht soll in diesem Fall aber nur an einen
+enthaltenen \glspl{endp} dieselbe Adresse. Die Nachricht soll in diesem Fall aber nur an einen
 dieser \glspl{endp} weitergeleitet werden, da sie von dort an die restlichen \glspl{endp} mit der
 gleichen Adresse weitergeleitet wird.

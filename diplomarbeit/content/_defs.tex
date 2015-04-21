@@ -45,7 +45,7 @@
 \newcommand{\flexnumfield}{\glslink{fnumc}{FlexNum, 1 -- 9 Bytes}}
 \newcommand{\netpktfield}{\glslink{netpkt}{NetworkPacket, $N$ Bytes}}
 
-\newcommand{\descriptionitem}[1]{\item[{#1}] \hfill \nopagebreak \\}
+\newcommand{\descriptionitem}[1]{\needspace{2\baselineskip} \item[{#1}] \hfill \\}
 \newcommand{\datei}[1]{\textit{#1}}
 
 \newcommand{\const}[1]{\code{#1}}
@@ -62,7 +62,7 @@
     \end{tabular}
 }
 
-\input{content/_defs_dcl_bytefields.tex}
+\input{content/_defs_bytefields.tex}
 
 % listings
 
@@ -73,10 +73,8 @@
 
 \newcommand{\javalisting}{\lstset{language=Java, breaklines=true, basicstyle=\ttfamily, keywordstyle=\color{javakeyword}\bfseries, stringstyle=\color{javastring}, commentstyle=\color{javacomment}, morecomment=[s][\color{javadoc}]{/**}{*/}, numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=5pt, tabsize=4, showspaces=false, showstringspaces=false, frame=single}}
 
-\newcommand{\messagestart}{\begin{figure}[p] \centering \begin{bytefield}[bitwidth=2em]{8}}
-\newcommand{\messageend}[1]{\end{bytefield} \par \protect\caption{\gls{#1}} \label{#1fig} \end{figure}}
+\newcommand{\listingneedspace}{\needspace{2\baselineskip}}
 
-
-\newcommand{\listingstart}[1]{\javalisting \begin{lstlisting}[caption={#1},captionpos=b]}
+\newcommand{\listingstart}[1]{\javalisting \listingneedspace \begin{lstlisting}[caption={#1},captionpos=b]}
 
 %\lstset{numbers=right, numberstyle=\tiny, stepnumber=2, numbersep=5pt, showspaces=false, frame=single}
