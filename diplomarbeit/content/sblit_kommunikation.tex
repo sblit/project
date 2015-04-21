@@ -10,16 +10,17 @@ Bevor ein fremdes Gerät eine Verbindung aufbaut, muss auf jeden Fall seine Iden
 	\item \gls{authreq}s
 	\item \gls{authres}s
 \end{itemize}
-\sblitauthreqbytefield
+\subsubsection{\gls{authreq}}
 
 Sobald zwei Geräte (Gerät A, Gerät B) Daten austauschen wollen, müssen sie die Identität des jeweiligen Kommunikationspartners überprüfen. Dies erfolgt über \gls{authreq}s. Dabei schickt Gerät B zufällige Daten an Gerät A mit der Aufforderung, diese zu verschlüsseln \abbildung{authreq}. 
 %TODO Umformulieren
 Die Gesamtlänge der Daten, die mit RSA-2048 verschlüsselt werden, darf maximal 128 Byte betragen. Um zu verhindern, dass Gerät B bestimmte Daten mit dem Private-Key von Gerät A verschlüsseln lässt, werden 64 von den maximal 128 Byte reserviert. Diese 64 Byte nutzt Gerät A, um zufällige Daten hinzuzufügen, damit sich Gerät B nicht gewünschte Werte verschlüsseln lassen kann.
+\sblitauthreqbytefield
 
 \subsubsection{\gls{authres}}
-\sblitauthresbytefield
 Bevor die Daten verschlüsselt werden, wird ein zufälliger Wert mit einer Länge von 64 Bit an die empfangenen Daten angefügt.
 Wird dieses Paket nun von Gerät B empfangen, kann der Inhalt mit dem Public-Key des Gerätes A, also dessen Adresse, entschlüsselt werden \abbildung{authres}.
+\sblitauthresbytefield
 		
 \subsection{Nachrichten an eigene Geräte}
 \subsubsection{Allgemein}
@@ -33,8 +34,8 @@ Wird dieses Paket nun von Gerät B empfangen, kann der Inhalt mit dem Public-Key
 \end{itemize}
 
 \subsubsection{\gls{filereq}} \label{Dateianfrage}
-\sblitfilereqbytefield
 Mithilfe des \gls{filereq} kann eruiert werden, ob die Datei bereits auf einem anderen Gerät bereits vorhanden ist. Außerdem kann mit dem \gls{filereq} ein möglicher Konflikt \referenz{Konflikt} ausgeschlossen werden \abbildung{filereq}.
+\sblitfilereqbytefield
 
 \begin{description} 
 	\descriptionitem{Dateipfad}
@@ -46,8 +47,8 @@ Mithilfe des \gls{filereq} kann eruiert werden, ob die Datei bereits auf einem a
 		
 \subsubsection{\gls{fileres}} \label{fileres}
 
-\sblitfileresbytefield
 Der \gls{fileres} wird benötigt, um dem Gerät, das den \gls{filereq} geschickt hat, zu antworten, ob die Datei benötigt wird.
+\sblitfileresbytefield
 
 \begin{description}
 	\descriptionitem{Need-Flag}
@@ -59,8 +60,8 @@ Der \gls{fileres} wird benötigt, um dem Gerät, das den \gls{filereq} geschickt
 \end{description}
 		
 \subsubsection{\gls{filemsg}}
-\sblitfilemsgbytefield
 Die \gls{filemsg} dient zur Übertragung der Datei \abbildung{filemsg}.
+\sblitfilemsgbytefield
 \begin{description}
 	\descriptionitem{Dateiinhalt}
 		Der Dateiinhalt wird als binäres \code{Data}-Objekt verschickt.
@@ -77,8 +78,8 @@ Die \gls{filemsg} dient zur Übertragung der Datei \abbildung{filemsg}.
 Eine \gls{filedel} beinhaltet den Pfad zur zu löschenden Datei. Nach Empfang der \gls{filedel} wird die Datei gelöscht \abbildung{filedel}.
 
 \subsubsection{\gls{refdev}}
-\sblitrefdevbytefield
 Die \gls{refdev} dient zur Aktualisierung von Gerätelisten \abbildung{refdev}.
+\sblitrefdevbytefield
 \begin{description}
 	\descriptionitem{File-Flag}
 	Das File-Flag gibt darüber Auskunft, ob es sich um die Datei für Partnergeräte oder die Datei für die eigenen Geräte handelt.
@@ -96,16 +97,16 @@ Die \gls{refdev} dient zur Aktualisierung von Gerätelisten \abbildung{refdev}.
 \end{itemize}
 
 \subsubsection{\gls{partfilereq}} \label{partnerfilerequest}
-\sblitpartfilereqbytefield
 Der \gls{partfilereq} dient, wie der \gls{filereq}, zum Versenden einer Dateianfrage \abbildung{partfilereq}.
+\sblitpartfilereqbytefield
 \begin{description}
 	\descriptionitem{Versionsverlauf}
 	Der Versionsverlauf wird, wie beim \gls{filereq}, mitgeschickt, damit der Partner die Datei identifizieren kann. Dies verhindert, dass der Partner den Dateipfad kennt und somit auf den Inhalt der Datei schließen kann. Weiters kann aus diesem Versionsverlauf, der lediglich Hashes enthält, nicht auf den Inhalt der Datei geschlossen werden, da das Verhashen eine Einwegfunktion ist. 
 \end{description}
 
 \subsubsection{\gls{partfileres}}
-\sblitpartfileresbytefield
 Der \gls{partfileres} dient zum Antworten auf einen \gls{partfilereq} \abbildung{partfileres}.
+\sblitpartfileresbytefield
 
 \begin{description}
 	\descriptionitem{Versionsverlauf}
@@ -115,8 +116,8 @@ Der \gls{partfileres} dient zum Antworten auf einen \gls{partfilereq} \abbildung
 \end{description}
 
 \subsubsection{\gls{partfilemsg}}
-\sblitpartfilemsgbytefield
 Die \gls{partfilemsg} dient zum Versenden einer Datei an Partnergeräte \referenz{Partnergerät} \abbildung{partfilemsg}.
+\sblitpartfilemsgbytefield
 \begin{description}
 	\descriptionitem{Versionsverlauf}
 	Da der Versionsverlauf zur Identifikation der Datei benötigt wird, wird er auch bei der \gls{partfilemsg} mitgeschickt. Gleichzeitig dient der letzte Hash im Versionsverlauf als Dateiname auf dem Partnergerät.
@@ -136,9 +137,9 @@ Die \gls{partfilemsg} dient zum Versenden einer Datei an Partnergeräte \referen
 \end{description}
 Die \gls{partfiledel} dient, wie die \gls{filedel}, zum Löschen von Dateien auf den eigenen Geräten \abbildung{partfiledel}.
 
-\subsubsection{\gls{filedel}}
-\sblitfiledelpartbytefield
+\subsubsection{\gls{filedelpart}}
 Um Platz auf den Partnergeräten zu sparen, werden die Dateien gelöscht, sobald diese auf allen eigenen Geräten verteilt sind. Dies wird mit der \gls{filedel} initiiert. In der \gls{filedel} zwischen Partnergerät und eigenem Gerät wird der Versionsverlauf statt dem Dateinamen angegeben \abbildung{filedel}.
+\sblitfiledelpartbytefield
 \begin{description}
 	\descriptionitem{Versionsverlauf}
 	Der Versionsverlauf gibt die Datei an, die vom Partnergerät gelöscht werden soll. 
