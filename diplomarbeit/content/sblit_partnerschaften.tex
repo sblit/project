@@ -2,7 +2,7 @@
 Um nicht immer mindestens zwei Geräte eingeschalten haben zu müssen, werden die
 Daten nicht nur auf den eigenen Geräten gespeichert, sondern auch auf sogenannten
 Partnergeräten. Damit man trotz hoher Verfügbarkeit nicht zu viel Speicher freigeben
-muss, sollte man Partnerschaften mit in etwa 10 Geräten eingehen.
+muss, sollte man Partnerschaften mit cirka 10 Geräten eingehen.
 
 \subsection{Partnergeräte} \label{Partnergerät}
 Ein \gls{partnerdevice} zeichnet sich dadurch aus, dass entweder meine Daten auf
@@ -14,8 +14,8 @@ einem eigenen Gerät zu speichern.
 \subsection{Delta-Daten}
 Um den auf den Partnergeräten benötigten und somit auch den freigegebenen Speicherplatz
 möglichst gering zu halten, synchronisiert \sblit nur Delta-Daten. Unter Delta-Daten
-kann man sich die Änderungen an einer Datei vorstellen. Bis zur Umsetzung des
-Erkennungsalgorithmus für Delta-Daten werden die Änderungen Datei-weise synchronisiert.
+werde die Änderungen an einer Datei verstanden. Bis zur Umsetzung des
+Erkennungsalgorithmus für Delta-Daten werden nur die veränderten Dateien synchronisiert.
 
 Wenn sich eine Datei ändert wird diese so lange auf den Partnergeräten gespeichert,
 bis diese auf allen Geräten verfügbar ist.
@@ -29,7 +29,7 @@ dass die Partnerschaft nicht mehr gewünscht ist. Danach wird die Partnerschaft 
 Partnergerät gelöscht.
 
 \subsection{Sicherheit} \label{sicherheit}
-Um zu verhindern, dass eine Datei vom Benutzer eines \gls{partnerdevice}es gelesen wird,
+Um zu verhindern, dass eine eigene Datei vom Benutzer eines \gls{partnerdevice}es gelesen wird,
 wird diese mit dem \gls{aes} im \gls{gcm} verschlüsselt. Des Weiteren wird dadurch
 verhindert, dass die Datei durch den Partner verändert werden kann.
 
@@ -67,14 +67,14 @@ und umgekehrt alle Geräte von Wilfried auf Gerät A(S) gespeichert.
 	\label{partnerschaften_3}
   \caption{Eintragen der Geräte des Partners.}
 \end{figure}
-Weiters wird die Adresse von A(W) auf Susanne's Geräte und die Adresse von A(S) auf Wilfried's Geräte gespeichert.
+Weiters wird die Adresse von A(W) auf Susannes Geräte und die Adresse von A(S) auf Wilfrieds Geräte gespeichert.
 \begin{figure}[htb]
 	\centering
   \includegraphics[]{images/partnerschaften_4.pdf}
 	\label{partnerschaften_4}
   \caption{Eintragen der Adressen des Partnergeräts.}
 \end{figure}
-Ab diesem Zeitpunkt werden alle Änderungen von Susanne's Dateien auf Gerät A(W) gesichert,
-bis sie auf alle Geräte von Susanne verteilt wurden. Sobald Susanne's Geräte die Änderung
+Ab diesem Zeitpunkt werden alle Änderungen von Susannes Dateien auf Gerät A(W) gesichert,
+bis sie auf alle Geräte von Susanne verteilt wurden. Sobald Susannes Geräte die Änderung
 erhalten, wird Gerät A(W) wieder aufgefordert, die Daten zu löschen. Das gleiche gilt natürlich
 auch für Wilfried und das Gerät A(S).

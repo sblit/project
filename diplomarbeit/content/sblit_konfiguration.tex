@@ -40,7 +40,7 @@ Das \gls{logfile} \referenz{Logfile} \datei{logs.txt} enthält die Versionsverl�
 
 \code{Pfad1} bezeichnet den relativen Pfad vom \sblit-Ordner zur betrachteten \datei{Datei 1}. Die einzelnen Versionen (\code{Version1}, \code{Version2}) sind Hashwerte der \datei{Datei 1} zu verschiedenen Zeitpunkten, deren Bytes in hexadezimaler Form im \gls{logfile} gespeichert werden. Analog dazu werden auch die Adressen der Geräte, die bereits die aktuellste Version der \datei{Datei 1} enthalten, in hexadezimaler Form gespeichert. \code{Pfad2} ist der Pfad zu jener Datei, mit der \datei{Datei 1} in Konflikt steht. Dieser ist optional.
 
-Zum Schreiben des \gls{logfile}s, wird folgende Methode verwendet: \\ \\
+Zum Schreiben des \gls{logfile}s wird folgende Methode verwendet: \\ \\
 \listingstart{Schreiben des Logfiles \datei{logs.txt}}
 private synchronized void write(Map<String, LinkedList<Data>> versions, Map<String, LinkedList<Data>> synchronizedDevices, Map<String, String> conflictOf) throws IOException {
 	String logs = "";
@@ -100,7 +100,7 @@ Die Methode \code{write} überprüft zunächst, ob Dateien in der Versionsliste 
 \datei{sblitDirectory.txt} enthält den Pfad zum \sblit-Ordner. Darin wird ein \code{String} gespeichert, der den Dateipfad enthält. 
 
 \subsection{symmetricKey.txt} \label{symmetricKeytxt}
-In \datei{symmetricKey.txt} wird der symmetrische Schlüssel \gls{symmetricKey} festgehalten. Dieser dient zum Entschlüsseln der Daten, die auf den Partnergeräten gespeichert werden. Der symmetrische Schlüssel wird, wie alle binären Daten, in hexadezimaler Form in der Datei gespeichert. Zusätzlich ist diese Datei versteckt.
+In \datei{symmetricKey.txt} wird der symmetrische Schlüssel \referenz{symmetricKey} festgehalten. Dieser dient zum Entschlüsseln der Daten, die auf den Partnergeräten gespeichert werden. Der symmetrische Schlüssel wird, wie alle binären Daten, in hexadezimaler Form in der Datei gespeichert. Zusätzlich ist diese Datei versteckt.
 
 \subsection{uk.txt} \label{uktxt}
 \datei{uk.txt} enthält den Public-Key des Gerätes, der gleichzeitig die Geräteadresse ist. Beim Verbinden mit \gls{dcl} wird diese Adresse bekanntgegeben. Der Schlüssel wird in hexadezimaler Form in der Datei gespeichert.

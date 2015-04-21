@@ -97,6 +97,12 @@
 \makeglossaries
 \input{content/glossary.tex}
 
+
+\bytefieldsetup{
+  rightcurlyspace=0pt,
+  leftcurlyspace=12pt
+}
+
 \begin{document}
 %%%%%%
 % Weitere Einstellungen siehe Latex-Vorspann%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -312,17 +318,14 @@ Prof. DI Herbert Sasshofer, \textit{Betreuer}
 
 \chapter{Anhang 3\label{appendix3}}
 \begin{figure}[htb]
-	\centering
-	\includegraphics[width=85mm,height=55mm]{images/visitenkarte_vorderseite.pdf}
-	\label{visitenkarte_vorderseite}
-  \caption{Vorderseite der Visitenkarte}
-\end{figure}
+   \centering
+  \includegraphics[width=85mm,height=55mm]{images/visitenkarte_vorderseite.pdf}
+      \\
+     \vspace{5mm}
 
-\begin{figure}[htb]
-  	\centering
-  	\includegraphics[width=85mm,height=55mm]{images/visitenkarte_rueckseite.pdf}
-  	\label{visitenkarte_rueckseite}
-    \caption{Rückseite der Visitenkarte}
+\includegraphics[width=85mm,height=55mm]{images/visitenkarte_rueckseite.pdf}
+          \label{visitenkarte_rueckseite}
+    \caption{Visitenkarte}
 \end{figure}
 
 \printindex{}
