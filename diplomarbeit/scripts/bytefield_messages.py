@@ -5,6 +5,8 @@ import sys
 EMPTY = sys.argv.count("--empty") > 0
 HEADINGS = sys.argv.count("--headings") > 0
 
+WGPARBOX = False
+
 def parseprotocols():
 	protocols = []
 	n = False
@@ -57,7 +59,7 @@ def cc(c = {}, add = {}, cpy = []):
 def bf(wordsize, content, title, label):
 	if EMPTY: return ""
 	return "\\needspace{2\\baselineskip}"\
-		 + "\\begin{figure}"\
+		 + "\\begin{figure}[#1]"\
 		 + "\\begin{centering}"\
 		 + "\\begin{bytefield}[bitwidth="+("%.1f" % (18.0 / wordsize))+"em]{"+str(wordsize)+"}"\
 		 + " \\\\ \n"\
@@ -82,6 +84,8 @@ def gen(part, proto, info, makegeneral = True):
 	latexname = info["latexname"]
 	gentext = info["gentext"] if info.has_key("gentext") else (latexname + " -- Genereller Messageaufbau")
 	typecmd = info["type"] if info.has_key("type") else "\\msg"
+	global WGPARBOX
+	WGPARBOX = info["wgparbox"] if info.has_key("wgparbox") else False
 
 	for msg in msgs:
 		s += "\\newcommand{\\"+proto+msg+"t}{"+msgs[msg]+"}\n"
@@ -93,10 +97,12 @@ def gen(part, proto, info, makegeneral = True):
 
 	s += "\n"
 	if makegeneral:
-		s += "\\newcommand{\\"+proto+"bytefield}{"+bf(8, eval(proto)(), gentext, part+"-"+proto+"-bytefield")+"}\n"
+		s += "\\newcommand{\\"+proto+"bytefieldattr}[1]{"+bf(8, eval(proto)(), gentext, part+"-"+proto+"-bytefield")+"}\n"
+		s += "\\newcommand{\\"+proto+"bytefield}{\\"+proto+"bytefieldattr{tbp}}"
 
 	for msg in msgs:
-		s += "\n\\newcommand{\\"+proto+msg+"bytefield}{"+bf(8, eval(proto+msg)(), latexname + " -- " + typecmd + "{\\"+proto+msg+"t}", part+"-"+proto+"-"+msg+"-bytefield")+"}"
+		s += "\n\\newcommand{\\"+proto+msg+"bytefieldattr}[1]{"+bf(8, eval(proto+msg)(), latexname + " -- " + typecmd + "{\\"+proto+msg+"t}", part+"-"+proto+"-"+msg+"-bytefield")+"}"
+		s += "\n\\newcommand{\\"+proto+msg+"bytefield}{\\"+proto+msg+"bytefieldattr{tbp}}"
 
 	return s
 
@@ -119,18 +125,22 @@ def genheadings(part, proto, info, makegeneral = True):
 
 def rwg(c, name, text, desc):
 	if c["rwg"] == True or c["rwg"].count(name) > 0:
-		text = "\\begin{rightwordgroup}{\parbox{8em}{\\raggedright "+desc+"}}\n"\
+		text = "\\begin{rightwordgroup}{"\
+			 + (("\parbox{8em}{\\raggedright "+desc+"}") if WGPARBOX else desc)\
+			 + "}\n"\
 			 + text + "\n"\
 			 + "\\end{rightwordgroup}\n"
 	return text
 
 def lwg(c, name, text, desc):
 	if c["lwg"] == True or c["lwg"].count(name) > 0:
-		text = "\\begin{leftwordgroup}{\parbox{8em}{\\raggedleft "+desc+"}}\n"\
+		text = "\\begin{leftwordgroup}{"\
+			 + (("\parbox{8em}{\\raggedleft "+desc+"}") if WGPARBOX else desc)\
+			 + "}\n"\
 			 + text + "\n"\
 			 + "\\end{leftwordgroup}\n"
 	return text
-	
+
 ###
 
 def varlen(c):
@@ -427,16 +437,16 @@ def _sblitinit(i, c = {}):
 
 def sblit():
 	return con(byte(cc({}, {"desc": "Message Type"})), varlen(cc({}, {"border": T|B|L|R, "desc": "Message Data \\\\ $N$ Bytes"})))
-	
+
 def version(cc):
 	return con(fixdata({"desc": "Hash", "size":20, "border" : T|B|L|R}))
 
 def geraet(cc):
 	return con(fixdata({"desc": "Gerät mit der aktuellen Version", "size":20, "border" : T|B|L|R}))
-	
+
 def geraete(c):
 	return lwg(cc(), "",array(cc(c, {"rwgid": "partfilemsg", "name": "Gerät", "content": geraet(cc(c)), "border" : T|B|L|R}, ["border"])), "Geräte mit der\\\\aktuellen Version")
-	
+
 def versionsverlauf(c):
 	lwg(cc(), "", array(cc(c, {"rwgid": "filereq", "name": "Version", "content": version(cc(c)), "border" : T|B|L|R}, ["border"])), "Versionsverlauf")
 
@@ -448,34 +458,34 @@ def sblitauthres():
 
 def sblitfilereq(c = {}):
 	return con(_sblitinit(2), string({"desc": "Dateipfad", "border" : T|B|L|R, "varlensize" : 3}), lwg(cc(), "", array(cc(c, {"rwgid": "filereq", "name": "Version", "content": version(cc(c)), "border" : T|B|L|R}, ["border"])), "Versionsverlauf"))#, array({"desc" : "Versionsverlauf"}))
-	
+
 def sblitfileres(c = {}):
 	return con(_sblitinit(3),byte({"desc" : "Need-Flag"}), string({"desc": "Dateipfad", "border" : T|B|L|R, "varlensize" : 3}), fixdata({"desc" : "Hash", "size" : 20, "border" : T|B|L|R}))
-	
+
 def sblitfilemsg(c = {}):
 	return con(_sblitinit(4), data({"desc": "Dateiinhalt"}), string({"desc": "Dateipfad", "varlensize" : 3}), lwg(cc(), "", array(cc(c, {"rwgid": "filereq", "name": "Version", "content": version(cc(c)), "border" : T|B|L|R}, ["border"])), "Versionsverlauf"), lwg(cc(), "",array(cc(c, {"rwgid": "partfilemsg", "name": "Gerät", "content": geraet(cc(c)), "border" : T|B|L|R}, ["border"])), "Geräte mit der\\\\aktuellen Version"))
-	
+
 def sblitfiledel():
 	return con(_sblitinit(5), string({"desc": "Dateipfad", "varlensize" : 3, "border" : T|B|L|R}))
-	
+
 def sblitrefdev():
 	return con(_sblitinit(6), byte({"desc" : "File-Flag"}), string({"desc": "Dateipfad", "varlensize" : 3, "border" : T|B|L|R}))
-	
+
 def sblitpartfilereq(c = {}):
 	return con(_sblitinit(7), lwg(cc(), "", array(cc(c, {"rwgid": "filereq", "name": "Version", "content": version(cc(c)), "border" : T|B|L|R}, ["border"])), "Versionsverlauf"))
-	
+
 def sblitpartfileres(c = {}):
 	return con(_sblitinit(8), lwg(cc(), "", array(cc(c, {"rwgid": "filereq", "name": "Version", "content": version(cc(c)), "border" : T|B|L|R}, ["border"])), "Versionsverlauf"), byte({"desc" : "Need-Flag", "border" : T|B|L|R}))
 
 def sblitpartfilemsg(c = {}):
 	return con(_sblitinit(9), lwg(cc(), "", array(cc(c, {"rwgid": "filereq", "name": "Version", "content": version(cc(c)), "border" : T|B|L|R}, ["border"])), "Versionsverlauf"), data({"desc": "Dateiinhalt"}), string({"desc": "Dateipfad", "varlensize" : 3}), lwg(cc(), "",array(cc(c, {"rwgid": "partfilemsg", "name": "Gerät", "content": geraet(cc(c)), "border" : T|B|L|R}, ["border"])), "Geräte mit der aktuellen Version"))
-	
+
 def sblitpartfiledel():
 	return con(_sblitinit(10), string({"desc": "Dateipfad", "varlensize" : 3, "border" : T|B|L|R}))
 
 def sblitfiledelpart(c = {}):
-	return con(_sblitinit(11), lwg(cc(), "", array(cc(c, {"rwgid": "filereq", "name": "Version", "content": version(cc(c)), "border" : T|B|L|R}, ["border"])), "Versionsverlauf")) 
-	 
+	return con(_sblitinit(11), lwg(cc(), "", array(cc(c, {"rwgid": "filereq", "name": "Version", "content": version(cc(c)), "border" : T|B|L|R}, ["border"])), "Versionsverlauf"))
+
 PROTOCOLS = {
 	"isproto": {
 		"latexname": "\\gls*{isproto}",
@@ -554,10 +564,11 @@ PROTOCOLS = {
 		}
 	},
 	"sblit" : {
-		"latexname" : "\\gls*{sblit}", 
+		"latexname" : "\\gls*{sblit}",
+		"wgparbox": True,
 		"messages" : {
 			"authreq" : "\\gls*{authreq}",
-			"authres": "\\gls*{authres}", 
+			"authres": "\\gls*{authres}",
 			"filereq" : "\\gls*{filereq}",
 			"fileres" : "\\gls*{fileres}",
 			"filemsg" : "File",
