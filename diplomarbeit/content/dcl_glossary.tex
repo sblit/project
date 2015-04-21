@@ -34,7 +34,7 @@
 
 \newglossaryentry{aenc}{
 	name=Asymmetrisches Verschlüsselungsverfahren,
-	description={Verschlüsselungsverfahren, bei dem zur Entschlüsselung einer Nachricht ein anderer Schlüssel verwendet wird, als zur Verschlüsselung verwendet wurde},
+	description={Verschlüsselungsverfahren, bei dem zur Entschlüsselung einer Nachricht ein anderer Schlüssel verwendet wird, als zur Verschlüsselung},
 	see={[Siehe:]{rsa}}
 }
 
@@ -68,7 +68,7 @@
 \newglossaryentry{hashval}{
 	name=Hashwert,
 	plural=Hashwerte,
-	description={Ergebnis bei Anwendung eines \gls{hash}}
+	description={Ergebnis der Anwendung eines \gls{hash}}
 }
 
 \newglossaryentry{digestlength}{
@@ -78,7 +78,7 @@
 
 \newglossaryentry{sha1}{
 	name=SHA-1,
-	description={Im \gls{dcl} standardmäßig verwendeter \gls{hash}. SHA steht für Secure Hash Algorithm},
+	description={Secure Hash Algorithm. Im \gls{dcl} standardmäßig verwendeter \gls{hash}},
 	see={[Siehe:]{hash}}
 }
 
@@ -104,7 +104,7 @@
 \newglossaryentry{ntid}{
 	name=Network Type Identifier,
 	plural=Network Type Identifiers,
-	description={Der eindeutige Name eines \gls{nt}},
+	description={Der eindeutige Name eines \gls{nt}s},
 	see={[Siehe:]{nt}}
 }
 
@@ -140,7 +140,7 @@
 
 \newglossaryentry{asendp}{
 	name=Network Endpoint,
-	description={Eine Kombination aus einer auf einer \gls{asconn} bekanntgegebenen Adresse und einem \gls{net}, dem die Anwendung mit dieser Adresse beigetreten ist}
+	description={Eine auf einer \gls{asconn} bekanntgegebene Adresse in einem \gls{net}, dem die Anwendung mit dieser Adresse beigetreten ist}
 }
 
 \newglossaryentry{isproto}{
@@ -150,7 +150,7 @@
 
 \newglossaryentry{link}{
 	name=Link,
-	description={Verlässlicher und verschlüsselter Übertragungskanal basierend auf \acrshort{udp}. Basis für \glspl{isch}. Siehe \link{dcl-link}}
+	description={Verlässlicher und verschlüsselter Übertragungskanal basierend auf \acrshort{udp}. Basis für Verbindungen zwischen \glspl{service}. Siehe \link{dcl-link}}
 }
 
 \newglossaryentry{channel}{
@@ -176,13 +176,13 @@
 
 \newglossaryentry{chblockstatrep}{
 	name=Channel Block Status Report,
-	description={Statusinformation über die empfangenen \glspl{dataid} eines \glslink{channel}{Channels}, anhand derer fehlende Pakete erkannt und erneut übertragen werden können},
+	description={Statusinformation über die empfangenen \glspl{dataid} eines \glslink{channel}{Channels}, anhand der fehlende Pakete erkannt und erneut übertragen werden können},
 	see={[Siehe:]{channel}}
 }
 
 \newglossaryentry{fcnt}{
 	name=Flusskontrolle,
-	description={Einschränkung der über einen Kommunikationskanal übertragenen Menge an Daten zur Vermeidung von Verstopfung}
+	description={Einschränkung der über einen Kommunikationskanal übertragenen Menge an Daten zur Vermeidung von Verstopfungen}
 }
 
 \newglossaryentry{protoid}{
@@ -260,13 +260,13 @@
 }
 
 \newglossaryentry{keyc}{
-	name=Key-Component,
+	name=KeyComponent,
 	description={Basis für \glspl{pktc} zur Übertragung von Schlüsseldaten}
 }
 
 \newglossaryentry{actid}{
 	name=Action Identifier,
-	description={String, der in Anfragen übertragen wird und Auskunft über den Grund dieser Anfrage geben soll}
+	description={String, der in Anfragen übertragen wird und Auskunft über deren Grund geben soll}
 }
 
 \newglossaryentry{addrslot}{
@@ -276,12 +276,12 @@
 
 \newglossaryentry{netslot}{
 	name=Network Slot,
-	description={Zahl zur Referenzierung von \glspl{net}, denen ein \gls{service} auf einem \gls{isch} mit einer oder mehreren Adressen beigetreten ist}
+	description={Zahl zur Referenzierung von \glslink{net}{Netzwerken}, denen ein \gls{service} auf einem \gls{isch} mit einer oder mehreren Adressen beigetreten ist}
 }
 
 \newglossaryentry{appchslot}{
 	name=Application Channel Slot,
-	description={Zahl zur Referenzierung von \glspl{appch} auf \glspl{isch}}
+	description={Zahl zur Referenzierung von \glspl{appch} in \glspl{isch}}
 }
 
 \newglossaryentry{endpslot}{
@@ -291,7 +291,7 @@
 
 \newglossaryentry{isch}{
 	name=Interservice Channel,
-	description={Verbindung zwischen zwei \glspl{service}, innerhalb der mit dem \gls{isproto} kommuniziert wird}
+	description={\Gls{channel} eines \glslink{link}{Links} zwischen zwei \glspl{service}, innerhalb dessen mit dem \gls{isproto} kommuniziert wird}
 }
 
 \newglossaryentry{connbase}{
@@ -308,7 +308,7 @@
 
 \newglossaryentry{Hash}{
 	name=Hash,
-	description={Im Quellcode von \gls{dcl} definierte Klasse zur Anwendung von \glspl{hash} auf \gls{Data}-Objekte}
+	description={Im Quellcode von \gls{dcl} definierte Klasse zur Anwendung von \glspl{hash} auf \code{\gls{Data}}-Objekte}
 }
 
 \newglossaryentry{Address}{
@@ -318,14 +318,14 @@
 
 \newglossaryentry{Nexthops}{
 	name=Nexthops,
-	description={Im Quellcode von \gls{dcl} definierte Klasse zur Speicherung von verbundenen \glslink{endp}{Endpunkten} in der Form von \gls{ForwardDestination}-Objekten}
+	description={Im Quellcode von \gls{dcl} definierte Klasse zur Speicherung von verbundenen \glslink{endp}{Endpunkten} in der Form von \code{\gls{ForwardDestination}}-Objekten}
 }
 
 \newglossaryentry{ForwardDestination}{
 	name=ForwardDestination,
 	description={Im Quellcode von \gls{dcl} definierte Klasse zur Speicherung eines verbundenen \glslink{endp}{Endpunkts},
-			an den eine Nachricht weitergeleitet werden kann, inklusive dessen \gls{Address}- und
-			\gls{InterserviceChannel}-Objekten},
+			an den eine Nachricht weitergeleitet werden kann, inklusive dessen \code{\gls{Address}}- und
+			\code{\gls{InterserviceChannel}}-Objekten},
 	see={[Siehe:]{endp}}
 }
 
@@ -343,14 +343,14 @@
 
 \newglossaryentry{gls_nat}{
 	name=Network Address Translation,
-	description={Auf \glspl{natdev} durchgeführte Übersetzung von Netzwerkadressen. Siehe \link{dcl-natt}}
+	description={Auf \glslink{natdev}{NAT-Geräten} durchgeführte Übersetzung von Netzwerkadressen. Siehe \link{dcl-natt}}
 }
 
 \newacronym[see={[Glossar:]{gls_nat}}]{nat}{NAT}{Network Address Translation\glsadd{gls_nat}}
 
 \newglossaryentry{natt}{
 	name=NAT-Traversal,
-	description={Umgehung von \gls{natdev}, um Peer-to-Peer-Verbindungen aufbauen zu können}
+	description={Umgehung von \glslink{natdev}{NAT-Geräten}, um Peer-to-Peer-Verbindungen aufbauen zu können}
 }
 
 \newglossaryentry{nattpkt}{
@@ -369,13 +369,13 @@
 \newglossaryentry{ignoredata}{
 	name=Ignore Data,
 	plural=Ignore Data,
-	description={Daten, die als Präfix für \glspl{nattpkt} verwendet werden können, die vom Empfänger ignoriert werden sollen},
+	description={Daten, die als Präfix für \glspl{nattpkt} verwendet werden können, da Pakete, die diese Daten enthalten, vom Empfänger ignoriert werden},
 	see={[Siehe:]{nattpkt}}
 }
 
 \newglossaryentry{gls_crisp}{
 	name=Common Routed Interservice Protocol,
-	description={Protokoll, das \gls{net}-übergreifend zur verbindungslosen Kommunikation zwischen \glspl{service} verwendet wird. Siehe \link{dcl-crisp}}
+	description={Protokoll, das netzwerkübergreifend zur Kommunikation zwischen nicht direkt miteinander verbundenen \glspl{service} verwendet wird. Siehe \link{dcl-crisp}}
 }
 
 \newacronym[see={[Glossar:]{gls_crisp}}]{crisp}{CRISP}{Common Routed Interservice Protocol\glsadd{gls_crisp}}

@@ -10,7 +10,7 @@ Damit \sblit weiß, wann die Dateien von den Partnergeräten \referenz{Partnerge
 \subsection{Reaktionen auf Dateiänderungen}
 Wenn eine Datei neu erstellt, bearbeitet oder gelöscht wird, erkennt dies \sblit und leitet diese Informationen an den Synchronisationsprozess weiter. Außerdem ist das Erkennen einer Änderung im \sblit-Ordner wichtig, damit sie im \gls{logfile} protokolliert werden kann. Das \gls{logfile} wird sowohl für die Konflikterkennung \referenz{Konflikterkennung} als auch für die Reduktion der benötigten Bandbreite \referenz{Dateianfrage} genutzt.
 
-Um Änderungen zu erkennen, verwendet \sblit das sogenannte \gls{watchservice}. Das \gls{watchservice} wird bei Änderungen in dem Ordner, der vom Benutzer für die Synchronisation festgelegt wurde, benachrichtigt. Je nach dem, ob eine Datei angelegt, verändert oder gelöscht wurde, erfolgen unterschiedliche Arbeitsschritte. Beim Anlegen einer neuen Datei, wird ihr Pfad samt Hash in das \gls{logfile} geschrieben und eine Dateianfrage an die anderen eigenen Geräte geschickt. Wird eine Datei verändert, wird ein neuer Hash zu den bereits vorhandenen Hashes hinzugefügt. Außerdem wird eine Dateianfrage an die anderen eigenen Geräte gesendet. Wird eine Datei gelöscht, wird sie samt Hashes aus dem \gls{logfile} entfernt. Anschließend wird eine Löschanfrage an die eigenen Geräte versandt.
+Um Änderungen zu erkennen, verwendet \sblit das sogenannte \gls{watchservice}. Das \gls{watchservice} wird bei Änderungen in dem Ordner, der vom Benutzer für die Synchronisation festgelegt wurde, benachrichtigt. Je nach dem, ob eine Datei angelegt, verändert oder gelöscht wurde, erfolgen unterschiedliche Arbeitsschritte. Beim Anlegen einer neuen Datei wird ihr Pfad samt Hash in das \gls{logfile} geschrieben und eine Dateianfrage an die anderen eigenen Geräte geschickt. Wird eine Datei verändert, wird ein neuer Hash zu den bereits vorhandenen Hashes hinzugefügt. Außerdem wird eine Dateianfrage an die anderen eigenen Geräte gesendet. Wird eine Datei gelöscht, wird sie samt Hashes aus dem \gls{logfile} entfernt. Anschließend wird eine Löschanfrage an die eigenen Geräte versandt.
 Um zu erkennen, ob die Änderung vom Benutzer oder vom Programm vorgenommen wurde, überprüft \sblit zuerst das Logfile. Steht dort zum Hash der aktuellen Version schon ein anderes Gerät, wird keine Anfrage an dieses Gerät geschickt.\\ 
 \listingstart{Initialisierung des \gls{watchservice}}
 WatchService watcher = filesDirectory.getFileSystem()
@@ -33,7 +33,7 @@ Map<String, LinkedList<Data>> synchronizedDevices =
 	\descriptionitem{watchKey}
 	\gls{watchkey} enthält eine Liste an Dateien, die neu erstellt, geändert oder gelöscht wurden.
 	\descriptionitem{events}
-	Jedes \code{WatchEvent} aus der \code{List events} enthält eine Datei, die sich geändert hat und die Information, ob sie neu erstellt, verändert oder gelöscht wurde. 
+	Jedes \code{WatchEvent} aus der \code{List events} enthält eine Datei, die sich geändert hat, und die Information, ob sie neu erstellt, verändert oder gelöscht wurde. 
 	\descriptionitem{logs}
 	\code{logs} enthält den Versionsverlauf aller Dateien, die sich im \sblit-Ordner befinden.
 	\descriptionitem{synchronizedDevices}
@@ -118,7 +118,7 @@ else if (event.kind() == StandardWatchEventKinds
 	\descriptionitem{devices}
 	\code{devices} enthält alle Geräte, auf denen die Datei aktuell ist. In diesem Fall ist das genau jenes Gerät, auf dem der Code ausgeführt wird, da diese Datei gerade bearbeitet wurde.
 \end{description}
-Wurde die Datei bearbeitet, wird sie ausgelesen und anschließend verhasht. Nachdem der Versionsverlauf für die Datei in der Variable \code{hashes} gespeichert wurde, wird überprüft, ob der Versionsverlauf die Datei schon enthält. Ist dies der Fall, ist ein Fehler aufgetreten und die neue Version wird nicht synchronisiert. Falls der Versionsverlauf die aktuelle Version noch nicht enthält, wird der Hash der aktuellen Version im Versionsverlauf gespeichert. Anschließend wird eine neue Liste an Geräten erstellt, auf denen schon die neuste Version synchronisiert ist. In diesem Fall wird nur das eigene Gerät hinzugefügt, da die neuste Version bis jetzt nur auf diesem Gerät vorhanden ist. \\
+Wurde die Datei bearbeitet, wird sie ausgelesen und anschließend verhasht. Nachdem der Versionsverlauf für die Datei in der Variable \code{hashes} gespeichert wurde, wird überprüft, ob der Versionsverlauf die Datei schon enthält. Ist dies der Fall, ist ein Fehler aufgetreten und die neue Version wird nicht synchronisiert. Falls der Versionsverlauf die aktuelle Version noch nicht enthält, wird der Hash der aktuellen Version im Versionsverlauf gespeichert. Anschließend wird eine neue Liste an Geräten erstellt, auf denen schon die neueste Version synchronisiert ist. In diesem Fall wird nur das eigene Gerät hinzugefügt, da die neueste Version bis jetzt nur auf diesem Gerät vorhanden ist. \\
 \listingstart{Schreiben des \gls{logfile}s}
 	}
 }
@@ -127,17 +127,18 @@ write(files, synchronizedDevices);
 writeFilesToDelete(filesToDelete);
 \end{lstlisting}
 Das \gls{logfile} wird neu erstellt und die neuen Daten werden anschließend darin gespeichert. Außerdem werden die zu löschenden Dateien in eine Datei geschrieben, damit sie auch auf Geräten gelöscht werden können, die gerade nicht online sind.
+
 \subsection{Konflikte}\label{Konflikt}
 \subsubsection{Allgemein}
 Ein Konflikt ist ein Problem, das bei Synchronisationsdiensten vorkommt. Dieser tritt auf, wenn eine Datei bearbeitet wird, bevor sie synchronisiert werden kann. 
 
 Dazu ein Beispiel: Susanne hat einen Laptop und einen Stand-Rechner, auf denen sie mithilfe von \sblit einen Ordner synchronisiert. Im Normalfall, also wenn kein Konflikt auftritt, bearbeitet Susanne eine Datei auf dem Laptop. Nach dem Speichern wird die Datei auf den Stand-Rechner übertragen und dort gespeichert. Die Datei ist nun auf beiden Geräten synchron.
 
-Angenommen, Susanne schaltet nun den Laptop aus und bearbeitet anschließend die Datei noch einmal auf dem Stand-Rechner. Da der Laptop ausgeschaltet ist, kann die Datei nicht synchronisiert werden. Auf dem Weg zur Arbeit fällt Susanne noch eine Verbesserungsmöglichkeit der Datei ein und sie bearbeitet die Datei auf dem Laptop ohne einer Verbindung zum Internet. In der Arbeit angekommen, packt Susanne wieder ihren Laptop aus und verbindet sich zum Internet. Die Datei kann jetzt nicht auf den neusten Stand gebracht werden, da ja zwei unterschiedliche Versionen existieren. Würde die Datei einfach vom Stand-Rechner auf den Laptop kopiert werden, gingen die Neuerungen am Laptop verloren, umgekehrt würde die Datei vom Laptop die Änderungen am Stand-Rechner überschreiben. Diesen Zustand zweier verschiedener Versionen der gleichen Datei, ohne die Änderungen des jeweils anderen Gerätes schon berücksichtigt zu haben, nennt man einen Konflikt.
+Angenommen jedoch, Susanne schaltet nun den Laptop aus und bearbeitet anschließend die Datei noch einmal auf dem Stand-Rechner. Da der Laptop ausgeschaltet ist, kann die Datei nicht synchronisiert werden. Auf dem Weg zur Arbeit fällt Susanne noch eine Verbesserungsmöglichkeit der Datei ein und sie bearbeitet die Datei auf dem Laptop ohne einer Verbindung zum Internet. In der Arbeit angekommen, packt Susanne wieder ihren Laptop aus und verbindet sich zum Internet. Die Datei kann jetzt nicht auf den neuesten Stand gebracht werden, da ja zwei unterschiedliche Versionen existieren. Würde die Datei einfach vom Stand-Rechner auf den Laptop kopiert werden, gingen die Neuerungen am Laptop verloren, umgekehrt würde die Datei vom Laptop die Änderungen am Stand-Rechner überschreiben. Diesen Zustand zweier verschiedener Versionen der gleichen Datei, ohne die Änderungen des jeweils anderen Gerätes schon berücksichtigt zu haben, nennt man einen Konflikt.
 %TODO eventuell noch ergänzen
 
 \subsubsection{Konflikterkennung}\label{Konflikterkennung}
-Um Konflikte zu erkennen, verwendet \sblit eine interne Versionierung der Dateien. Diese wird im Kapitel \linkt{Logfile} näher erklärt. Bei einer Dateianfrage \referenz{Dateianfrage} werden alle Hashes einer Datei mitgesendet. Diese werden nach dem Empfang der Anfrage mit den Hashes der Datei mit dem gleichen Namen und aller Konfliktdateien dieser Datei im lokalen \gls{logfile} verglichen. Stimmen die beiden aktullen Hashes aus Dateianfrage und der Datei mit dem gleichen Namen im \gls{logfile} überein, muss die Datei gar nicht übertragen werden, da sie schon auf dem neusten Stand ist. Das heißt natürlich auch, dass kein Konflikt auftritt. Stimmt der aktuelle Hash im lokalen \gls{logfile} mit einem in der Dateianfrage überein, tritt ebenfalls kein Konflikt auf, da der aktuelle lokale Hash dem Gerät, das die Anfrage verschickt hat, schon bekannt ist. 
+Um Konflikte zu erkennen, verwendet \sblit eine interne Versionierung der Dateien. Diese wird im Kapitel \linkt{Logfile} näher erklärt. Bei einer Dateianfrage \referenz{Dateianfrage} werden alle Hashes einer Datei mitgesendet. Diese werden nach dem Empfang der Anfrage mit den Hashes der Datei mit dem gleichen Namen und den Hashes aller Konfliktdateien dieser Datei im lokalen \gls{logfile} verglichen. Stimmen die beiden aktuellen Hashes aus Dateianfrage und der Datei mit dem gleichen Namen im \gls{logfile} überein, muss die Datei gar nicht übertragen werden, da sie schon auf dem neuesten Stand ist. Das heißt natürlich auch, dass kein Konflikt auftritt. Stimmt der aktuelle Hash im lokalen \gls{logfile} mit einem in der Dateianfrage überein, tritt ebenfalls kein Konflikt auf, da der aktuelle lokale Hash dem Gerät, das die Anfrage verschickt hat, schon bekannt ist. 
 
 Stimmt der Versionsverlauf aus dem \gls{filereq} mit dem einer Konfliktdatei überein, wurde eine Version synchronisiert, bevor ein drittes Gerät einen Konflikt bemerkt hat. In diesem Falle könnten mehrere Konfliktdateien mit nur zwei verschiedenen Inhalten erstellt werden. Passiert dies, werden die Namen der beiden Dateien vertauscht, um das eben genannte Szenario zu verhindern.
 
@@ -151,7 +152,7 @@ Damit die Änderungen von einem Gerät nicht überschrieben werden, speichert \s
 Nach dem Empfang der Datei speichert Gerät A diese unter dem ursprünglichen Namen. Des Weiteren sendet Gerät A die Konfliktdatei mit dem geänderten Namen an Gerät B. Die neue Datei wird auf Gerät B unter dem neuen Namen gespeichert.
 
 \subsubsection{Umsetzung}
-Um Konflikte zu erkennen und zu lösen wird der folgende Code verwendet: \\
+Um Konflikte zu erkennen und zu lösen, wird der folgende Code verwendet: \\
 \listingstart{Erkennen eines Konflikts}
 private void handleConflict(LinkedList<Data> requestedHashes, LinkedList<Data> ownHashes, String path) throws IOException {
 	String sblitDirectory = Configuration.getSblitDirectory() + Configuration.slash;
@@ -181,15 +182,15 @@ private void handleConflict(LinkedList<Data> requestedHashes, LinkedList<Data> o
 \end{lstlisting}
 
 \begin{description}
-	\descriptionitem{requestedHashes} Der Parameter gibt an, welche Hashes in der Dateianfrage geschickt wurden. Die Hashes haben den Datentyp Data, welcher in \gls{dcl} definiert wurden. Um eine unbestimmte Menge davon speichern zu können, werden diese in eine LinkedList geschrieben. Diese hat den Vorteil, dass die Elemente die Reihenfolge behalten, in der sie in die Liste geschrieben wurden.
+	\descriptionitem{requestedHashes} Der Parameter gibt an, welche Hashes in der Dateianfrage geschickt wurden. Die Hashes haben den Datentyp \code{\gls{Data}}, welcher in \gls{dcl} definiert wurde. Um eine unbestimmte Menge davon speichern zu können, werden diese in eine LinkedList geschrieben. Diese hat den Vorteil, dass die Elemente die Reihenfolge behalten, in der sie in die Liste geschrieben wurden.
 	
-	\descriptionitem{ownHashes} Dieser Parameter enthält eine \code{LinkedList} an Hashes vom Datentyp Data, welche gemeinsam den Versionsverlauf der lokalen Datei ergeben. 
+	\descriptionitem{ownHashes} Dieser Parameter enthält eine \code{LinkedList} an Hashes vom Datentyp \code{\gls{Data}}, welche gemeinsam den Versionsverlauf der lokalen Datei ergeben. 
 	
 	\descriptionitem{path} Der Parameter path enthält den zum \sblit-Ordner relativen Pfad.
 	
 	\descriptionitem{sblitDirectory} Diese Variable vom Datentyp String enthält den absoluten Pfad des \sblit-Ordners. Dieser setzt sich zusammen aus \code{Configuration.getSblitDirectory()} und \code{Configuration.slash}. \code{Configuration.getSblitDirectory()} liefert den \sblit-Ordner zurück, der in der \code{Configuration}-Klasse definiert ist. Außerdem wird, je nach dem, ob das Betriebssystem Windows oder Unix-basierend ist, ein Backslash oder ein Slash an den Pfad gehängt. Die Zuweisung des richtigen Slashes wird am Programmstart bei der Initialisierung der \code{Configuration}-Klasse vorgenommen.
 
-	\descriptionitem{dotIndex} In dieser Variable befindet sich der Index des letzten Punktes im Dateipfad. Dieser dient dazu, um herauszufinden, ob die Datei eine Endung hat.
+	\descriptionitem{dotIndex} In dieser Variable befindet sich der Index des letzten Punktes im Dateipfad. Dieser dient dazu, herauszufinden, ob die Datei eine Endung hat.
 	
 	\descriptionitem{conflictFile} Das conflictFile ist die neue Datei, die erzeugt wird, wenn ein Konflikt auftritt.
 	
@@ -197,6 +198,6 @@ private void handleConflict(LinkedList<Data> requestedHashes, LinkedList<Data> o
 \end{description}
 Enthält der empfangene Versionsverlauf nicht den aktuellsten Hash im \gls{logfile}, tritt ein Konflikt auf. Ist dies der Fall, wird zunächst überprüft, ob die Datei eine Dateiendung besitzt.
 
-Hat die Datei eine Dateiendung, wird die Anmerkung, dass es sich um eine Konfliktdatei handelt, zwischen Dateiname und Dateiendung eingefügt. Hat die Datei jedoch keine Dateiendung, wird die Anmerkung einfach zum Schluss eingefügt.
+Hat die Datei eine Dateiendung, wird die Anmerkung, dass es sich um eine Konfliktdatei handelt, zwischen Dateinamen und Dateiendung eingefügt. Hat die Datei jedoch keine Dateiendung, wird die Anmerkung einfach zum Schluss eingefügt.
 
-Existiert schon eine Datei mit dem gleichen Namen, wie die Konfliktdatei bekommen soll, wird die Konfliktnummer so lange erhöht, bis eine Datei mit einem solchen Namen noch nicht existiert. Die Datei wird anschließend mit dem gewählten Dateinamen gespeichert.
+Existiert schon eine Datei mit dem gleichen Namen, den die Konfliktdatei bekommen soll, wird die Konfliktnummer so lange erhöht, bis eine Datei mit einem solchen Namen noch nicht existiert. Die Datei wird anschließend mit dem gewählten Dateinamen gespeichert.
