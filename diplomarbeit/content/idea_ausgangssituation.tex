@@ -9,13 +9,13 @@ Besonders bei Verwendung eines Laptops in der Schule und eines zweiten Rechners
 Zuhause ist die Anmeldung bei einem dieser Anbieter hilfreich.
 Statt Dateien mühsam über externe Speichermedien wie USB-Sticks kopieren zu
 müssen, kann ein Synchronisationsclient des Anbieters installiert werden, der
-neue und geänderte Dateien von einem Gerät automatisch auf den Cloudspeicher
+neue und geänderte Dateien von einem Gerät automatisch in die \gls{filecloud}
 lädt und somit auf das zweite Gerät synchronisiert.
 
 Die meisten Cloudspeicher sind so aufgebaut, dass die Daten der Nutzer zentral
 und unverschlüsselt auf Servern des Anbieters gespeichert werden.
-Dieses Modell ist zwar effizient und vergleichsweise einfach umzusetzen, birgt
-aber Risiken für die Privatsphäre der Nutzer.
+Dieses Modell ist zwar der simpelste, effizienteste und am einfachsten
+umzusetzen, birgt aber Risiken für die Privatsphäre der Nutzer.
 
 Durch die zentrale Speicherung der Daten entsteht ein einziger Angriffspunkt,
 der, wenn ein Angriff erfolgreich oder ein Fremdzugriff auf einem anderen Weg
@@ -40,33 +40,30 @@ Hierbei werden Dateien auf den zentralen Servern des betreibenden
 Unternehmens übertragen, zwischengespeichert, verwaltet und schließlich
 synchronisiert.
 
-Als Erklärung des üblichen Funktionsablauf eines Synchronisationsvorgangs von
-Dateien folgt ein Szenrio.
-
 \subsubsection{Szenario}
 In der Schule wird ein Übungsprotokoll geschrieben. Wird die Übung nicht
 fertiggestellt, muss sie zu Hause fertiggestellt werden.
 
 Beim Erstellen und Bearbeiten des Übungsprotokolls auf dem Schulrechner
-wird eine Kopie dieser Datei auf den vom Betreiber zur Verfügung gestellten
-\gls{cloudstorage} beziehungsweise dessen Server hochgeladen und dort gespeichert.
+wird eine Kopie dieser Datei auf die vom Betreiber zur Verfügung gestellten
+\gls{filecloud} beziehungsweise dessen Server hochgeladen und dort gespeichert.
 Der Sender behält dabei die Originaldatei. (\figurelink{dropbox_upload})
 \begin{figure}[htb]
 	\centering
   \includegraphics[]{images/dropbox_upload}
-	\label{dropbox_upload}
   \caption{Üblich gehandhabtes Uploaden einer Datei}
+	\label{dropbox_upload}
 \end{figure}
 
-Der Schulrechner wird heruntergefahren, zu Hause wird der Heimrechner hochgefahren. Die Synchronisations-Software wird
-sobald gestartet, über die Änderungen im \gls{cloudstorage} informiert und aktualisiert den lokalen Datenbestand, in
+Der Schulrechner wird heruntergefahren, zu Hause wird der Heimrechner hochgefahren. Die Synchronisations-Software wird,
+sobald gestartet, über die Änderungen in der \gls{filecloud} informiert und aktualisiert den lokalen Datenbestand, in
 diesem Fall durch Herunterladen des neu angelegten Übungsprotokolls vom Server. (\figurelink{dropbox_download})
 
 \begin{figure}[htb]
 	\centering
   \includegraphics[]{images/dropbox_download}
-	\label{dropbox_download}
   \caption{Üblich gehandhabtes Downloaden einer Datei}
+	\label{dropbox_download}
 \end{figure}
 
 Das Übungsprotokoll hat nach dem Synchronisationsvorgang auf dem Heim-PC
