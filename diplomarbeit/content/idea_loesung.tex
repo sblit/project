@@ -23,7 +23,7 @@ Mechanismus finden müssen, um eine direkte Verbindung aufbauen zu können.
 Das \kap{DCL} widmet sich der Bewältigung dieser, sowie weiterer
 durch die Dezentralisierung der Kommunikation enstehenden Herausforderungen.
 
-\subsubsection{Alternative zu Server als \gls{filecloud}}
+\subsubsection{Alternative zu Server als Filecloud}
 Der Server agiert aber nicht nur als Vermittlung der Clients zueinander, damit diese
 kommunizieren können, sondern auch als Zwischenspeicher für Daten. Dieser ist nämlich
 essenziell, um Dateien auch dann synchronisieren zu können, wenn stets nur eines der
@@ -99,7 +99,7 @@ Erstinstallation der Anwendung angegebenen wurde. Sobald sich Dateien innerhalb 
 erreichbaren Synchronisationspartnern über eine direkte verschlüsselte Verbindung
 gesendet.
 
-\subsubsection{Synchronisieren bei erreichbaren \glspl{syncpartner}n}
+\subsubsection{Synchronisieren bei erreichbaren Synchronisationspartnern}
 Wenn auf dem Schulrechner eine neue Datei erstellt oder eine bereits synchronisierte verändert und
 gespeichert wird, dann wird diese Datei in mehrere Datenblöcke
 aufgeteilt, diese Blöcke werden verschlüsselt und direkt über eine verschlüsselte
@@ -114,7 +114,7 @@ entschlüsselt und zu der vollständigen neuen Datei zusammengesetzt.
   \caption{Übertragung einer Datei zwischen zwei erreichbaren Hosts.}
 \end{figure}
 
-\subsubsection{Synchronisieren bei nicht erreichbaren \glspl{syncpartner}n}
+\subsubsection{Synchronisieren bei nicht erreichbaren Synchronisationspartnern}
 Für \glspl{syncpartner}, die nicht erreichbar sind, wird die Datei in der dezentralen
 \gls{filecloud} zwischengespeichert. Die Datei wird kopiert und in Blöcke
 aufgeteilt. Diese Blöcke werden verschlüsselt und verteilt auf den
@@ -130,7 +130,7 @@ können.
 	\centering
   \includegraphics[]{images/sblit_upload}
 	\label{sblit_upload}
-  \caption{Hochladen einer Datei in die dezentrale \gls{filecloud}.}
+  \caption{Hochladen einer Datei in die dezentrale \gls*{filecloud}.}
 \end{figure}
 
 Sobald der \gls{syncpartner}, hier der Heim-PC, wieder hochgefahren ist, fordert er die
@@ -142,6 +142,6 @@ vollständigen neuen Datei zusammengesetzt.
 	\centering
   \includegraphics[]{images/sblit_download}
 	\label{sblit_download}
-  \caption{Herunterladen einer Datei aus der dezentralen \gls{filecloud} beziehungsweise
+  \caption{Herunterladen einer Datei aus der dezentralen \gls*{filecloud} beziehungsweise
 	von den \glspl{partnerdevice}n.}
 \end{figure}
