@@ -12,7 +12,7 @@ Bevor ein fremdes Gerät eine Verbindung aufbaut, muss auf jeden Fall seine Iden
 \end{itemize}
 \subsubsection{Authenticity Request}
 
-Sobald zwei Geräte (Gerät A, Gerät B) Daten austauschen wollen, müssen sie die Identität des jeweiligen Kommunikationspartners überprüfen. Dies erfolgt über \gls{authreq}s. Dabei schickt Gerät B zufällige Daten an Gerät A mit der Aufforderung, diese zu verschlüsseln \abbildung{authreq}. 
+Sobald zwei Geräte (Gerät A, Gerät B) Daten austauschen wollen, müssen sie die Identität des jeweiligen Kommunikationspartners überprüfen. Dies erfolgt über \gls{authreq}s. Dabei schickt Gerät B zufällige Daten an Gerät A mit der Aufforderung, diese zu verschlüsseln \abbildung{authreq}.
 %TODO Umformulieren
 Die Gesamtlänge der Daten, die mit RSA-2048 verschlüsselt werden, darf maximal 128 Byte betragen. Um zu verhindern, dass Gerät B bestimmte Daten mit dem Private-Key von Gerät A verschlüsseln lässt, werden 64 von den maximal 128 Byte reserviert. Diese 64 Byte nutzt Gerät A, um zufällige Daten hinzuzufügen, damit sich Gerät B nicht gewünschte Werte verschlüsseln lassen kann.
 \sblitauthreqbytefield
@@ -21,7 +21,7 @@ Die Gesamtlänge der Daten, die mit RSA-2048 verschlüsselt werden, darf maximal
 Bevor die Daten verschlüsselt werden, wird ein zufälliger Wert mit einer Länge von 64 Bit an die empfangenen Daten angefügt.
 Wird dieses Paket nun von Gerät B empfangen, kann der Inhalt mit dem Public-Key des Gerätes A, also dessen Adresse, entschlüsselt werden \abbildung{authres}.
 \sblitauthresbytefield
-		
+
 \subsection{Nachrichten an eigene Geräte}
 \subsubsection{Allgemein}
 \sblitg verwendet zur Kommunikation zwischen den authentifizierten eigenen Geräten vier verschiedene Nachrichten:
@@ -37,14 +37,14 @@ Wird dieses Paket nun von Gerät B empfangen, kann der Inhalt mit dem Public-Key
 Mithilfe des \gls{filereq} kann eruiert werden, ob die Datei bereits auf einem anderen Gerät bereits vorhanden ist. Außerdem kann mit dem \gls{filereq} ein möglicher Konflikt \referenz{Konflikt} ausgeschlossen werden \abbildung{filereq}.
 \sblitfilereqbytefield
 
-\begin{description} 
+\begin{description}
 	\descriptionitem{Dateipfad}
 		Hierbei wird der zu \sblit's Hauptordner relative Dateipfad mitgeschickt. Der absolute Dateipfad wird nicht mitgeschickt, da der Ort des \sblit-Ordners nicht auf allen Geräten gleich sein muss. Befindet sich der Ordner auf Gerät A beispielsweise unter \datei{C:/Users/Susanne/} kann sich der Ordner auf Gerät B auch unter \datei{/home/susanne/dateien/} befinden.
 	\descriptionitem{Versionsverlauf}
 		Der Versionsverlauf beinhaltet alle Hashes einer Datei seit der letzten komplett synchronisierten Version. Das heißt, dass auf jedem Gerät aktuell entweder diese oder eine neuere Version gespeichert ist.
 \end{description}
 
-		
+
 \subsubsection{File Response} \label{fileres}
 
 Der \gls{fileres} wird benötigt, um dem Gerät, das den \gls{filereq} geschickt hat, zu antworten, ob die Datei benötigt wird.
@@ -56,9 +56,9 @@ Der \gls{fileres} wird benötigt, um dem Gerät, das den \gls{filereq} geschickt
 	\descriptionitem{Dateipfad}
 		Wie auch beim \gls{filereq} wird im \gls{fileres} der zu \sblit's Hauptordner relative Pfad mitgeschickt.
 	\descriptionitem{Hash}
-		Hier wird noch einmal der letzte Hash des Versionsverlaufs der Dateianfrage verschickt, um sicherzustellen, dass die Datei in der Zwischenzeit nicht geändert wurde. 
+		Hier wird noch einmal der letzte Hash des Versionsverlaufs der Dateianfrage verschickt, um sicherzustellen, dass die Datei in der Zwischenzeit nicht geändert wurde.
 \end{description}
-		
+
 \subsubsection{File Message}
 Die \gls{filemsg} dient zur Übertragung der Datei \abbildung{filemsg}.
 \sblitfilemsgbytefield
@@ -72,7 +72,7 @@ Die \gls{filemsg} dient zur Übertragung der Datei \abbildung{filemsg}.
 	\descriptionitem{Versionsverlauf}
 		Der Versionsverlauf wird mitgeschickt, damit er auf allen Geräten einheitlich ist. Dies verhindert, dass Konflikte fälschlicherweise erkannt werden, wo keine vorhanden sind. Weiters stellt der aktuellste Hash sicher, dass die versendete Datei korrekt zugestellt wurde. Verhasht man die versandte Datei, muss das Ergebnis mit dem aktuellsten mitgesendeten Hash übereinstimmen. Andernfalls muss die Datei neu gesendet werden.
 \end{description}
-		
+
 \subsubsection{File Delete Message}
 \sblitfiledelbytefield
 Eine \gls{filedel} beinhaltet den Pfad zur zu löschenden Datei. Nach Empfang der \gls{filedel} wird die Datei gelöscht \abbildung{filedel}.
@@ -101,7 +101,7 @@ Der \gls{partfilereq} dient, wie der \gls{filereq}, zum Versenden einer Dateianf
 \sblitpartfilereqbytefield
 \begin{description}
 	\descriptionitem{Versionsverlauf}
-	Der Versionsverlauf wird, wie beim \gls{filereq}, mitgeschickt, damit der Partner die Datei identifizieren kann. Dies verhindert, dass der Partner den Dateipfad kennt und somit auf den Inhalt der Datei schließen kann. Weiters kann aus diesem Versionsverlauf, der lediglich Hashes enthält, nicht auf den Inhalt der Datei geschlossen werden, da das Verhashen eine Einwegfunktion ist. 
+	Der Versionsverlauf wird, wie beim \gls{filereq}, mitgeschickt, damit der Partner die Datei identifizieren kann. Dies verhindert, dass der Partner den Dateipfad kennt und somit auf den Inhalt der Datei schließen kann. Weiters kann aus diesem Versionsverlauf, der lediglich Hashes enthält, nicht auf den Inhalt der Datei geschlossen werden, da das Verhashen eine Einwegfunktion ist.
 \end{description}
 
 \subsubsection{Partner File Response}
@@ -122,9 +122,9 @@ Die \gls{partfilemsg} dient zum Versenden einer Datei an Partnergeräte \referen
 	\descriptionitem{Versionsverlauf}
 	Da der Versionsverlauf zur Identifikation der Datei benötigt wird, wird er auch bei der \gls{partfilemsg} mitgeschickt. Gleichzeitig dient der letzte Hash im Versionsverlauf als Dateiname auf dem Partnergerät.
 	\descriptionitem{Dateiinhalt}
-	Um den Inhalt der Datei vor fremdem Zugriff zu schützen, wird er mit dem symmetrischen Schlüssel \referenz{sicherheit} verschlüsselt. 
+	Um den Inhalt der Datei vor fremdem Zugriff zu schützen, wird er mit dem symmetrischen Schlüssel \referenz{sicherheit} verschlüsselt.
 	\descriptionitem{Dateipfad}
-	Der Dateipfad wird, wie auch beim \gls{partfilereq}, verschlüsselt übertragen. 
+	Der Dateipfad wird, wie auch beim \gls{partfilereq}, verschlüsselt übertragen.
 	\descriptionitem{Geräte mit der aktuellen Version}
 	Hier stehen die Adressen aller Geräte, die schon die neueste Version haben. Ist die Version auf allen Geräten aktuell, kann sie von den Partnergeräten gelöscht werden. Daher wird diese Liste an Geräten immer mit der Datei mitgeschickt. Außerdem können somit unnötige Anfragen an Geräte, die die Datei schon besitzen, verhindert werden.
 \end{description}
@@ -142,15 +142,15 @@ Um Platz auf den Partnergeräten zu sparen, werden die Dateien gelöscht, sobald
 \sblitfiledelpartbytefield
 \begin{description}
 	\descriptionitem{Versionsverlauf}
-	Der Versionsverlauf gibt die Datei an, die vom Partnergerät gelöscht werden soll. 
+	Der Versionsverlauf gibt die Datei an, die vom Partnergerät gelöscht werden soll.
 \end{description}
 
 \subsection{Ablauf}
 \subsubsection{Allgemein}
-Bevor eine Verbindung nicht autorisiert ist, werden sämtliche Nachrichten verworfen. Die einzige Außnahme hierbei sind Nachrichten, die zur Authentifizierung dienen. 
+Bevor eine Verbindung nicht autorisiert ist, werden sämtliche Nachrichten verworfen. Die einzige Außnahme hierbei sind Nachrichten, die zur Authentifizierung dienen.
 
 \subsubsection{Authentifizierung}
-Beim Programmstart versucht sich \sblit zu allen eigenen Geräten und \gls{partnerdevice}en zu verbinden. Dazu schickt es über \gls{dcl} \gls{appch} Anfragen und fügt die Adresse des anderen Gerätes einer Liste mit unautorisierten \gls{appch}s hinzu. Wird die Anfrage angenommen, wird sofort ein \gls{authreq} verschickt. 
+Beim Programmstart versucht sich \sblit zu allen eigenen Geräten und \gls{partnerdevice}en zu verbinden. Dazu schickt es über \gls{dcl} \gls{appch} Anfragen und fügt die Adresse des anderen Gerätes einer Liste mit unautorisierten \gls{appch}s hinzu. Wird die Anfrage angenommen, wird sofort ein \gls{authreq} verschickt.
 
 Wird der \gls{appch} von einem anderen Gerät angefragt, wird zunächst in der Liste der eigenen Geräte \referenz{receiverstxt} und der Liste der Partnergeräte \referenz{freceiverstxt} nachgeschaut, ob die Adresse des Gerätes, das die Anfrage verschickt hat, in dieser vorhanden ist. Ist sie nicht vorhanden, wird der \gls{appch} sofort verworfen. Andernfalls wird ein \gls{authreq} über den \gls{appch} verschickt und die Adresse des Gerätes, das den \gls{appch} angefragt hat, zur Liste an unautorisierten \gls{appch}s hinzugefügt.
 
@@ -168,17 +168,17 @@ Nach Empfang des \gls{fileres} wird zunächst überprüft, ob der Hashwert der D
 Wird ein \gls{fileres} empfangen, wird zunächst das \gls{logfile} bearbeitet. Dazu wird der ursprüngliche Eintrag zur empfangenen Datei samt dem Versionsverlauf und den Geräten mit der aktuellen Version durch die neuen Parameter ersetzt. Dies passiert, damit die Änderung vom \gls{watchservice} nicht fälschlicherweise als Änderung durch den Benutzer wahrgenommen wird. Anschließend wird der empfangene Dateiinhalt vorerst in eine temporäre Datei geschrieben. Diese versteckte, temporäre Datei wird mit dem Prefix \datei{.sblit.} gespeichert, damit bei einem Absturz keine Dateien verloren gehen. Nach dem Schreiben der Datei wird sie in den urspünglichen Namen umbenannt.
 
 \subsubsection{Löschen einer Datei}
-Das Senden einer \gls{filedel} wird, wie das Senden eines \gls{filereq}, entweder durch das \gls{watchservice} oder beim Autorisieren eines \gls{appch} initiiert. 
+Das Senden einer \gls{filedel} wird, wie das Senden eines \gls{filereq}, entweder durch das \gls{watchservice} oder beim Autorisieren eines \gls{appch} initiiert.
 
 Beim Empfangen dieser Anfrage wird der Dateiname mit einem Zeitstempel in einer temporären Datei gespeichert, damit die Datei auch auf Geräten, die gerade nicht online sind, gelöscht werden kann. Außerdem wird die angefragte Datei gelöscht, sobald die Anfrage empfangen wird. Deshalb sollte man eine alte Version nicht löschen, nur weil sie nicht auf dem aktuellsten Stand ist, denn dies löscht ebenfalls die Datei auf dem aktuellsten Stand.
 
 \subsubsection{Aktualisieren einer Gerätedatei}
 Die Gerätedateien werden ebenfalls von einem Watchservice überwacht. Werden diese bearbeitet, wird eine \gls{refdev} an die anderen Geräte, die gerade online sind, verschickt. Außerdem wird diese periodisch in einem konfigurierbaren Intervall den anderen Geräten mitgeteilt. Beim Empfangen wird überprüft, ob die empfangene Version aktueller ist. Im Falle, dass die Datei aktueller ist, werden die Neuerungen in die Datei geschrieben.
 
-\subsubsection{Speichern einer Datei auf einem \gls{partnerdevice}}
-Wird eine Datei von einem Benutzer verändert, wird diese, sofern nicht alle eigenen Geräte online sind, auf ein \gls{partnerdevice} übertragen. Dazu wird ein \gls{partfilereq} an das \gls{partnerdevice} geschickt. 
+\subsubsection{Speichern einer Datei auf einem Partnergerät}
+Wird eine Datei von einem Benutzer verändert, wird diese, sofern nicht alle eigenen Geräte online sind, auf ein \gls{partnerdevice} übertragen. Dazu wird ein \gls{partfilereq} an das \gls{partnerdevice} geschickt.
 
-Beim Empfangen des \gls{partfilereq} wird überprüft, ob eine Datei mit dem in der Anfrage mitgeschickten Versionsverlauf noch nicht existiert und ob genug von dem zur Verfügung gestellten Speicherplatz vorhanden ist. Werden beide Bedingungen erfüllt, wird das Need-Flag auf den Hexadezimalwert \code{0x01} gesetzt und gemeinsam mit dem Versionsverlauf in einem \gls{partfileres} zurückgeschickt. Andernfalls wird mit dem Versionsverlauf und dem Hexadezimalwert \code{0x00} geantwortet. 
+Beim Empfangen des \gls{partfilereq} wird überprüft, ob eine Datei mit dem in der Anfrage mitgeschickten Versionsverlauf noch nicht existiert und ob genug von dem zur Verfügung gestellten Speicherplatz vorhanden ist. Werden beide Bedingungen erfüllt, wird das Need-Flag auf den Hexadezimalwert \code{0x01} gesetzt und gemeinsam mit dem Versionsverlauf in einem \gls{partfileres} zurückgeschickt. Andernfalls wird mit dem Versionsverlauf und dem Hexadezimalwert \code{0x00} geantwortet.
 
 Nachdem der \gls{partfileres} empfangen wurde, wird, falls das Need-Flag auf \code{0x01} gesetzt ist, mit der \gls{partfilemsg} geantwortet. Bevor die \gls{partfilemsg} verschickt wird, werden der Dateiinhalt, Dateipfad und die Geräte mit der aktuellen Version mit dem symmetrischen Schlüssel verschlüsselt \referenz{sicherheit}.
 
