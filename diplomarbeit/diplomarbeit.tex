@@ -307,18 +307,16 @@ Prof. DI Herbert Sasshofer, \textit{Betreuer}
 
 
 \chapter{Anhang\label{appendix}}
-\input{content/appendix_dcl_tutorial.tex}
+\input{content/appendix_desc.tex}
 
 % inkludiertes PDF auf der rechten Seite beginnen:
 \cleardoublepage
+\voffset0mm
 \includepdf[pages=-,width=210mm,height=297mm]{../dcl_tutorial/dcl_tutorial.pdf}
 
-\chapter{Anhang 2\label{appendix2}}
-
-\cleardoublepage
 \includepdf[pages=-,width=210mm,height=297mm]{../wettbewerbe/flyer.pdf}
 
-\chapter{Anhang 3\label{appendix3}}
+\thispagestyle{plain}
 \begin{figure}[htb]
    \centering
   \includegraphics[width=85mm,height=55mm]{images/visitenkarte_vorderseite.pdf}
@@ -329,6 +327,8 @@ Prof. DI Herbert Sasshofer, \textit{Betreuer}
           \label{visitenkarte_rueckseite}
     \caption{Visitenkarte}
 \end{figure}
+
+\voffset10mm
 
 \printindex{}
 
