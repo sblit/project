@@ -1,5 +1,5 @@
 \subsection{Einführung}
-Für das gestalten der grafischen Oberfläche wurde bei \sblit \acrshort{swt} verwendet.
+Für das Gestalten der grafischen Oberfläche wurde bei \sblit \acrshort{swt} verwendet.
 Das Standard Widget Toolkit ist eine Open-Source-Bibliothek für grafische
 Benutzeroberflächen, entwickelt von Eclipse. Es unterstützt viele Plattformen,
 darunter Windows 2000/XP/Vista/7/8, Linux und Mac OS X und bietet eine
@@ -12,11 +12,11 @@ oder \code{Table}-Widget.\cite{swt:tutorial}
 \subsection{Vorteile}
 \begin{description}
 	\descriptionitem{Behält Design der jeweiligen Plattform}
-    Damit eine möglichst große Reichweite mit \sblit erreicht werden kann, wurde bei
+    Um mit \sblit eine möglichst große Reichweite zu erzielen, wurde
     besonders auf Plattformunabhängigkeit geachtet, um \sblit mit wenig
     Anpassungsaufwand auf verschiedensten Betriebssystemen laufen lassen zu können.
-		\acrshort{swt} hat nun den Vorteil, dass es auf den verschiedenen Plattformen das
-    spezifische Aussehen des jeweiligen Betriebssystems hat, obwohl das selbe
+	\acrshort{swt} hat den Vorteil, dass grafische Oberflächen auf den verschiedenen Plattformen das
+    spezifische Aussehen des jeweiligen Betriebssystems haben, obwohl überall dasselbe
     Programm ausgeführt und die selben Elemente verwendet werden.
 
 	\descriptionitem{Einsteigerfreundlicher Editor}
@@ -31,7 +31,7 @@ oder \code{Table}-Widget.\cite{swt:tutorial}
 \begin{description}
 	\descriptionitem{Ist auf Linux weniger performant}
     Auf allen Plattformen außer Windows (wie zum Beispiel Linux) ist \acrshort{swt} manchmal
-    weniger performant, da bestimmte Widgets nicht vorhanden sind und erst emuliert werden müssen.\cite{swt:disadvantages}
+    weniger performant, da bestimmte Widgets nicht auf diesen Plattformen vorhanden sind und erst emuliert werden müssen.\cite{swt:disadvantages}
 
 	\descriptionitem{Ist nicht \acrshort{mvc} basiert}
     SWT basiert nicht auf einem \acrshort{mvc}-Design, bietet mit JFace allerdings eine
@@ -41,8 +41,8 @@ oder \code{Table}-Widget.\cite{swt:tutorial}
 \subsection{Aufbau}
 Der Aufbau bei \acrshort{swt} ist sehr einheitlich. Es gibt zwei Hauptobjekte:
 \code{Display} und \code{Shell}. Jedes Element hat ein Elternelement als Parameter
-und jedes Widget noch dazu ein Stil-Bit, dass dem Element eine vordefinierte Optik
-verleiht. Zudem gibt es noch Container-Klassen, auf die ein Layout angewendet werden
+und jedes Widget noch dazu ein Stil-Bit, das dem Element eine vordefinierte Optik
+verleiht. Zudem gibt es noch Container-Klassen auf die ein Layout angewendet werden
 kann, um die ihm untergeordneten Elemente zu positionieren.
 \listingstart{Beispielklasse für grafische Oberfläche \datei{erklaerungsGUI}}
 public class erklaerungsGUI {
@@ -84,32 +84,32 @@ public class erklaerungsGUI {
 
 \begin{description}
 	\descriptionitem{Display}
-    Die \code{Display}-Klasse ist einer der Kernkomponenten innerhalb einer \acrshort{swt}-\acrshort{gui}.
+    Die \code{Display}-Klasse ist eine der Kernkomponenten innerhalb einer \acrshort{swt}-\acrshort{gui}.
     Sie verwaltet Event-Loops, Schriftarten, Farben und die generelle Kommunikation zwischen dem \acrshort{gui}-Thread
     und den anderen Threads. Jedes Programm mit einer \acrshort{swt}-\acrshort{gui} muss ein \code{Display}-Objekt haben.
 
     \descriptionitem{Shell}
-    Die \code{Shell}-Klasse ist die zweite der Kernkomponenten einer \acrshort{swt}-\acrshort{gui}.
-    Sie stellt das Programmfenster dar und wird das Elternelement aller eingefügten Widgets.
-		Das \code{Display}-Objekt muss ein oder mehrere \code{Shell}-Objekte als Unterobjekt haben.
-    Mit der Funktion \code{shell.open()} wird das Programmfenster erst gezeichnet.
+    Die \code{Shell}-Klasse ist die zweite Kernkomponenten einer \acrshort{swt}-\acrshort{gui}.
+    Sie stellt das Programmfenster dar und wird das oberste Elternelement aller eingefügten Widgets.
+	Das \code{Display}-Objekt muss ein oder mehrere \code{Shell}-Objekte als Unterobjekte haben.
+    Erst mit der Funktion \code{shell.open()} wird das Programmfenster gezeichnet.
 
     \descriptionitem{GridLayout}
     Layouts können auf \code{Composite}-Objekte angewandt werden, um die darin befindlichen
-		Elemente zu positionieren. Ein Beispiel für ein Solches Objekt ist die \code{Shell}.
-    Es gibt verschiedenste Layouttypen, je nach Struktur, in der man die Elemente anordnen will.
+	Elemente zu positionieren. Ein Beispiel für ein solches Objekt ist die \code{Shell}.
+    Es gibt je nach Struktur, in der man die Elemente anordnen will, verschiedenste Layouttypen.
     Um jedem Widget eine Layoutinformation, also unter anderem eine Position zuordnen zu können,
-		die jeweilig spezielle \code{LayoutData} benötigt.
+	wird die jeweilige \code{LayoutData} benötigt.
 
     \descriptionitem{Button}
-    Zwei typische Buttons als Beispiel-Widgets verwendet. Unter den Parametern wird die Shell als
+    Hier werden zwei typische Buttons als Beispiel-Widgets verwendet. Unter den Parametern wird die Shell als
     Elternelement angegeben und \code{SWT.PUSH} beziehungsweise \code{SWT.ARROW}
-    als Stil-Bit. Das unterschiedliche Stil-Bit erklärt die andere Optik der Buttons.
+    als Stil-Bit. Das ungleiche Stil-Bit erklärt die unterschiedliche Optik der Buttons.
 
     \descriptionitem{Eventloop}
     Damit das \acrshort{gui} nicht sofort geschlossen wird, gibt es eine Eventloop,
 		eine Schleife die wartet bis ein gewisses Event eintritt. In diesem Fall wird
-		darauf gewartet, dass das Fenster, also das \code{Shell}-Objekt disposed, also
+		darauf gewartet, dass das Fenster, also das \code{Shell}-Objekt disposed, zu deutsch
 		geschlossen wird.
 
 \end{description}

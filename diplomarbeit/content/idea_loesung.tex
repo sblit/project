@@ -1,5 +1,5 @@
 \subsection{Einleitung}
-Anders als bei herkömmlichen Dateisynchronisationsanwendungen, findet die
+Anders als bei herkömmlichen Dateisynchronisationsanwendungen findet die
 Datenübertragung bei \sblit nicht über zentrale Server des Betreibers statt,
 sondern über eine direkte, verschlüsselte Verbindung zwischen den beteiligten
 Geräten.
@@ -20,8 +20,8 @@ vergleichsweise einfach bewältigt werden können, welche in den folgenden Absch
 Bei \sblit fehlt der öffentliche Server als bekannte Vermittlungsstelle in der Kommunikation
 zwischen den zu synchronisierenden Geräten, sodass sich diese über einen speziellen
 Mechanismus finden müssen, um eine direkte Verbindung aufbauen zu können.
-Das \kap{DCL} widmet sich der Bewältigung dieser, sowie weiterer
-durch die Dezentralisierung der Kommunikation enstehenden Herausforderungen.
+Das \kap{DCL} widmet sich der Bewältigung dieser, sowie weiteren Herausforderungen, die
+durch die Dezentralisierung der Kommunikation enstehen.
 
 \subsubsection{Alternative zu Server als Filecloud}
 Der Server agiert aber nicht nur als Vermittlung der Clients zueinander, damit diese
@@ -59,8 +59,8 @@ um Dateien zwischenspeichern und \glspl{syncconflict} vermeiden zu können.
 Bei \sblit kommt deshalb eine dezentrale \gls{filecloud} zum Einsatz. Anstelle
 der zentralen Speicherung auf einem Server wird zum Zwischenspeichern der Daten eines
 Nutzers auf den Speicherplatz auf Geräten anderer Nutzer von \sblit zurückgegriffen.
-Die Geräte der Nutzer speichern sich also gegenseitig die Änderungen ihrer Datenbestände
-in verlüsselter Form.
+Die Geräte der Nutzer speichern also gegenseitig die Änderungen ihrer Datenbestände
+in verschlüsselter Form.
 
 Dieses Prinzip funktioniert durch ein \gls{p2pnet}, welches durch faire Abkommen zwischen den \sblit-Nutzern,
 sogenannte \glspl{partnership}, realisiert wird. Grundsätzlich sind \glspl{partnership} einfach eine
@@ -77,7 +77,7 @@ Die Information zum korrekten Zusammensetzen der Datei besitzen dabei nur der Er
 \glspl{syncpartner}.
 
 Für die Besitzer der \glspl{partnerdevice} ist es somit unmöglich auf die ursprüngliche
-Datei zu schließen. Sollte es nämlich einer von ihnen schaffen die Datenblöcke zu
+Datei zu schließen. Sollte es nämlich einer von ihnen schaffen, die Datenblöcke zu
 entschlüsseln, würde ihnen noch immer der Rest an Datenblöcken fehlen und die Information
 zum korrekten Zusammensetzen dieser.
 
@@ -94,7 +94,7 @@ folgen nun häufig auftretende Szenarien.
 \subsection{Szenarien}
 \subsubsection{Allgemein}
 Bei \sblit wird der Inhalt eines Ordners synchronisert, der bei der
-Erstinstallation der Anwendung angegebenen wurde. Sobald sich Dateien innerhalb des Ordners
+Erstinstallation der Anwendung angegebenen wird. Sobald sich Dateien innerhalb des Ordners
 ändern, wird die neue Version der Datei kopiert und die Kopie wird den
 erreichbaren Synchronisationspartnern über eine direkte verschlüsselte Verbindung
 gesendet.
